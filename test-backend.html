@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .btn { background: #9CAF88; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin: 5px; }
+        .btn:hover { background: #8BA077; }
+        .result { background: #f8f9fa; padding: 15px; border-radius: 4px; margin: 10px 0; border-left: 4px solid #9CAF88; }
+        .error { border-left-color: #dc3545; background: #f8d7da; }
+        .success { border-left-color: #28a745; background: #d4edda; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Backend Connection Test</h1>
+        <p>Testing if the backend is running and responding...</p>
+        
+        <button class="btn" onclick="testHealth()">Test Health Check</button>
+        <button class="btn" onclick="testProducts()">Test Products</button>
+        <button class="btn" onclick="testTops()">Test Tops</button>
+        <button class="btn" onclick="testBottoms()">Test Bottoms</button>
+        <button class="btn" onclick="testAI()">Test AI</button>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+        
+        function showResult(message, isError = false) {
+            const div = document.createElement('div');
+            div.className = `result ${isError ? 'error' : 'success'}`;
+            div.innerHTML = `<strong>${isError ? ' Error:' : ' Success:'}</strong> ${message}`;
+            document.getElementById('results').appendChild(div);
+        }
+        
+        async function testHealth() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                showResult(`Backend is running! ${data.message}`);
+            } catch (error) {
+                showResult(`Backend not running: ${error.message}`, true);
+            }
+        }
+        
+        async function testProducts() {
+            try {
+                const response = await fetch(`${API_BASE}/products`);
+                const products = await response.json();
+                showResult(`Found ${products.length} products: ${products.map(p => p.name).join(', ')}`);
+            } catch (error) {
+                showResult(`Error loading products: ${error.message}`, true);
+            }
+        }
+        
+        async function testTops() {
+            try {
+                const response = await fetch(`${API_BASE}/tops`);
+                const tops = await response.json();
+                showResult(`Found ${tops.length} tops: ${tops.map(p => p.name).join(', ')}`);
+            } catch (error) {
+                showResult(`Error loading tops: ${error.message}`, true);
+            }
+        }
+        
+        async function testBottoms() {
+            try {
+                const response = await fetch(`${API_BASE}/bottoms`);
+                const bottoms = await response.json();
+                showResult(`Found ${bottoms.length} bottoms: ${bottoms.map(p => p.name).join(', ')}`);
+            } catch (error) {
+                showResult(`Error loading bottoms: ${error.message}`, true);
+            }
+        }
+        
+        async function testAI() {
+            try {
+                const response = await fetch(`${API_BASE}/ai-recommendation`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: 'office meeting' })
+                });
+                const data = await response.json();
+                showResult(`AI Response: ${data.recommendation.reasoning}`);
+            } catch (error) {
+                showResult(`Error testing AI: ${error.message}`, true);
+            }
+        }
+        
+        // Auto-test on load
+        window.onload = () => {
+            testHealth();
+        };
+    </script>
+</body>
+</html>

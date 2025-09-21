@@ -1,0 +1,575 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATYR Style Quiz</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: linear-gradient(135deg, #9CAF88 0%, #8BA077 100%);
+            min-height: 100vh; 
+            color: #333;
+            overflow-x: hidden;
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px;
+        }
+        
+        /* Quiz Header */
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .quiz-title {
+            font-size: 3.5rem;
+            font-weight: 300;
+            color: white;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .quiz-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffffff, rgba(255, 255, 255, 0.8));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+        
+        /* Quiz Steps */
+        .quiz-step {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 3rem;
+            margin: 2rem 0;
+            box-shadow: 0 16px 64px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .quiz-step.active {
+            display: block;
+            animation: slideInUp 0.6s ease;
+        }
+        .quiz-step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            z-index: -1;
+        }
+        
+        .step-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .step-description {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 2rem;
+        }
+        .form-label {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        .form-input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Gender Selection */
+        .gender-options {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        .gender-option {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            min-width: 150px;
+        }
+        .gender-option:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-4px);
+        }
+        .gender-option.selected {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-4px);
+        }
+        .gender-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        .gender-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        /* Pinterest Style Board */
+        .style-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .style-image {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            aspect-ratio: 1;
+        }
+        .style-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .style-image:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        }
+        .style-image.selected {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.8);
+        }
+        .style-image.selected::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #9CAF88;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        /* Navigation Buttons */
+        .quiz-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+        }
+        .quiz-btn {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 16px 32px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .quiz-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+        .quiz-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .quiz-btn.primary {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        
+        /* Results Page */
+        .results-container {
+            text-align: center;
+            padding: 3rem;
+        }
+        .results-title {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: white;
+            margin-bottom: 2rem;
+        }
+        .results-description {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+        .style-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        .style-tag {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        /* Animations */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .gender-options {
+                flex-direction: column;
+                align-items: center;
+            }
+            .style-board {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+            .quiz-title {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="quiz-header">
+            <h1 class="quiz-title">ATYR Style Quiz</h1>
+            <p class="quiz-subtitle">Let's discover your unique style together</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <!-- Step 1: Name -->
+        <div class="quiz-step active" id="step1">
+            <h2 class="step-title">What's your name?</h2>
+            <p class="step-description">We'd love to personalize your experience</p>
+            <div class="form-group">
+                <label class="form-label" for="userName">Your Name</label>
+                <input type="text" class="form-input" id="userName" placeholder="Enter your name">
+            </div>
+            <div class="quiz-nav">
+                <button class="quiz-btn" disabled>Previous</button>
+                <button class="quiz-btn primary" onclick="nextStep()">Next </button>
+            </div>
+        </div>
+
+        <!-- Step 2: Gender -->
+        <div class="quiz-step" id="step2">
+            <h2 class="step-title">How do you identify?</h2>
+            <p class="step-description">This helps us recommend the right styles for you</p>
+            <div class="gender-options">
+                <div class="gender-option" onclick="selectGender('male')">
+                    <div class="gender-icon"></div>
+                    <div class="gender-label">Male</div>
+                </div>
+                <div class="gender-option" onclick="selectGender('female')">
+                    <div class="gender-icon"></div>
+                    <div class="gender-label">Female</div>
+                </div>
+                <div class="gender-option" onclick="selectGender('other')">
+                    <div class="gender-icon"></div>
+                    <div class="gender-label">Other</div>
+                </div>
+            </div>
+            <div class="quiz-nav">
+                <button class="quiz-btn" onclick="prevStep()"> Previous</button>
+                <button class="quiz-btn primary" onclick="nextStep()" disabled id="nextBtn2">Next </button>
+            </div>
+        </div>
+
+        <!-- Step 3: Style Selection -->
+        <div class="quiz-step" id="step3">
+            <h2 class="step-title">Select your style vibes</h2>
+            <p class="step-description">Choose 5-10 images that represent your style (click to select)</p>
+            <div class="style-board" id="styleBoard">
+                <!-- Style images will be loaded here -->
+            </div>
+            <div class="quiz-nav">
+                <button class="quiz-btn" onclick="prevStep()"> Previous</button>
+                <button class="quiz-btn primary" onclick="nextStep()" disabled id="nextBtn3">Next </button>
+            </div>
+        </div>
+
+        <!-- Step 4: Results -->
+        <div class="quiz-step" id="step4">
+            <div class="results-container">
+                <h2 class="results-title">Welcome to ATYR, <span id="resultName"></span>!</h2>
+                <p class="results-description">
+                    Based on your preferences, we've created a personalized style profile just for you. 
+                    Our AI will now recommend outfits that match your unique taste and personality.
+                </p>
+                <div class="style-tags" id="styleTags">
+                    <!-- Style tags will be generated here -->
+                </div>
+                <div class="quiz-nav">
+                    <button class="quiz-btn" onclick="prevStep()"> Previous</button>
+                    <button class="quiz-btn primary" onclick="startMixing()">Start Mixing & Matching </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+    <script>
+        // Quiz state
+        let currentStep = 1;
+        let totalSteps = 4;
+        let quizData = {
+            name: '',
+            gender: '',
+            selectedStyles: []
+        };
+
+        // Style images with different aesthetics
+        const styleImages = [
+            { url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop', style: 'minimalist' },
+            { url: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=400&fit=crop', style: 'bohemian' },
+            { url: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=400&fit=crop', style: 'streetwear' },
+            { url: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop', style: 'classic' },
+            { url: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=400&fit=crop', style: 'vintage' },
+            { url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop', style: 'modern' },
+            { url: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop', style: 'edgy' },
+            { url: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=400&fit=crop', style: 'romantic' },
+            { url: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=400&fit=crop', style: 'athletic' },
+            { url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop', style: 'preppy' },
+            { url: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop', style: 'artistic' },
+            { url: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=400&fit=crop', style: 'casual' },
+            { url: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=400&fit=crop', style: 'elegant' },
+            { url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop', style: 'trendy' },
+            { url: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop', style: 'sophisticated' },
+            { url: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=400&fit=crop', style: 'playful' }
+        ];
+
+        // Initialize quiz
+        function initQuiz() {
+            loadStyleImages();
+            updateProgress();
+        }
+
+        // Load style images
+        function loadStyleImages() {
+            const styleBoard = document.getElementById('styleBoard');
+            styleBoard.innerHTML = '';
+            
+            styleImages.forEach((image, index) => {
+                const imageDiv = document.createElement('div');
+                imageDiv.className = 'style-image';
+                imageDiv.innerHTML = `<img src="${image.url}" alt="${image.style}" loading="lazy">`;
+                imageDiv.onclick = () => selectStyle(image.style, imageDiv);
+                styleBoard.appendChild(imageDiv);
+            });
+        }
+
+        // Select style image
+        function selectStyle(style, element) {
+            if (element.classList.contains('selected')) {
+                element.classList.remove('selected');
+                quizData.selectedStyles = quizData.selectedStyles.filter(s => s !== style);
+            } else {
+                if (quizData.selectedStyles.length < 10) {
+                    element.classList.add('selected');
+                    quizData.selectedStyles.push(style);
+                } else {
+                    alert('You can select up to 10 styles!');
+                    return;
+                }
+            }
+            
+            updateNextButton();
+        }
+
+        // Select gender
+        function selectGender(gender) {
+            // Remove previous selection
+            document.querySelectorAll('.gender-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // Add selection to clicked option
+            event.target.closest('.gender-option').classList.add('selected');
+            
+            quizData.gender = gender;
+            document.getElementById('nextBtn2').disabled = false;
+        }
+
+        // Next step
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                // Validate current step
+                if (currentStep === 1) {
+                    const name = document.getElementById('userName').value.trim();
+                    if (!name) {
+                        alert('Please enter your name!');
+                        return;
+                    }
+                    quizData.name = name;
+                } else if (currentStep === 3) {
+                    if (quizData.selectedStyles.length < 5) {
+                        alert('Please select at least 5 styles!');
+                        return;
+                    }
+                }
+                
+                // Hide current step
+                document.getElementById(`step${currentStep}`).classList.remove('active');
+                
+                // Show next step
+                currentStep++;
+                document.getElementById(`step${currentStep}`).classList.add('active');
+                
+                // Update progress
+                updateProgress();
+                
+                // Generate results if on last step
+                if (currentStep === 4) {
+                    generateResults();
+                }
+            }
+        }
+
+        // Previous step
+        function prevStep() {
+            if (currentStep > 1) {
+                // Hide current step
+                document.getElementById(`step${currentStep}`).classList.remove('active');
+                
+                // Show previous step
+                currentStep--;
+                document.getElementById(`step${currentStep}`).classList.add('active');
+                
+                // Update progress
+                updateProgress();
+            }
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const progress = (currentStep / totalSteps) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+        }
+
+        // Update next button state
+        function updateNextButton() {
+            const nextBtn = document.getElementById('nextBtn3');
+            if (nextBtn) {
+                nextBtn.disabled = quizData.selectedStyles.length < 5;
+            }
+        }
+
+        // Generate results
+        function generateResults() {
+            // Update name
+            document.getElementById('resultName').textContent = quizData.name;
+            
+            // Generate style tags
+            const styleTags = document.getElementById('styleTags');
+            styleTags.innerHTML = '';
+            
+            quizData.selectedStyles.forEach(style => {
+                const tag = document.createElement('div');
+                tag.className = 'style-tag';
+                tag.textContent = style.charAt(0).toUpperCase() + style.slice(1);
+                styleTags.appendChild(tag);
+            });
+            
+            // Save quiz data to localStorage
+            localStorage.setItem('userProfile', JSON.stringify(quizData));
+        }
+
+        // Start mixing and matching
+        function startMixing() {
+            // Redirect to main app
+            window.location.href = 'atyr-with-moodboard.html';
+        }
+
+        // Enter key support for name input
+        document.getElementById('userName').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                nextStep();
+            }
+        });
+
+        // Initialize quiz when page loads
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>

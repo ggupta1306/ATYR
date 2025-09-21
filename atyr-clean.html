@@ -1,0 +1,504 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATYR Fashion Mix & Match</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: #fafafa; 
+            min-height: 100vh; 
+            color: #333;
+            overflow-x: hidden;
+        }
+        .container { 
+            max-width: 100%; 
+            margin: 0 auto; 
+            padding: 20px;
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 3rem; 
+        }
+        .title { 
+            font-size: 2.5rem; 
+            font-weight: 300; 
+            margin-bottom: 0.5rem; 
+            color: #1a1a1a;
+            letter-spacing: -0.02em;
+        }
+        .subtitle { 
+            font-size: 1rem; 
+            color: #666; 
+            font-weight: 400;
+        }
+        .outfit-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            margin: 3rem 0;
+        }
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        .carousel-title {
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #666;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            background: white;
+        }
+        .carousel {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+        .carousel-item {
+            flex: 0 0 100%;
+            height: 250px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .carousel-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .carousel-item:hover::before {
+            opacity: 1;
+        }
+        .carousel-item:hover .item-details {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .item-details {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem;
+            transform: translateY(100%);
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+        .item-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+        .item-brand {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .item-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #000;
+        }
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.9);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: #333;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        .nav-button:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        .nav-button.prev {
+            left: -18px;
+        }
+        .nav-button.next {
+            right: -18px;
+        }
+        .nav-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .buy-button {
+            background: #000;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            margin: 2rem auto;
+            display: block;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .buy-button:hover {
+            background: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        .buy-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .total-price {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin: 1rem 0;
+        }
+        @media (max-width: 768px) {
+            .carousel-wrapper {
+                max-width: 280px;
+            }
+            .carousel-item {
+                height: 220px;
+            }
+            .nav-button {
+                width: 32px;
+                height: 32px;
+                font-size: 1rem;
+            }
+            .nav-button.prev {
+                left: -16px;
+            }
+            .nav-button.next {
+                right: -16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">ATYR</h1>
+            <p class="subtitle">Mix & Match</p>
+        </div>
+
+        <div class="outfit-container">
+            <div class="carousel-container">
+                <h3 class="carousel-title">Tops</h3>
+                <div class="carousel-wrapper">
+                    <button class="nav-button prev" id="topPrev"></button>
+                    <div class="carousel" id="topsCarousel">
+                        <div class="carousel-item" data-name="White T-Shirt" data-brand="ATYR" data-price="29.99">
+                            <img src="backend/uploads/Adobe Express - file (1).png" alt="White T-Shirt">
+                            <div class="item-details">
+                                <div class="item-name">White T-Shirt</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$29.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Striped Top" data-brand="ATYR" data-price="45.99">
+                            <img src="backend/uploads/Remove background project (10).png" alt="Striped Top">
+                            <div class="item-details">
+                                <div class="item-name">Striped Top</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$45.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Button Up" data-brand="ATYR" data-price="39.99">
+                            <img src="backend/uploads/Remove background project (11).png" alt="Button Up">
+                            <div class="item-details">
+                                <div class="item-name">Button Up</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$39.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Blouse" data-brand="ATYR" data-price="55.99">
+                            <img src="backend/uploads/Remove background project (12).png" alt="Blouse">
+                            <div class="item-details">
+                                <div class="item-name">Blouse</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$55.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Tank Top" data-brand="ATYR" data-price="24.99">
+                            <img src="backend/uploads/Remove background project (3).png" alt="Tank Top">
+                            <div class="item-details">
+                                <div class="item-name">Tank Top</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$24.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Shirt" data-brand="ATYR" data-price="49.99">
+                            <img src="backend/uploads/Remove background project (5).png" alt="Shirt">
+                            <div class="item-details">
+                                <div class="item-name">Shirt</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$49.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Trendy Top" data-brand="ATYR" data-price="34.99">
+                            <img src="backend/uploads/Remove background project (7).png" alt="Trendy Top">
+                            <div class="item-details">
+                                <div class="item-name">Trendy Top</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$34.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Fashion Top" data-brand="ATYR" data-price="42.99">
+                            <img src="backend/uploads/Remove background project.png" alt="Fashion Top">
+                            <div class="item-details">
+                                <div class="item-name">Fashion Top</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$42.99</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="nav-button next" id="topNext"></button>
+                </div>
+            </div>
+
+            <div class="carousel-container">
+                <h3 class="carousel-title">Bottoms</h3>
+                <div class="carousel-wrapper">
+                    <button class="nav-button prev" id="bottomPrev"></button>
+                    <div class="carousel" id="bottomsCarousel">
+                        <div class="carousel-item" data-name="Jeans" data-brand="ATYR" data-price="79.99">
+                            <img src="backend/uploads/Remove background project (1).png" alt="Jeans">
+                            <div class="item-details">
+                                <div class="item-name">Jeans</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$79.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Chinos" data-brand="ATYR" data-price="65.99">
+                            <img src="backend/uploads/Remove background project (13).png" alt="Chinos">
+                            <div class="item-details">
+                                <div class="item-name">Chinos</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$65.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Trousers" data-brand="ATYR" data-price="59.99">
+                            <img src="backend/uploads/Remove background project (14).png" alt="Trousers">
+                            <div class="item-details">
+                                <div class="item-name">Trousers</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$59.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Pants" data-brand="ATYR" data-price="89.99">
+                            <img src="backend/uploads/Remove background project (2).png" alt="Pants">
+                            <div class="item-details">
+                                <div class="item-name">Pants</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$89.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Shorts" data-brand="ATYR" data-price="39.99">
+                            <img src="backend/uploads/Remove background project (4).png" alt="Shorts">
+                            <div class="item-details">
+                                <div class="item-name">Shorts</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$39.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Skirt" data-brand="ATYR" data-price="49.99">
+                            <img src="backend/uploads/Remove background project (6).png" alt="Skirt">
+                            <div class="item-details">
+                                <div class="item-name">Skirt</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$49.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Trendy Pants" data-brand="ATYR" data-price="69.99">
+                            <img src="backend/uploads/Remove background project (8).png" alt="Trendy Pants">
+                            <div class="item-details">
+                                <div class="item-name">Trendy Pants</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$69.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Fashion Bottoms" data-brand="ATYR" data-price="54.99">
+                            <img src="backend/uploads/Remove background project (9).png" alt="Fashion Bottoms">
+                            <div class="item-details">
+                                <div class="item-name">Fashion Bottoms</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$54.99</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="nav-button next" id="bottomNext"></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="total-price" id="totalPrice" style="display: none;"></div>
+        <button class="buy-button" id="buyButton" disabled>Buy Together</button>
+    </div>
+
+    <script>
+        class Carousel {
+            constructor(containerId) {
+                this.container = document.getElementById(containerId);
+                this.currentIndex = 0;
+                this.items = this.container.querySelectorAll('.carousel-item');
+                this.totalItems = this.items.length;
+                
+                this.init();
+            }
+
+            init() {
+                this.updateCarousel();
+            }
+
+            next() {
+                this.currentIndex = (this.currentIndex + 1) % this.totalItems;
+                this.updateCarousel();
+            }
+
+            prev() {
+                this.currentIndex = (this.currentIndex - 1 + this.totalItems) % this.totalItems;
+                this.updateCarousel();
+            }
+
+            updateCarousel() {
+                const translateX = -this.currentIndex * 100;
+                this.container.style.transform = `translateX(${translateX}%)`;
+            }
+
+            getCurrentItem() {
+                return this.items[this.currentIndex];
+            }
+        }
+
+        // Initialize carousels
+        const topCarousel = new Carousel('topsCarousel');
+        const bottomCarousel = new Carousel('bottomsCarousel');
+
+        // Add event listeners
+        document.getElementById('topPrev').addEventListener('click', () => topCarousel.prev());
+        document.getElementById('topNext').addEventListener('click', () => topCarousel.next());
+        document.getElementById('bottomPrev').addEventListener('click', () => bottomCarousel.prev());
+        document.getElementById('bottomNext').addEventListener('click', () => bottomCarousel.next());
+
+        // Touch/swipe support
+        let startX = 0;
+        let startY = 0;
+
+        function handleTouchStart(e) {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        }
+
+        function handleTouchEnd(e) {
+            if (!startX || !startY) return;
+
+            const endX = e.changedTouches[0].clientX;
+            const endY = e.changedTouches[0].clientY;
+            const diffX = startX - endX;
+            const diffY = startY - endY;
+
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (Math.abs(diffX) > 50) {
+                    if (diffX > 0) {
+                        // Swipe left - next
+                        if (e.target.closest('#topsCarousel')) topCarousel.next();
+                        if (e.target.closest('#bottomsCarousel')) bottomCarousel.next();
+                    } else {
+                        // Swipe right - prev
+                        if (e.target.closest('#topsCarousel')) topCarousel.prev();
+                        if (e.target.closest('#bottomsCarousel')) bottomCarousel.prev();
+                    }
+                }
+            }
+
+            startX = 0;
+            startY = 0;
+        }
+
+        // Add touch events to carousels
+        document.getElementById('topsCarousel').addEventListener('touchstart', handleTouchStart, false);
+        document.getElementById('topsCarousel').addEventListener('touchend', handleTouchEnd, false);
+        document.getElementById('bottomsCarousel').addEventListener('touchstart', handleTouchStart, false);
+        document.getElementById('bottomsCarousel').addEventListener('touchend', handleTouchEnd, false);
+
+        // Update buy button when carousel changes
+        function updateBuyButton() {
+            const topItem = topCarousel.getCurrentItem();
+            const bottomItem = bottomCarousel.getCurrentItem();
+            const buyButton = document.getElementById('buyButton');
+            const totalPrice = document.getElementById('totalPrice');
+            
+            if (topItem && bottomItem) {
+                const topPrice = parseFloat(topItem.dataset.price);
+                const bottomPrice = parseFloat(bottomItem.dataset.price);
+                const total = topPrice + bottomPrice;
+                
+                totalPrice.textContent = `Total: $${total.toFixed(2)}`;
+                totalPrice.style.display = 'block';
+                buyButton.disabled = false;
+            } else {
+                totalPrice.style.display = 'none';
+                buyButton.disabled = true;
+            }
+        }
+
+        // Update buy button when carousel changes
+        setInterval(updateBuyButton, 100);
+
+        function buyTogether() {
+            const topItem = topCarousel.getCurrentItem();
+            const bottomItem = bottomCarousel.getCurrentItem();
+            
+            if (topItem && bottomItem) {
+                alert('Opening ATYR buy links!');
+                window.open('https://atyr.com/buy/top', '_blank');
+                window.open('https://atyr.com/buy/bottom', '_blank');
+            }
+        }
+
+        document.getElementById('buyButton').addEventListener('click', buyTogether);
+    </script>
+</body>
+</html>

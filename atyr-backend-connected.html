@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>atyr - Fashion Mix & Match</title>
+    
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: #fafafa; 
+            min-height: 100vh; 
+            color: #333;
+            overflow-x: hidden;
+            position: relative;
+            touch-action: manipulation;
+        }
+        
+        /* Landing Screen */
+        .landing-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #9CAF88 0%, #8BA077 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .landing-screen.hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo-text {
+            font-size: 3rem;
+            font-weight: 300;
+            color: white;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: logoSlideIn 1s ease-out 0.5s forwards;
+        }
+        
+        .logo-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: logoSlideIn 1s ease-out 1s forwards;
+        }
+        
+        .loading-dots {
+            display: flex;
+            gap: 8px;
+            margin-top: 2rem;
+            opacity: 0;
+            animation: logoSlideIn 1s ease-out 1.5s forwards;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: dotPulse 1.5s ease-in-out infinite;
+        }
+        
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes logoSlideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes dotPulse {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1.2); opacity: 1; }
+        }
+        
+        /* Main App */
+        .main-app {
+            display: none;
+            min-height: 100vh;
+            background: #fafafa;
+        }
+        
+        .main-app.active {
+            display: block;
+        }
+        
+        /* Header */
+        .header {
+            background: white;
+            padding: 1rem 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: #9CAF88;
+            letter-spacing: 0.1em;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .nav-btn {
+            background: rgba(156, 175, 136, 0.1);
+            border: 2px solid #9CAF88;
+            color: #9CAF88;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .nav-btn:hover {
+            background: #9CAF88;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        /* Welcome Message */
+        .welcome-message {
+            background: linear-gradient(135deg, #9CAF88, #8BA077);
+            color: white;
+            padding: 1rem 1.5rem;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        /* Carousel Container */
+        .carousel-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            align-items: center;
+            margin-bottom: 2rem;
+            max-width: 400px;
+            margin: 0 auto 2rem auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .carousel-section {
+            width: 100%;
+            position: relative;
+        }
+        
+        .carousel {
+            width: 100%;
+            height: 350px;
+            position: relative;
+            overflow: hidden;
+            background: white;
+        }
+        
+        .carousel:first-child {
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+        }
+        
+        .carousel-controls.left {
+            left: 10px;
+        }
+        
+        .carousel-controls.right {
+            right: 10px;
+        }
+        
+        .carousel-controls button {
+            background: rgba(255, 255, 255, 0.9);
+            color: #9CAF88;
+            border: 2px solid #9CAF88;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(156, 175, 136, 0.2);
+        }
+        
+        .carousel-controls button:hover {
+            background: #9CAF88;
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(156, 175, 136, 0.3);
+        }
+        
+        .buy-together-section {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .action-btn {
+            background: rgba(255, 255, 255, 0.9);
+            color: #9CAF88;
+            border: 2px solid #9CAF88;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(156, 175, 136, 0.2);
+        }
+        
+        .action-btn:hover {
+            background: #9CAF88;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(156, 175, 136, 0.3);
+        }
+        
+        .action-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .carousel-item {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .carousel-item.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .carousel-item.prev {
+            transform: translateX(-100%);
+        }
+        
+        .carousel-item img {
+            width: 100%;
+            height: 85%;
+            object-fit: contain;
+            border-radius: 0;
+            transition: transform 0.3s ease;
+        }
+        
+        .carousel-item:hover img {
+            transform: scale(1.02);
+        }
+        
+        .item-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .carousel-item:hover .item-info {
+            opacity: 1;
+        }
+        
+        .item-name {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+        
+        .item-price {
+            color: #9CAF88;
+            font-weight: 500;
+        }
+        
+        /* Carousel Controls */
+        .carousel-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #9CAF88, #8BA077);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(156, 175, 136, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(156, 175, 136, 0.1);
+            color: #9CAF88;
+            border: 2px solid #9CAF88;
+        }
+        
+        .btn-secondary:hover {
+            background: #9CAF88;
+            color: white;
+        }
+        
+        /* Combo Display */
+        .combo-display {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+        }
+        
+        .combo-title {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        .combo-price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #9CAF88;
+            margin-bottom: 1rem;
+        }
+        
+        .combo-description {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        /* AI Recommendation */
+        .ai-section {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ai-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .ai-search {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .ai-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        
+        .ai-input:focus {
+            border-color: #9CAF88;
+        }
+        
+        .ai-message {
+            background: linear-gradient(135deg, #9CAF88, #8BA077);
+            color: white;
+            padding: 1rem;
+            border-radius: 15px;
+            text-align: center;
+            font-style: italic;
+            margin-top: 1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .ai-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Stats Bar */
+        .stats-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 1rem 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+        
+        .stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #9CAF88;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        
+        /* Lightbox Modal */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .lightbox-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .lightbox-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            display: flex;
+            gap: 2rem;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+        
+        .lightbox-overlay.active .lightbox-content {
+            transform: scale(1);
+        }
+        
+        .lightbox-image {
+            flex: 1;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .lightbox-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .lightbox-info {
+            flex: 1;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .lightbox-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .lightbox-brand {
+            color: #9CAF88;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .lightbox-price {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #9CAF88;
+            margin-bottom: 1rem;
+        }
+        
+        .lightbox-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .sizes-container {
+            margin-bottom: 2rem;
+        }
+        
+        .sizes-title {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .sizes {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .size-option {
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .size-option:hover,
+        .size-option.selected {
+            border-color: #9CAF88;
+            background: #9CAF88;
+        }
+        
+        .lightbox-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .lightbox-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .lightbox-btn-primary {
+            background: #9CAF88;
+            color: white;
+        }
+        
+        .lightbox-btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .lightbox-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .close-lightbox {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Quiz Styles */
+        .quiz-step {
+            display: none;
+        }
+        
+        .quiz-step.active {
+            display: block;
+        }
+        
+        .quiz-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #9CAF88;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .quiz-option {
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quiz-option:hover {
+            border-color: #9CAF88;
+            background: rgba(156, 175, 136, 0.1);
+        }
+        
+        .quiz-option.selected {
+            border-color: #9CAF88;
+            background: #9CAF88;
+            color: white;
+        }
+        
+        .quiz-option img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .carousel {
+                max-width: 300px;
+                height: 400px;
+            }
+            
+            .stats-bar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Landing Screen -->
+    <div class="landing-screen" id="landingScreen">
+        <div class="logo-container">
+            <div class="logo-text">atyr</div>
+            <div class="logo-subtitle">Fashion Mix & Match</div>
+            <div class="loading-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="main-app" id="mainApp">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <div class="logo">atyr</div>
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="window.open('http://localhost:5000/admin', '_blank')">
+                        <span>Admin</span>
+                    </button>
+                    <button class="nav-btn" id="startQuizBtn">
+                        <span>Style Quiz</span>
+                    </button>
+                    <button class="nav-btn" id="viewMoodBoardBtn">
+                        <span>Mood Board</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Welcome Message -->
+        <div class="welcome-message" id="welcomeMessage">
+            Welcome back, <span id="userName">Guest</span>!
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Carousel Container -->
+            <div class="carousel-container">
+                <!-- Top Carousel -->
+                <div class="carousel-section">
+                    <div class="carousel" id="topCarousel">
+                        <div class="carousel-item active" data-name="Classic White Tee" data-brand="atyr" data-price="29.99" data-description="Essential white cotton t-shirt with a relaxed fit. Perfect for layering or wearing alone. Made from 100% organic cotton for ultimate comfort." data-sizes="XS,S,M,L,XL" data-occasion="casual,everyday,weekend,summer" onclick="openLightbox(this)">
+                            <img src="images/tops/Adobe Express - file (1).png" alt="White Tee">
+                            <div class="item-info">
+                                <div class="item-name">Classic White Tee</div>
+                                <div class="item-price">$29.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Elegant Blouse" data-brand="atyr" data-price="45.99" data-description="Sophisticated blouse with modern silhouette. Features premium cotton blend fabric and delicate button details. Perfect for smart casual occasions." data-sizes="XS,S,M,L,XL" data-occasion="smart-casual,office,brunch,date" onclick="openLightbox(this)">
+                            <img src="images/tops/Remove background project (10).png" alt="Elegant Blouse">
+                            <div class="item-info">
+                                <div class="item-name">Elegant Blouse</div>
+                                <div class="item-price">$45.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Professional Button-Up" data-brand="atyr" data-price="39.99" data-description="Crisp button-up shirt that transitions seamlessly from office to evening. Features a tailored fit and wrinkle-resistant fabric. Essential for any professional wardrobe." data-sizes="XS,S,M,L,XL" data-occasion="office,professional,meeting,formal" onclick="openLightbox(this)">
+                            <img src="images/tops/Remove background project (11).png" alt="Button Up">
+                            <div class="item-info">
+                                <div class="item-name">Professional Button-Up</div>
+                                <div class="item-price">$39.99</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-controls left">
+                        <button onclick="previousItem('top')">←</button>
+                    </div>
+                    <div class="carousel-controls right">
+                        <button onclick="nextItem('top')">→</button>
+                    </div>
+                </div>
+
+                <!-- Bottom Carousel -->
+                <div class="carousel-section">
+                    <div class="carousel" id="bottomCarousel">
+                        <div class="carousel-item active" data-name="Classic Denim Jeans" data-brand="atyr" data-price="79.99" data-description="Timeless denim jeans with perfect fit and premium stretch. Made from high-quality denim with a comfortable waistband. Perfect for casual outings, weekends, or relaxed office days." data-sizes="28,30,32,34,36" data-occasion="casual,everyday,weekend,relaxed" onclick="openLightbox(this)">
+                            <img src="images/bottoms/Remove background project (1).png" alt="Denim Jeans">
+                            <div class="item-info">
+                                <div class="item-name">Classic Denim Jeans</div>
+                                <div class="item-price">$79.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Business Chinos" data-brand="atyr" data-price="65.99" data-description="Professional chinos that bridge the gap between casual and formal. Features a tailored fit and wrinkle-resistant fabric. Perfect for business casual settings, client meetings, or smart casual occasions." data-sizes="28,30,32,34,36" data-occasion="office,professional,business-casual,meeting" onclick="openLightbox(this)">
+                            <img src="images/bottoms/Remove background project (13).png" alt="Chinos">
+                            <div class="item-info">
+                                <div class="item-name">Business Chinos</div>
+                                <div class="item-price">$65.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Formal Trousers" data-brand="atyr" data-price="59.99" data-description="Elegant trousers with sophisticated tailored fit. Made from premium wool blend fabric. Perfect for formal office settings, important meetings, or professional events." data-sizes="28,30,32,34,36" data-occasion="formal,office,professional,meeting,corporate" onclick="openLightbox(this)">
+                            <img src="images/bottoms/Remove background project (14).png" alt="Formal Pants">
+                            <div class="item-info">
+                                <div class="item-name">Formal Trousers</div>
+                                <div class="item-price">$59.99</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-controls left">
+                        <button onclick="previousItem('bottom')">←</button>
+                    </div>
+                    <div class="carousel-controls right">
+                        <button onclick="nextItem('bottom')">→</button>
+                    </div>
+                </div>
+
+                <!-- Buy Together Button -->
+                <div class="buy-together-section">
+                    <button class="btn" onclick="buyTogether()">🛒 Buy Together</button>
+                    
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="saveToBoard()">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                            </svg>
+                            Save to Board
+                        </button>
+                        <button class="action-btn" onclick="shuffleCombo()">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>
+                            </svg>
+                            Shuffle
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Combo Display -->
+            <div class="combo-display">
+                <div class="combo-title">Perfect Combo</div>
+                <div class="combo-price" id="comboPrice">$109.98</div>
+                <div class="combo-description">Classic White Tee + Classic Denim Jeans</div>
+            </div>
+
+            <!-- AI Recommendation -->
+            <div class="ai-section">
+                <div class="ai-title">🤖 AI Style Assistant</div>
+                <div class="ai-search">
+                    <input type="text" class="ai-input" id="aiInput" placeholder="Tell me where you're heading... (e.g., weekend concert, office meeting)">
+                    <button class="btn" onclick="getAIRecommendation()">Get Recommendation</button>
+                </div>
+                <div class="ai-message" id="aiMessage">
+                    Perfect for a casual weekend! This combination balances comfort and style.
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-number" id="fitsMade">0</div>
+                    <div class="stat-label">Fits Made</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="timeSpent">0</div>
+                    <div class="stat-label">Minutes Spent</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="combosSaved">0</div>
+                    <div class="stat-label">Combos Saved</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Modal -->
+    <div class="modal-overlay" id="quizModal">
+        <div class="modal-content">
+            <h2 style="text-align: center; margin-bottom: 2rem; color: #9CAF88; font-size: 2rem;">Style Quiz</h2>
+            
+            <!-- Quiz Step 1: Name -->
+            <div class="quiz-step active" id="quizStep1">
+                <h3>What's your name?</h3>
+                <input type="text" id="quizName" class="quiz-input" placeholder="Enter your name">
+                <button class="btn" onclick="nextQuizStep()">Next</button>
+            </div>
+            
+            <!-- Quiz Step 2: Gender -->
+            <div class="quiz-step" id="quizStep2" style="display: none;">
+                <h3>How do you identify?</h3>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectGender('male')">Male</div>
+                    <div class="quiz-option" onclick="selectGender('female')">Female</div>
+                    <div class="quiz-option" onclick="selectGender('other')">Other</div>
+                </div>
+                <button class="btn" onclick="nextQuizStep()" id="quizNext2" disabled>Next</button>
+            </div>
+            
+            <!-- Quiz Step 3: Style Selection -->
+            <div class="quiz-step" id="quizStep3" style="display: none;">
+                <h3>Select 5-10 styles you love:</h3>
+                <div class="quiz-options" id="styleOptions">
+                    <div class="quiz-option" onclick="toggleStyle('casual')">
+                        <img src="https://via.placeholder.com/150x100/ff6b6b/ffffff?text=Casual" alt="Casual">
+                        <div>Casual</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleStyle('formal')">
+                        <img src="https://via.placeholder.com/150x100/4ecdc4/ffffff?text=Formal" alt="Formal">
+                        <div>Formal</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleStyle('streetwear')">
+                        <img src="https://via.placeholder.com/150x100/45b7d1/ffffff?text=Streetwear" alt="Streetwear">
+                        <div>Streetwear</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleStyle('bohemian')">
+                        <img src="https://via.placeholder.com/150x100/f9ca24/ffffff?text=Bohemian" alt="Bohemian">
+                        <div>Bohemian</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleStyle('minimalist')">
+                        <img src="https://via.placeholder.com/150x100/6c5ce7/ffffff?text=Minimalist" alt="Minimalist">
+                        <div>Minimalist</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleStyle('vintage')">
+                        <img src="https://via.placeholder.com/150x100/a55eea/ffffff?text=Vintage" alt="Vintage">
+                        <div>Vintage</div>
+                    </div>
+                </div>
+                <button class="btn" onclick="nextQuizStep()" id="quizNext3" disabled>Next</button>
+            </div>
+            
+            <!-- Quiz Step 4: Results -->
+            <div class="quiz-step" id="quizStep4" style="display: none;">
+                <h3>Welcome to atyr, <span id="quizResultName"></span>!</h3>
+                <p>Your style preferences have been saved. Let's start mixing & matching!</p>
+                <button class="btn" onclick="completeQuiz()">Start Mixing & Matching</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox-overlay" id="lightboxOverlay">
+        <div class="lightbox-content">
+            <button class="close-lightbox" onclick="closeLightbox()">&times;</button>
+            <div class="lightbox-image">
+                <img id="lightboxImage" src="" alt="">
+            </div>
+            <div class="lightbox-info">
+                <div class="lightbox-title" id="lightboxTitle"></div>
+                <div class="lightbox-brand" id="lightboxBrand"></div>
+                <div class="lightbox-price" id="lightboxPrice"></div>
+                <div class="lightbox-description" id="lightboxDescription"></div>
+                <div class="sizes-container">
+                    <div class="sizes-title">Select Size:</div>
+                    <div class="sizes" id="lightboxSizes"></div>
+                </div>
+                <div class="lightbox-buttons">
+                    <button class="lightbox-btn lightbox-btn-primary" onclick="addToCart()">Add to Cart</button>
+                    <button class="lightbox-btn lightbox-btn-secondary" onclick="closeLightbox()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // App State
+        let currentTopIndex = 0;
+        let currentBottomIndex = 0;
+        let currentQuizStep = 1;
+        let quizData = {
+            name: '',
+            gender: '',
+            selectedStyles: []
+        };
+        let stats = {
+            fitsMade: 0,
+            timeSpent: 0,
+            combosSaved: 0
+        };
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show landing screen for 3 seconds
+            setTimeout(() => {
+                document.getElementById('landingScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.add('active');
+                
+                // Check for saved user data
+                const savedProfile = localStorage.getItem('userProfile');
+                if (savedProfile) {
+                    const profile = JSON.parse(savedProfile);
+                    document.getElementById('userName').textContent = profile.name;
+                }
+                
+                // Load saved stats
+                const savedStats = localStorage.getItem('userStats');
+                if (savedStats) {
+                    stats = JSON.parse(savedStats);
+                    updateStats();
+                }
+                
+                // Start timer
+                setInterval(() => {
+                    stats.timeSpent++;
+                    updateStats();
+                    localStorage.setItem('userStats', JSON.stringify(stats));
+                }, 60000); // Every minute
+            }, 3000);
+        });
+
+        // Carousel Functions
+        function nextItem(type) {
+            if (type === 'top') {
+                const items = document.querySelectorAll('#topCarousel .carousel-item');
+                const currentItem = items[currentTopIndex];
+                currentItem.classList.remove('active');
+                currentItem.classList.add('prev');
+                
+                currentTopIndex = (currentTopIndex + 1) % items.length;
+                const nextItem = items[currentTopIndex];
+                nextItem.classList.add('active');
+                nextItem.classList.remove('prev');
+                
+                // Clean up prev class after animation
+                setTimeout(() => {
+                    currentItem.classList.remove('prev');
+                }, 600);
+            } else {
+                const items = document.querySelectorAll('#bottomCarousel .carousel-item');
+                const currentItem = items[currentBottomIndex];
+                currentItem.classList.remove('active');
+                currentItem.classList.add('prev');
+                
+                currentBottomIndex = (currentBottomIndex + 1) % items.length;
+                const nextItem = items[currentBottomIndex];
+                nextItem.classList.add('active');
+                nextItem.classList.remove('prev');
+                
+                // Clean up prev class after animation
+                setTimeout(() => {
+                    currentItem.classList.remove('prev');
+                }, 600);
+            }
+            updateComboDisplay();
+        }
+
+        function previousItem(type) {
+            if (type === 'top') {
+                const items = document.querySelectorAll('#topCarousel .carousel-item');
+                const currentItem = items[currentTopIndex];
+                currentItem.classList.remove('active');
+                currentItem.classList.add('prev');
+                
+                currentTopIndex = currentTopIndex === 0 ? items.length - 1 : currentTopIndex - 1;
+                const prevItem = items[currentTopIndex];
+                prevItem.classList.add('active');
+                prevItem.classList.remove('prev');
+                
+                // Clean up prev class after animation
+                setTimeout(() => {
+                    currentItem.classList.remove('prev');
+                }, 600);
+            } else {
+                const items = document.querySelectorAll('#bottomCarousel .carousel-item');
+                const currentItem = items[currentBottomIndex];
+                currentItem.classList.remove('active');
+                currentItem.classList.add('prev');
+                
+                currentBottomIndex = currentBottomIndex === 0 ? items.length - 1 : currentBottomIndex - 1;
+                const prevItem = items[currentBottomIndex];
+                prevItem.classList.add('active');
+                prevItem.classList.remove('prev');
+                
+                // Clean up prev class after animation
+                setTimeout(() => {
+                    currentItem.classList.remove('prev');
+                }, 600);
+            }
+            updateComboDisplay();
+        }
+
+        function updateComboDisplay() {
+            const topItem = document.querySelectorAll('#topCarousel .carousel-item')[currentTopIndex];
+            const bottomItem = document.querySelectorAll('#bottomCarousel .carousel-item')[currentBottomIndex];
+            
+            const topPrice = parseFloat(topItem.dataset.price);
+            const bottomPrice = parseFloat(bottomItem.dataset.price);
+            const totalPrice = topPrice + bottomPrice;
+            
+            document.getElementById('comboPrice').textContent = `$${totalPrice.toFixed(2)}`;
+            document.querySelector('.combo-description').textContent = 
+                `${topItem.dataset.name} + ${bottomItem.dataset.name}`;
+        }
+
+        function buyTogether() {
+            stats.fitsMade++;
+            updateStats();
+            localStorage.setItem('userStats', JSON.stringify(stats));
+            
+            const topItem = document.querySelectorAll('#topCarousel .carousel-item')[currentTopIndex];
+            const bottomItem = document.querySelectorAll('#bottomCarousel .carousel-item')[currentBottomIndex];
+            
+            alert(`Added to cart: ${topItem.dataset.name} + ${bottomItem.dataset.name} = $${(parseFloat(topItem.dataset.price) + parseFloat(bottomItem.dataset.price)).toFixed(2)}`);
+        }
+        
+        function saveToBoard() {
+            const topItem = document.querySelectorAll('#topCarousel .carousel-item')[currentTopIndex];
+            const bottomItem = document.querySelectorAll('#bottomCarousel .carousel-item')[currentBottomIndex];
+            
+            const combo = {
+                id: Date.now(),
+                top: {
+                    name: topItem.dataset.name,
+                    price: topItem.dataset.price,
+                    image: topItem.querySelector('img').src
+                },
+                bottom: {
+                    name: bottomItem.dataset.name,
+                    price: bottomItem.dataset.price,
+                    image: bottomItem.querySelector('img').src
+                },
+                total: (parseFloat(topItem.dataset.price) + parseFloat(bottomItem.dataset.price)).toFixed(2),
+                savedAt: new Date().toLocaleDateString()
+            };
+            
+            // Save to localStorage
+            let savedCombos = JSON.parse(localStorage.getItem('savedCombos') || '[]');
+            savedCombos.push(combo);
+            localStorage.setItem('savedCombos', JSON.stringify(savedCombos));
+            
+            // Show success message
+            const btn = event.target.closest('.action-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Saved!';
+            btn.style.background = '#9CAF88';
+            btn.style.color = 'white';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '';
+                btn.style.color = '';
+            }, 2000);
+        }
+        
+        function shuffleCombo() {
+            const topCarousel = document.getElementById('topCarousel');
+            const bottomCarousel = document.getElementById('bottomCarousel');
+            
+            // Get all items
+            const topItems = Array.from(topCarousel.querySelectorAll('.carousel-item'));
+            const bottomItems = Array.from(bottomCarousel.querySelectorAll('.carousel-item'));
+            
+            // Randomly select items
+            const randomTopIndex = Math.floor(Math.random() * topItems.length);
+            const randomBottomIndex = Math.floor(Math.random() * bottomItems.length);
+            
+            // Animate out current items
+            const currentTopItem = topItems[currentTopIndex];
+            const currentBottomItem = bottomItems[currentBottomIndex];
+            
+            currentTopItem.classList.remove('active');
+            currentTopItem.classList.add('prev');
+            currentBottomItem.classList.remove('active');
+            currentBottomItem.classList.add('prev');
+            
+            // Update current indices
+            currentTopIndex = randomTopIndex;
+            currentBottomIndex = randomBottomIndex;
+            
+            // Animate in new items
+            setTimeout(() => {
+                topItems[currentTopIndex].classList.add('active');
+                topItems[currentTopIndex].classList.remove('prev');
+                bottomItems[currentBottomIndex].classList.add('active');
+                bottomItems[currentBottomIndex].classList.remove('prev');
+                
+                // Clean up prev classes
+                currentTopItem.classList.remove('prev');
+                currentBottomItem.classList.remove('prev');
+            }, 100);
+            
+            // Update combo display
+            updateComboDisplay();
+            
+            // Show shuffle animation
+            const btn = event.target.closest('.action-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>Shuffled!';
+            btn.style.background = '#9CAF88';
+            btn.style.color = 'white';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '';
+                btn.style.color = '';
+            }, 1500);
+        }
+
+        // AI Functions
+        function getAIRecommendation() {
+            const input = document.getElementById('aiInput').value;
+            if (!input.trim()) return;
+            
+            const message = document.getElementById('aiMessage');
+            message.textContent = `Perfect for ${input}! This combination balances style and comfort.`;
+            message.classList.add('show');
+            
+            setTimeout(() => {
+                message.classList.remove('show');
+            }, 3000);
+        }
+
+        // Quiz Functions
+        function startQuiz() {
+            document.getElementById('quizModal').classList.add('active');
+        }
+
+        function selectGender(gender) {
+            document.querySelectorAll('#quizStep2 .quiz-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            quizData.gender = gender;
+            document.getElementById('quizNext2').disabled = false;
+            document.getElementById('quizNext2').style.background = '#9CAF88';
+            document.getElementById('quizNext2').style.cursor = 'pointer';
+        }
+
+        function toggleStyle(style) {
+            const option = event.target.closest('.quiz-option');
+            if (quizData.selectedStyles.includes(style)) {
+                option.classList.remove('selected');
+                quizData.selectedStyles = quizData.selectedStyles.filter(s => s !== style);
+            } else {
+                if (quizData.selectedStyles.length < 10) {
+                    option.classList.add('selected');
+                    quizData.selectedStyles.push(style);
+                }
+            }
+            updateQuizNextButton();
+        }
+
+        function nextQuizStep() {
+            if (currentQuizStep === 1) {
+                const name = document.getElementById('quizName').value.trim();
+                if (!name) {
+                    alert('Please enter your name');
+                    return;
+                }
+                quizData.name = name;
+            } else if (currentQuizStep === 3) {
+                if (quizData.selectedStyles.length < 5) {
+                    alert('Please select at least 5 styles');
+                    return;
+                }
+            }
+            
+            document.getElementById(`quizStep${currentQuizStep}`).style.display = 'none';
+            currentQuizStep++;
+            document.getElementById(`quizStep${currentQuizStep}`).style.display = 'block';
+            
+            if (currentQuizStep === 4) {
+                document.getElementById('quizResultName').textContent = quizData.name;
+            }
+        }
+
+        function completeQuiz() {
+            // Save quiz data
+            localStorage.setItem('userProfile', JSON.stringify(quizData));
+            
+            // Update welcome message
+            document.getElementById('userName').textContent = quizData.name;
+            
+            // Close quiz modal
+            document.getElementById('quizModal').classList.remove('active');
+            
+            // Reset quiz
+            currentQuizStep = 1;
+            quizData = { name: '', gender: '', selectedStyles: [] };
+        }
+
+        function updateQuizNextButton() {
+            const nextBtn = document.getElementById('quizNext3');
+            if (quizData.selectedStyles.length >= 5) {
+                nextBtn.disabled = false;
+                nextBtn.style.background = '#9CAF88';
+                nextBtn.style.cursor = 'pointer';
+            } else {
+                nextBtn.disabled = true;
+                nextBtn.style.background = '#ccc';
+                nextBtn.style.cursor = 'not-allowed';
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('fitsMade').textContent = stats.fitsMade;
+            document.getElementById('timeSpent').textContent = stats.timeSpent;
+            document.getElementById('combosSaved').textContent = stats.combosSaved;
+        }
+
+        // Event Listeners
+        document.getElementById('startQuizBtn').addEventListener('click', startQuiz);
+        document.getElementById('viewMoodBoardBtn').addEventListener('click', () => {
+            window.location.href = 'moodboard.html';
+        });
+
+        // Lightbox Functions
+        function openLightbox(item) {
+            const lightbox = document.getElementById('lightboxOverlay');
+            const sizes = item.dataset.sizes.split(',');
+            
+            document.getElementById('lightboxImage').src = item.querySelector('img').src;
+            document.getElementById('lightboxTitle').textContent = item.dataset.name;
+            document.getElementById('lightboxBrand').textContent = item.dataset.brand;
+            document.getElementById('lightboxPrice').textContent = '$' + item.dataset.price;
+            document.getElementById('lightboxDescription').textContent = item.dataset.description;
+            
+            // Create size options
+            const sizesContainer = document.getElementById('lightboxSizes');
+            sizesContainer.innerHTML = '';
+            sizes.forEach(size => {
+                const sizeOption = document.createElement('div');
+                sizeOption.className = 'size-option';
+                sizeOption.textContent = size.trim();
+                sizeOption.onclick = () => selectSize(sizeOption);
+                sizesContainer.appendChild(sizeOption);
+            });
+            
+            lightbox.classList.add('active');
+        }
+        
+        function closeLightbox() {
+            document.getElementById('lightboxOverlay').classList.remove('active');
+        }
+        
+        function selectSize(option) {
+            document.querySelectorAll('.size-option').forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+        }
+        
+        function addToCart() {
+            const selectedSize = document.querySelector('.size-option.selected');
+            if (!selectedSize) {
+                alert('Please select a size');
+                return;
+            }
+            alert('Added to cart!');
+            closeLightbox();
+        }
+        
+        // Swipe functionality
+        let startX = 0;
+        let startY = 0;
+        let isDragging = false;
+        
+        function addSwipeListeners() {
+            const carousels = document.querySelectorAll('.carousel');
+            carousels.forEach(carousel => {
+                carousel.addEventListener('touchstart', handleTouchStart, { passive: false });
+                carousel.addEventListener('touchmove', handleTouchMove, { passive: false });
+                carousel.addEventListener('touchend', handleTouchEnd, { passive: false });
+                
+                carousel.addEventListener('mousedown', handleMouseDown);
+                carousel.addEventListener('mousemove', handleMouseMove);
+                carousel.addEventListener('mouseup', handleMouseUp);
+                carousel.addEventListener('mouseleave', handleMouseUp);
+            });
+        }
+        
+        function handleTouchStart(e) {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            isDragging = true;
+        }
+        
+        function handleTouchMove(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+        }
+        
+        function handleTouchEnd(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const endX = e.changedTouches[0].clientX;
+            const endY = e.changedTouches[0].clientY;
+            const diffX = startX - endX;
+            const diffY = startY - endY;
+            
+            // Only handle horizontal swipes
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                const carousel = e.target.closest('.carousel');
+                if (diffX > 0) {
+                    // Swipe left - next item
+                    if (carousel.id === 'topCarousel') nextItem('top');
+                    else nextItem('bottom');
+                } else {
+                    // Swipe right - previous item
+                    if (carousel.id === 'topCarousel') previousItem('top');
+                    else previousItem('bottom');
+                }
+            }
+        }
+        
+        function handleMouseDown(e) {
+            startX = e.clientX;
+            startY = e.clientY;
+            isDragging = true;
+        }
+        
+        function handleMouseMove(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+        }
+        
+        function handleMouseUp(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            const endX = e.clientX;
+            const endY = e.clientY;
+            const diffX = startX - endX;
+            const diffY = startY - endY;
+            
+            // Only handle horizontal swipes
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                const carousel = e.target.closest('.carousel');
+                if (diffX > 0) {
+                    // Swipe left - next item
+                    if (carousel.id === 'topCarousel') nextItem('top');
+                    else nextItem('bottom');
+                } else {
+                    // Swipe right - previous item
+                    if (carousel.id === 'topCarousel') previousItem('top');
+                    else previousItem('bottom');
+                }
+            }
+        }
+        
+        // Initialize combo display
+        updateComboDisplay();
+        
+        // Add swipe listeners after DOM is loaded
+        setTimeout(addSwipeListeners, 100);
+
+        // Load products from backend
+        async function loadProductsFromBackend() {
+            try {
+                const [topsResponse, bottomsResponse] = await Promise.all([
+                    fetch('http://localhost:5000/api/tops'),
+                    fetch('http://localhost:5000/api/bottoms')
+                ]);
+
+                const topsData = await topsResponse.json();
+                const bottomsData = await bottomsResponse.json();
+
+                // Update the carousels with backend data
+                updateCarouselWithBackendData('topCarousel', topsData);
+                updateCarouselWithBackendData('bottomCarousel', bottomsData);
+                
+                // Update stats
+                document.getElementById('totalProducts').textContent = topsData.length + bottomsData.length;
+            } catch (error) {
+                console.error('Error loading products from backend:', error);
+                // Fall back to existing data if backend fails
+            }
+        }
+
+        // Update carousel with backend data
+        function updateCarouselWithBackendData(carouselId, items) {
+            const carousel = document.getElementById(carouselId);
+            if (!carousel || items.length === 0) return;
+
+            // Clear existing items
+            carousel.innerHTML = '';
+
+            items.forEach((item, index) => {
+                const carouselItem = document.createElement('div');
+                carouselItem.className = `carousel-item ${index === 0 ? 'active' : ''}`;
+                carouselItem.dataset.name = item.name;
+                carouselItem.dataset.brand = item.brand || 'atyr';
+                carouselItem.dataset.price = item.price;
+                carouselItem.dataset.description = item.description || '';
+                carouselItem.dataset.sizes = item.sizes || '';
+                carouselItem.dataset.occasion = item.occasion || '';
+                carouselItem.onclick = () => openLightbox(carouselItem);
+
+                const imageUrl = item.main_image ? 
+                    `http://localhost:5000/uploads/${item.category}/${item.main_image}` : 
+                    'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOWZhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzZjNzU3ZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==';
+
+                carouselItem.innerHTML = `
+                    <img src="${imageUrl}" alt="${item.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOWZhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzZjNzU3ZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg=='">
+                    <div class="item-info">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-price">$${item.price}</div>
+                    </div>
+                `;
+
+                carousel.appendChild(carouselItem);
+            });
+        }
+
+        // Load from backend after a short delay
+        setTimeout(loadProductsFromBackend, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>atyr - Connected to Backend</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: #f5f5f5; 
+            color: #333;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { 
+            background: linear-gradient(135deg, #9CAF88, #8BA077);
+            color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; text-align: center;
+        }
+        .status { 
+            background: white; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; 
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        .api-test { 
+            background: white; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; 
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        .btn { 
+            background: #9CAF88; color: white; border: none; padding: 12px 24px; 
+            border-radius: 8px; cursor: pointer; margin: 0.5rem; font-weight: 500;
+        }
+        .btn:hover { background: #8BA077; }
+        .data-display { 
+            background: white; padding: 1rem; border-radius: 8px; margin: 1rem 0; 
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        .product-grid { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+            gap: 1rem; margin: 1rem 0;
+        }
+        .product-card { 
+            border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; 
+            background: white; transition: transform 0.3s ease;
+        }
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+        .product-card img { width: 100%; height: 200px; object-fit: cover; }
+        .product-info { padding: 1rem; }
+        .product-name { font-weight: 600; margin-bottom: 0.5rem; }
+        .product-price { color: #9CAF88; font-weight: 700; }
+        .loading { text-align: center; padding: 2rem; color: #666; }
+        .error { color: #d32f2f; background: #ffebee; padding: 1rem; border-radius: 8px; margin: 1rem 0; }
+        .success { color: #2e7d32; background: #e8f5e8; padding: 1rem; border-radius: 8px; margin: 1rem 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>atyr - Backend Connected</h1>
+            <p>Testing real API integration</p>
+        </div>
+
+        <div class="status">
+            <h3>Backend Status</h3>
+            <p id="backendStatus">Checking...</p>
+            <button class="btn" onclick="checkBackend()">Check Backend</button>
+        </div>
+
+        <div class="api-test">
+            <h3>API Tests</h3>
+            <button class="btn" onclick="loadProducts()">Load Products</button>
+            <button class="btn" onclick="loadTops()">Load Tops</button>
+            <button class="btn" onclick="loadBottoms()">Load Bottoms</button>
+            <button class="btn" onclick="loadStyleCategories()">Load Style Categories</button>
+            <button class="btn" onclick="testAI()">Test AI Recommendation</button>
+        </div>
+
+        <div class="data-display">
+            <h3>Data Display</h3>
+            <div id="dataContent">
+                <p class="loading">Click a button above to load data from the backend</p>
+            </div>
+        </div>
+
+        <div class="data-display">
+            <h3>Admin Dashboard</h3>
+            <p>Use the admin dashboard to upload content:</p>
+            <a href="http://localhost:5000/admin.html" target="_blank" class="btn">Open Admin Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5000/api';
+
+        async function checkBackend() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                document.getElementById('backendStatus').innerHTML = 
+                    `<span class="success"> Backend is running! ${data.message}</span>`;
+            } catch (error) {
+                document.getElementById('backendStatus').innerHTML = 
+                    `<span class="error"> Backend not running: ${error.message}</span>`;
+            }
+        }
+
+        async function loadProducts() {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE}/products`);
+                const products = await response.json();
+                displayProducts(products, 'All Products');
+            } catch (error) {
+                showError('Error loading products: ' + error.message);
+            }
+        }
+
+        async function loadTops() {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE}/tops`);
+                const products = await response.json();
+                displayProducts(products, 'Tops');
+            } catch (error) {
+                showError('Error loading tops: ' + error.message);
+            }
+        }
+
+        async function loadBottoms() {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE}/bottoms`);
+                const products = await response.json();
+                displayProducts(products, 'Bottoms');
+            } catch (error) {
+                showError('Error loading bottoms: ' + error.message);
+            }
+        }
+
+        async function loadStyleCategories() {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE}/style-categories`);
+                const categories = await response.json();
+                displayStyleCategories(categories);
+            } catch (error) {
+                showError('Error loading style categories: ' + error.message);
+            }
+        }
+
+        async function testAI() {
+            showLoading();
+            try {
+                const response = await fetch(`${API_BASE}/ai-recommendation`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query: 'office meeting',
+                        userId: 'test-user-123'
+                    })
+                });
+                const data = await response.json();
+                displayAIResult(data);
+            } catch (error) {
+                showError('Error testing AI: ' + error.message);
+            }
+        }
+
+        function displayProducts(products, title) {
+            const content = document.getElementById('dataContent');
+            content.innerHTML = `
+                <h4>${title} (${products.length} items)</h4>
+                <div class="product-grid">
+                    ${products.map(product => `
+                        <div class="product-card">
+                            ${product.main_image ? `<img src="${product.main_image}" alt="${product.name}">` : '<div style="height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #999;">No Image</div>'}
+                            <div class="product-info">
+                                <div class="product-name">${product.name}</div>
+                                <div class="product-price">$${product.price}</div>
+                                <div style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">
+                                    Brand: ${product.brand}<br>
+                                    Category: ${product.category}<br>
+                                    Tags: ${product.tags ? product.tags.join(', ') : 'None'}<br>
+                                    Gallery: ${product.gallery_images ? product.gallery_images.length : 0} images
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function displayStyleCategories(categories) {
+            const content = document.getElementById('dataContent');
+            content.innerHTML = `
+                <h4>Style Categories (${categories.length} categories)</h4>
+                <div class="product-grid">
+                    ${categories.map(category => `
+                        <div class="product-card">
+                            ${category.main_image ? `<img src="${category.main_image}" alt="${category.name}">` : '<div style="height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #999;">No Image</div>'}
+                            <div class="product-info">
+                                <div class="product-name">${category.name}</div>
+                                <div style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">
+                                    ${category.description || 'No description'}<br>
+                                    Images: ${category.images ? category.images.length : 0}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function displayAIResult(data) {
+            const content = document.getElementById('dataContent');
+            content.innerHTML = `
+                <h4>AI Recommendation Result</h4>
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                </div>
+            `;
+        }
+
+        function showLoading() {
+            document.getElementById('dataContent').innerHTML = '<p class="loading">Loading...</p>';
+        }
+
+        function showError(message) {
+            document.getElementById('dataContent').innerHTML = `<div class="error">${message}</div>`;
+        }
+
+        // Check backend on load
+        window.addEventListener('load', checkBackend);
+    </script>
+</body>
+</html>

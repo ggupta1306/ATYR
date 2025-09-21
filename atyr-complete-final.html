@@ -1,0 +1,1381 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATYR Fashion Mix & Match</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: #fafafa; 
+            min-height: 100vh; 
+            color: #333;
+            overflow-x: hidden;
+        }
+        .container { 
+            max-width: 100%; 
+            margin: 0 auto; 
+            padding: 20px;
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 2rem; 
+        }
+        .welcome-message {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-left: 4px solid #9CAF88;
+        }
+        .welcome-text {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        .welcome-name {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #333;
+        }
+        .title { 
+            font-size: 2.5rem; 
+            font-weight: 300; 
+            margin-bottom: 0.5rem; 
+            color: #1a1a1a;
+            letter-spacing: -0.02em;
+        }
+        .subtitle { 
+            font-size: 1rem; 
+            color: #666; 
+            font-weight: 400;
+        }
+        
+        /* Stats Bar */
+        .stats-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+        .stat-item {
+            flex: 1;
+        }
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #9CAF88;
+            display: block;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* AI Search Bar */
+        .ai-search-container {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-left: 4px solid #9CAF88;
+        }
+        .ai-search-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .ai-search-bar {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .ai-search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .ai-search-input:focus {
+            outline: none;
+            border-color: #9CAF88;
+            box-shadow: 0 0 0 3px rgba(156,175,136,0.1);
+        }
+        .ai-search-btn {
+            background: #9CAF88;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .ai-search-btn:hover {
+            background: #8BA077;
+            transform: translateY(-2px);
+        }
+        .ai-search-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .outfit-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        /* Unified Carousel Design */
+        .unified-carousel {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+            overflow: hidden;
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+        }
+        
+        .carousel-section {
+            position: relative;
+        }
+        
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .carousel {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+        
+        .carousel-item {
+            flex: 0 0 100%;
+            height: 280px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            transition: transform 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        .carousel-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .carousel-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+        
+        .carousel-item:hover::before {
+            opacity: 1;
+        }
+        
+        .carousel-item:hover .item-details {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .item-details {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem;
+            transform: translateY(100%);
+            transition: all 0.3s ease;
+            opacity: 0;
+            z-index: 2;
+        }
+        
+        .item-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+        
+        .item-brand {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .item-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #9CAF88;
+        }
+        
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #333;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        .nav-button:hover {
+            background: #9CAF88;
+            color: white;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 20px rgba(156,175,136,0.3);
+        }
+        
+        .nav-button.prev {
+            left: -20px;
+        }
+        
+        .nav-button.next {
+            right: -20px;
+        }
+        
+        .nav-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        
+        /* Action Buttons - Moved all the way in */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+            position: absolute;
+            right: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            flex-direction: column;
+        }
+        
+        .action-btn {
+            background: white;
+            border: 2px solid #9CAF88;
+            color: #9CAF88;
+            padding: 8px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        .action-btn:hover {
+            background: #9CAF88;
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .buy-button {
+            background: #9CAF88;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            margin: 2rem auto;
+            display: block;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 8px 24px rgba(156,175,136,0.3);
+        }
+        
+        .buy-button:hover {
+            background: #8BA077;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(156,175,136,0.4);
+        }
+        
+        .buy-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .total-price {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border-left: 4px solid #9CAF88;
+        }
+        
+        /* AI Speech Bubble */
+        .ai-speech-bubble {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #9CAF88, #8BA077);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 20px;
+            max-width: 300px;
+            box-shadow: 0 8px 32px rgba(156,175,136,0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s ease;
+            z-index: 1000;
+        }
+        
+        .ai-speech-bubble.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .ai-speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 30px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid #8BA077;
+        }
+        
+        .ai-speech-text {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .ai-speech-close {
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.7;
+        }
+        
+        .ai-speech-close:hover {
+            opacity: 1;
+        }
+        
+        /* AI Recommendation Display */
+        .ai-recommendation {
+            background: linear-gradient(135deg, #9CAF88, #8BA077);
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 1rem 0;
+            display: none;
+        }
+        
+        .ai-recommendation.show {
+            display: block;
+        }
+        
+        .ai-recommendation h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .ai-recommendation p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        /* Modal Styles - Beautiful Glossy Lightbox */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            display: flex;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        
+        .modal-image {
+            flex: 1;
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .modal-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+        }
+        
+        .modal-content {
+            flex: 1;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+        }
+        
+        .modal-brand {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal-name {
+            font-size: 2.2rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .modal-price {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #9CAF88;
+        }
+        
+        .modal-description {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        .sizes-container {
+            margin-bottom: 2rem;
+        }
+        
+        .sizes-title {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+        
+        .sizes {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .size-option {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .size-option:hover {
+            border-color: #9CAF88;
+            background: rgba(156,175,136,0.2);
+        }
+        
+        .size-option.selected {
+            border-color: #9CAF88;
+            background: #9CAF88;
+            color: #000;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .modal-button {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .modal-button.primary {
+            background: #9CAF88;
+            color: #000;
+        }
+        
+        .modal-button.primary:hover {
+            background: #8BA077;
+            transform: translateY(-2px);
+        }
+        
+        .modal-button.secondary {
+            background: transparent;
+            color: #fff;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .modal-button.secondary:hover {
+            border-color: #9CAF88;
+            background: rgba(156,175,136,0.1);
+        }
+        
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+        
+        .close-button:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+        }
+        
+        @media (max-width: 768px) {
+            .action-buttons {
+                position: static;
+                flex-direction: row;
+                justify-content: center;
+                margin: 1rem 0;
+            }
+            
+            .modal {
+                flex-direction: column;
+                max-height: 95vh;
+            }
+            
+            .modal-image {
+                min-height: 250px;
+            }
+            
+            .modal-content {
+                padding: 1.5rem;
+            }
+            
+            .modal-name {
+                font-size: 1.8rem;
+            }
+            
+            .modal-price {
+                font-size: 2.2rem;
+            }
+            
+            .unified-carousel {
+                max-width: 320px;
+            }
+            
+            .carousel-item {
+                height: 250px;
+            }
+            
+            .nav-button {
+                width: 36px;
+                height: 36px;
+                font-size: 1.1rem;
+            }
+            
+            .nav-button.prev {
+                left: -18px;
+            }
+            
+            .nav-button.next {
+                right: -18px;
+            }
+            
+            .ai-speech-bubble {
+                bottom: 10px;
+                right: 10px;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="welcome-message">
+                <div class="welcome-text">Welcome back,</div>
+                <div class="welcome-name" id="userName">Gourav</div>
+            </div>
+            <h1 class="title">ATYR</h1>
+            <p class="subtitle">Mix & Match</p>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-number" id="combosCreated">0</span>
+                <span class="stat-label">Combos Created</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="itemsViewed">0</span>
+                <span class="stat-label">Items Viewed</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="timeSpent">0m</span>
+                <span class="stat-label">Time Spent</span>
+            </div>
+        </div>
+
+        <!-- AI Search Bar -->
+        <div class="ai-search-container">
+            <div class="ai-search-title"> AI Style Assistant</div>
+            <div class="ai-search-bar">
+                <input type="text" class="ai-search-input" id="aiSearchInput" placeholder="Tell me where you're heading... (e.g., office meeting, weekend party, date night, gym workout)">
+                <button class="ai-search-btn" id="aiSearchBtn">
+                    <span></span>
+                    <span>Get AI Recommendation</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- AI Recommendation Display -->
+        <div class="ai-recommendation" id="aiRecommendation">
+            <h4> AI Recommendation</h4>
+            <p id="aiRecommendationText"></p>
+        </div>
+
+        <div class="outfit-container">
+            <div class="unified-carousel">
+                <!-- Top Carousel -->
+                <div class="carousel-section">
+                    <button class="nav-button prev" id="topPrev"></button>
+                    <div class="carousel-wrapper">
+                        <div class="carousel" id="topsCarousel">
+                            <div class="carousel-item" data-name="Classic White Tee" data-brand="ATYR" data-price="29.99" data-description="Essential white cotton t-shirt with a relaxed fit. Perfect for layering or wearing alone. Made from 100% organic cotton for ultimate comfort." data-sizes="XS,S,M,L,XL" data-occasion="casual,everyday,weekend,summer">
+                                <img src="backend/uploads/Adobe Express - file (1).png" alt="Classic White Tee">
+                                <div class="item-details">
+                                    <div class="item-name">Classic White Tee</div>
+                                    <div class="item-brand">ATYR</div>
+                                    <div class="item-price">$29.99</div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" data-name="Elegant Striped Blouse" data-brand="ATYR" data-price="45.99" data-description="Sophisticated striped blouse with a modern silhouette. Features premium cotton blend fabric and delicate button details. Perfect for smart casual occasions." data-sizes="XS,S,M,L,XL" data-occasion="smart-casual,office,brunch,date">
+                                <img src="backend/uploads/Remove background project (10).png" alt="Elegant Striped Blouse">
+                                <div class="item-details">
+                                    <div class="item-name">Elegant Striped Blouse</div>
+                                    <div class="item-brand">ATYR</div>
+                                    <div class="item-price">$45.99</div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" data-name="Professional Button-Up" data-brand="ATYR" data-price="39.99" data-description="Crisp button-up shirt that transitions seamlessly from office to evening. Features a tailored fit and wrinkle-resistant fabric. Essential for any professional wardrobe." data-sizes="XS,S,M,L,XL" data-occasion="office,professional,meeting,formal">
+                                <img src="backend/uploads/Remove background project (11).png" alt="Professional Button-Up">
+                                <div class="item-details">
+                                    <div class="item-name">Professional Button-Up</div>
+                                    <div class="item-brand">ATYR</div>
+                                    <div class="item-price">$39.99</div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" data-name="Luxury Silk Blouse" data-brand="ATYR" data-price="55.99" data-description="Exquisite silk blouse with intricate details and a flattering cut. Perfect for special occasions, client meetings, or elegant dinners. Features premium silk fabric." data-sizes="XS,S,M,L,XL" data-occasion="formal,office,special-occasion,evening">
+                                <img src="backend/uploads/Remove background project (12).png" alt="Luxury Silk Blouse">
+                                <div class="item-details">
+                                    <div class="item-name">Luxury Silk Blouse</div>
+                                    <div class="item-brand">ATYR</div>
+                                    <div class="item-price">$55.99</div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" data-name="Athletic Tank Top" data-brand="ATYR" data-price="24.99" data-description="Performance tank top designed for active lifestyles. Features moisture-wicking fabric and a comfortable fit. Perfect for gym sessions, yoga, or casual summer days." data-sizes="XS,S,M,L,XL" data-occasion="gym,workout,summer,casual,athletic">
+                                <img src="backend/uploads/Remove background project (3).png" alt="Athletic Tank Top">
+                                <div class="item-details">
+                                    <div class="item-name">Athletic Tank Top</div>
+                                    <div class="item-brand">ATYR</div>
+                                    <div class="item-price">$24.99</div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" data-name="Modern Oxford Shirt" data-brand="ATYR" data-price="49.99" data-description="Contemporary oxford shirt with a modern twist. Features a relaxed fit and premium cotton fabric. Versatile piece that works for office, dates, or casual outings." data-sizes="XS,S,M,L,XL" data-occasion="office,smart-casual,date,weekend">
+                                <img src="backend/uploads/Remove background project (5).png" alt="Modern Oxford Shirt">
+                                <div class="item-details">
+                                    <div class="item-name">Modern Oxford Shirt</div>
+                                    <div class="item-brand">ATYR</div>
+                                    <div class="item-price">$49.99</div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" data-name="Trendy Party Top" data-brand="ATYR" data-price="34.99" data-description="Fashion-forward top with contemporary styling and eye-catching details. Perfect for nights out, parties, or when you want to make a statement. Features trendy cut and premium materials." data-sizes="XS,S,M,L,XL" data-occasion="party,night-out,trendy,evening,celebration">
+                                <img src="backend/uploads/Remove background project (7).png" alt="Trendy Party Top">
+                                <div class="item-details">
+                                    <div class="item-name">Trendy Party Top</div>
+                                    <div class="item-brand">ATYR</div>
+                                    <div class="item-price">$34.99</div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" data-name="Designer Fashion Top" data-brand="ATYR" data-price="42.99" data-description="Stylish designer-inspired top with unique details and contemporary design. Perfect for fashion-forward individuals who want to stand out. Features premium construction and modern styling." data-sizes="XS,S,M,L,XL" data-occasion="fashion,trendy,date,evening,special">
+                                <img src="backend/uploads/Remove background project.png" alt="Designer Fashion Top">
+                                <div class="item-details">
+                                    <div class="item-name">Designer Fashion Top</div>
+                                    <div class="item-brand">ATYR</div>
+                                    <div class="item-price">$42.99</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="nav-button next" id="topNext"></button>
+                </div>
+
+                <!-- Bottom Carousel -->
+                <div class="carousel-section">
+                    <button class="nav-button prev" id="bottomPrev"></button>
+                    <div class="carousel-wrapper">
+                        <div class="carousel" id="bottomsCarousel">
+                            <div class="carousel-item" data-name="Classic Denim Jeans" data-brand="ATYR" data-price="79.99" data-description="Timeless denim jeans with a perfect fit and premium stretch. Made from high-quality denim with a comfortable waistband. Perfect for casual outings, weekends, or relaxed office days." data-sizes="28,30,32,34,36" data-occasion="casual,everyday,weekend,relaxed">
+                                <img src="backend/uploads/Remove background project (1).png" alt="Classic Denim Jeans">
+                                <div class="item-details">
+                                    <div class="item-name">Classic Denim Jeans</div>
+                                    <div class="item-brand">ATYR</div>
+                                    <div class="item-price">$79.99</div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" data-name="Business Chinos" data-brand="ATYR" data-price="65.99" data-description="Professional chinos that bridge the gap between casual and formal. Features a tailored fit and wrinkle-resistant fabric. Perfect for business casual settings, client meetings, or smart casual occasions." data-sizes="28,30,32,34,36" data-occasion="office,professional,business-casual,meeting">
+                                <img src="backend/uploads/Remove background project (13).png" alt="Business Chinos">
+                                <div class="item-details">
+                                    <div class="item-name">Business Chinos</div>
+                                    <div class="item-brand">ATYR</div>
+                                    <div class="item-price">$65.99</div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" data-name="Formal Trousers" data-brand="ATYR" data-price="59.99" data-description="Elegant trousers with a sophisticated tailored fit. Made from premium wool blend fabric. Perfect for formal office settings, important meetings, or professional events." data-sizes="28,30,32,34,36" data-occasion="formal,office,professional,meeting,corporate">
+                                <img src="backend/uploads/Remove background project (14).png" alt="Formal Trousers">
+                                <div class="item-details">
+                                    <div class="item-name">Formal Trousers</div>
+                                    <div class="item-brand">ATYR</div>
+                                    <div class="item-price">$59.99</div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" data-name="Premium Dress Pants" data-brand="ATYR" data-price="89.99" data-description="High-end dress pants with exceptional quality and sophisticated styling. Features premium materials and perfect tailoring. Ideal for executive meetings, formal events, or when you need to make a strong impression." data-sizes="28,30,32,34,36" data-occasion="formal,executive,special-occasion,premium">
+                                <img src="backend/uploads/Remove background project (2).png" alt="Premium Dress Pants">
+                                <div class="item-details">
+                                    <div class="item-name">Premium Dress Pants</div>
+                                    <div class="item-brand">ATYR</div>
+                                    <div class="item-price">$89.99</div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" data-name="Athletic Shorts" data-brand="ATYR" data-price="39.99" data-description="Performance shorts designed for active lifestyles. Features moisture-wicking fabric, comfortable fit, and functional pockets. Perfect for gym workouts, running, or casual summer activities." data-sizes="28,30,32,34,36" data-occasion="gym,workout,summer,athletic,casual">
+                                <img src="backend/uploads/Remove background project (4).png" alt="Athletic Shorts">
+                                <div class="item-details">
+                                    <div class="item-name">Athletic Shorts</div>
+                                    <div class="item-brand">ATYR</div>
+                                    <div class="item-price">$39.99</div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" data-name="Elegant A-Line Skirt" data-brand="ATYR" data-price="49.99" data-description="Flattering A-line skirt with a sophisticated silhouette. Perfect for office settings, dates, or special occasions. Features premium fabric and a comfortable fit that flatters all body types." data-sizes="XS,S,M,L,XL" data-occasion="office,professional,date,special-occasion,elegant">
+                                <img src="backend/uploads/Remove background project (6).png" alt="Elegant A-Line Skirt">
+                                <div class="item-details">
+                                    <div class="item-name">Elegant A-Line Skirt</div>
+                                    <div class="item-brand">ATYR</div>
+                                    <div class="item-price">$49.99</div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" data-name="Trendy Cargo Pants" data-brand="ATYR" data-price="69.99" data-description="Modern cargo pants with contemporary styling and functional details. Perfect for casual outings, weekend adventures, or when you want a trendy yet comfortable look." data-sizes="28,30,32,34,36" data-occasion="casual,trendy,weekend,adventure,street">
+                                <img src="backend/uploads/Remove background project (8).png" alt="Trendy Cargo Pants">
+                                <div class="item-details">
+                                    <div class="item-name">Trendy Cargo Pants</div>
+                                    <div class="item-brand">ATYR</div>
+                                    <div class="item-price">$69.99</div>
+                                </div>
+                            </div>
+                            <div class="carousel-item" data-name="Fashion Statement Bottoms" data-brand="ATYR" data-price="54.99" data-description="Stylish bottoms that make a fashion statement. Features unique design elements and premium materials. Perfect for parties, dates, or when you want to showcase your personal style." data-sizes="28,30,32,34,36" data-occasion="party,trendy,date,evening,fashion">
+                                <img src="backend/uploads/Remove background project (9).png" alt="Fashion Statement Bottoms">
+                                <div class="item-details">
+                                    <div class="item-name">Fashion Statement Bottoms</div>
+                                    <div class="item-brand">ATYR</div>
+                                    <div class="item-price">$54.99</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="nav-button next" id="bottomNext"></button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="action-btn" id="randomCombo" title="Random Combo"></button>
+                <button class="action-btn" id="saveCombo" title="Save Combo"></button>
+                <button class="action-btn" id="shareCombo" title="Share Combo"></button>
+            </div>
+        </div>
+
+        <div class="total-price" id="totalPrice" style="display: none;"></div>
+        <button class="buy-button" id="buyButton" disabled>Buy Together</button>
+    </div>
+
+    <!-- AI Speech Bubble -->
+    <div class="ai-speech-bubble" id="aiSpeechBubble">
+        <button class="ai-speech-close" id="closeSpeechBubble"></button>
+        <div class="ai-speech-text" id="aiSpeechText"></div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <button class="close-button" id="closeModal"></button>
+            <div class="modal-image">
+                <img id="modalImage" src="" alt="">
+            </div>
+            <div class="modal-content">
+                <div class="modal-brand" id="modalBrand"></div>
+                <div class="modal-name" id="modalName"></div>
+                <div class="modal-price" id="modalPrice"></div>
+                <div class="modal-description" id="modalDescription"></div>
+                <div class="sizes-container">
+                    <div class="sizes-title">Size</div>
+                    <div class="sizes" id="modalSizes"></div>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-button primary" id="addToCart">Add to Cart</button>
+                    <button class="modal-button secondary" id="buyNow">Buy Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+    <script>
+        // GROQ API Configuration
+        const GROQ_API_KEY = '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';
+        const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+
+        // Stats tracking
+        let stats = {
+            combosCreated: 0,
+            itemsViewed: 0,
+            timeSpent: 0
+        };
+
+        // AI Speech Bubble prompts
+        const aiPrompts = [
+            "Ooh la la! This combo would be perfect for a party! ",
+            "Wow, you'd look amazing in this! ",
+            "This screams girlboss energy! ",
+            "Perfect for Toronto weather! ",
+            "This combo is giving main character energy! ",
+            "So chic and sophisticated! ",
+            "This would turn heads at any event! ",
+            "Absolutely stunning combination! ",
+            "This screams confidence! ",
+            "Perfect for a coffee date! "
+        ];
+
+        class Carousel {
+            constructor(containerId) {
+                this.container = document.getElementById(containerId);
+                this.currentIndex = 0;
+                this.items = this.container.querySelectorAll('.carousel-item');
+                this.totalItems = this.items.length;
+                
+                this.init();
+            }
+
+            init() {
+                this.updateCarousel();
+                this.addClickListeners();
+            }
+
+            addClickListeners() {
+                this.items.forEach(item => {
+                    item.addEventListener('click', () => this.openModal(item));
+                });
+            }
+
+            openModal(item) {
+                // Track item view
+                stats.itemsViewed++;
+                updateStats();
+                
+                // Show random AI prompt
+                showRandomAIPrompt();
+                
+                // Open modal
+                const modal = document.getElementById('modalOverlay');
+                const modalImage = document.getElementById('modalImage');
+                const modalBrand = document.getElementById('modalBrand');
+                const modalName = document.getElementById('modalName');
+                const modalPrice = document.getElementById('modalPrice');
+                const modalDescription = document.getElementById('modalDescription');
+                const modalSizes = document.getElementById('modalSizes');
+
+                const img = item.querySelector('img');
+                modalImage.src = img.src;
+                modalImage.alt = img.alt;
+                modalBrand.textContent = item.dataset.brand;
+                modalName.textContent = item.dataset.name;
+                modalPrice.textContent = '$' + item.dataset.price;
+                modalDescription.textContent = item.dataset.description;
+
+                // Create size options
+                modalSizes.innerHTML = '';
+                const sizes = item.dataset.sizes.split(',');
+                sizes.forEach(size => {
+                    const sizeOption = document.createElement('div');
+                    sizeOption.className = 'size-option';
+                    sizeOption.textContent = size.trim();
+                    sizeOption.addEventListener('click', () => {
+                        document.querySelectorAll('.size-option').forEach(s => s.classList.remove('selected'));
+                        sizeOption.classList.add('selected');
+                    });
+                    modalSizes.appendChild(sizeOption);
+                });
+
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            next() {
+                this.currentIndex = (this.currentIndex + 1) % this.totalItems;
+                this.updateCarousel();
+                stats.itemsViewed++;
+                updateStats();
+            }
+
+            prev() {
+                this.currentIndex = (this.currentIndex - 1 + this.totalItems) % this.totalItems;
+                this.updateCarousel();
+                stats.itemsViewed++;
+                updateStats();
+            }
+
+            goToItem(itemName) {
+                const itemIndex = Array.from(this.items).findIndex(item => 
+                    item.dataset.name.toLowerCase().includes(itemName.toLowerCase())
+                );
+                if (itemIndex !== -1) {
+                    this.currentIndex = itemIndex;
+                    this.updateCarousel();
+                    console.log(`Navigated to ${itemName} at index ${itemIndex}`);
+                } else {
+                    console.log(`Could not find item: ${itemName}`);
+                }
+            }
+
+            updateCarousel() {
+                const translateX = -this.currentIndex * 100;
+                this.container.style.transform = `translateX(${translateX}%)`;
+            }
+
+            getCurrentItem() {
+                return this.items[this.currentIndex];
+            }
+        }
+
+        // Initialize carousels
+        const topCarousel = new Carousel('topsCarousel');
+        const bottomCarousel = new Carousel('bottomsCarousel');
+
+        // Add event listeners
+        document.getElementById('topPrev').addEventListener('click', () => topCarousel.prev());
+        document.getElementById('topNext').addEventListener('click', () => topCarousel.next());
+        document.getElementById('bottomPrev').addEventListener('click', () => bottomCarousel.prev());
+        document.getElementById('bottomNext').addEventListener('click', () => bottomCarousel.next());
+
+        // Enhanced AI Recommendation Function
+        function getSmartRecommendation(query) {
+            const occasion = query.toLowerCase();
+            let topRecommendation = '';
+            let bottomRecommendation = '';
+            let reason = '';
+
+            // More sophisticated matching based on improved clothing labels
+            if (occasion.includes('office') || occasion.includes('work') || occasion.includes('professional') || occasion.includes('business') || occasion.includes('meeting')) {
+                // Office/Professional looks
+                const officeTops = ['Professional Button-Up', 'Luxury Silk Blouse', 'Modern Oxford Shirt', 'Elegant Striped Blouse'];
+                const officeBottoms = ['Business Chinos', 'Formal Trousers', 'Premium Dress Pants', 'Elegant A-Line Skirt'];
+                topRecommendation = officeTops[Math.floor(Math.random() * officeTops.length)];
+                bottomRecommendation = officeBottoms[Math.floor(Math.random() * officeBottoms.length)];
+                reason = 'Perfect professional look for the office - sophisticated, polished, and business-appropriate!';
+            } else if (occasion.includes('party') || occasion.includes('night out') || occasion.includes('club') || occasion.includes('celebration') || occasion.includes('evening')) {
+                // Party/Night out looks
+                const partyTops = ['Trendy Party Top', 'Designer Fashion Top', 'Athletic Tank Top'];
+                const partyBottoms = ['Fashion Statement Bottoms', 'Trendy Cargo Pants', 'Classic Denim Jeans'];
+                topRecommendation = partyTops[Math.floor(Math.random() * partyTops.length)];
+                bottomRecommendation = partyBottoms[Math.floor(Math.random() * partyBottoms.length)];
+                reason = 'Perfect for a night out - trendy, eye-catching, and party-ready!';
+            } else if (occasion.includes('date') || occasion.includes('romantic') || occasion.includes('dinner') || occasion.includes('brunch')) {
+                // Date night looks
+                const dateTops = ['Designer Fashion Top', 'Elegant Striped Blouse', 'Luxury Silk Blouse'];
+                const dateBottoms = ['Elegant A-Line Skirt', 'Fashion Statement Bottoms', 'Business Chinos'];
+                topRecommendation = dateTops[Math.floor(Math.random() * dateTops.length)];
+                bottomRecommendation = dateBottoms[Math.floor(Math.random() * dateBottoms.length)];
+                reason = 'Perfect for a romantic date - elegant, charming, and sophisticated!';
+            } else if (occasion.includes('gym') || occasion.includes('workout') || occasion.includes('sport') || occasion.includes('athletic')) {
+                // Gym/Active looks
+                const gymTops = ['Athletic Tank Top', 'Classic White Tee'];
+                const gymBottoms = ['Athletic Shorts', 'Classic Denim Jeans'];
+                topRecommendation = gymTops[Math.floor(Math.random() * gymTops.length)];
+                bottomRecommendation = gymBottoms[Math.floor(Math.random() * gymBottoms.length)];
+                reason = 'Perfect for the gym - comfortable, functional, and performance-ready!';
+            } else if (occasion.includes('casual') || occasion.includes('everyday') || occasion.includes('weekend') || occasion.includes('relaxed')) {
+                // Casual looks
+                const casualTops = ['Classic White Tee', 'Elegant Striped Blouse', 'Athletic Tank Top'];
+                const casualBottoms = ['Classic Denim Jeans', 'Athletic Shorts', 'Trendy Cargo Pants'];
+                topRecommendation = casualTops[Math.floor(Math.random() * casualTops.length)];
+                bottomRecommendation = casualBottoms[Math.floor(Math.random() * casualBottoms.length)];
+                reason = 'Perfect casual look - comfortable, stylish, and versatile!';
+            } else if (occasion.includes('formal') || occasion.includes('special') || occasion.includes('event') || occasion.includes('premium')) {
+                // Formal/Special occasion looks
+                const formalTops = ['Luxury Silk Blouse', 'Professional Button-Up', 'Designer Fashion Top'];
+                const formalBottoms = ['Premium Dress Pants', 'Formal Trousers', 'Elegant A-Line Skirt'];
+                topRecommendation = formalTops[Math.floor(Math.random() * formalTops.length)];
+                bottomRecommendation = formalBottoms[Math.floor(Math.random() * formalBottoms.length)];
+                reason = 'Perfect for special occasions - elegant, sophisticated, and premium!';
+            } else {
+                // Default recommendation
+                const allTops = ['Professional Button-Up', 'Elegant Striped Blouse', 'Designer Fashion Top', 'Classic White Tee'];
+                const allBottoms = ['Business Chinos', 'Classic Denim Jeans', 'Fashion Statement Bottoms', 'Elegant A-Line Skirt'];
+                topRecommendation = allTops[Math.floor(Math.random() * allTops.length)];
+                bottomRecommendation = allBottoms[Math.floor(Math.random() * allBottoms.length)];
+                reason = 'Great versatile combination that works for many occasions!';
+            }
+
+            return {
+                top: topRecommendation,
+                bottom: bottomRecommendation,
+                reason: reason
+            };
+        }
+
+        // AI Search functionality
+        document.getElementById('aiSearchBtn').addEventListener('click', async () => {
+            const query = document.getElementById('aiSearchInput').value.trim();
+            if (!query) return;
+
+            const btn = document.getElementById('aiSearchBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span></span><span>Analyzing...</span>';
+
+            try {
+                // Use smart recommendation
+                const recommendation = getSmartRecommendation(query);
+                
+                if (recommendation) {
+                    // Show recommendation
+                    document.getElementById('aiRecommendationText').textContent = 
+                        `For ${query}, I recommend: ${recommendation.top} + ${recommendation.bottom}. ${recommendation.reason}`;
+                    document.getElementById('aiRecommendation').classList.add('show');
+
+                    // Navigate to recommended items with animation
+                    setTimeout(() => {
+                        console.log('Navigating to:', recommendation.top, recommendation.bottom);
+                        topCarousel.goToItem(recommendation.top);
+                        bottomCarousel.goToItem(recommendation.bottom);
+                        
+                        // Show success message
+                        showRandomAIPrompt();
+                    }, 1000);
+                }
+            } catch (error) {
+                alert('Error getting AI recommendation. Please try again.');
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<span></span><span>Get AI Recommendation</span>';
+        });
+
+        // AI Speech Bubble functions
+        function showRandomAIPrompt() {
+            const bubble = document.getElementById('aiSpeechBubble');
+            const text = document.getElementById('aiSpeechText');
+            
+            const randomPrompt = aiPrompts[Math.floor(Math.random() * aiPrompts.length)];
+            text.textContent = randomPrompt;
+            
+            bubble.classList.add('show');
+            
+            // Auto hide after 4 seconds
+            setTimeout(() => {
+                bubble.classList.remove('show');
+            }, 4000);
+        }
+
+        // Close speech bubble
+        document.getElementById('closeSpeechBubble').addEventListener('click', () => {
+            document.getElementById('aiSpeechBubble').classList.remove('show');
+        });
+
+        // Modal functionality
+        const modalOverlay = document.getElementById('modalOverlay');
+        const closeModal = document.getElementById('closeModal');
+
+        closeModal.addEventListener('click', () => {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Modal action buttons
+        document.getElementById('addToCart').addEventListener('click', () => {
+            alert('Added to cart!');
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        document.getElementById('buyNow').addEventListener('click', () => {
+            alert('Proceeding to checkout!');
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Update stats
+        function updateStats() {
+            document.getElementById('combosCreated').textContent = stats.combosCreated;
+            document.getElementById('itemsViewed').textContent = stats.itemsViewed;
+            document.getElementById('timeSpent').textContent = Math.floor(stats.timeSpent / 60) + 'm';
+        }
+
+        // Track time spent
+        setInterval(() => {
+            stats.timeSpent++;
+            updateStats();
+        }, 1000);
+
+        // Update buy button when carousel changes
+        function updateBuyButton() {
+            const topItem = topCarousel.getCurrentItem();
+            const bottomItem = bottomCarousel.getCurrentItem();
+            const buyButton = document.getElementById('buyButton');
+            const totalPrice = document.getElementById('totalPrice');
+            
+            if (topItem && bottomItem) {
+                const topPrice = parseFloat(topItem.dataset.price);
+                const bottomPrice = parseFloat(bottomItem.dataset.price);
+                const total = topPrice + bottomPrice;
+                
+                totalPrice.textContent = `Total: $${total.toFixed(2)}`;
+                totalPrice.style.display = 'block';
+                buyButton.disabled = false;
+            } else {
+                totalPrice.style.display = 'none';
+                buyButton.disabled = true;
+            }
+        }
+
+        // Update buy button when carousel changes
+        setInterval(updateBuyButton, 100);
+
+        function buyTogether() {
+            const topItem = topCarousel.getCurrentItem();
+            const bottomItem = bottomCarousel.getCurrentItem();
+            
+            if (topItem && bottomItem) {
+                stats.combosCreated++;
+                updateStats();
+                alert('Opening ATYR buy links!');
+                window.open('https://atyr.com/buy/top', '_blank');
+                window.open('https://atyr.com/buy/bottom', '_blank');
+            }
+        }
+
+        document.getElementById('buyButton').addEventListener('click', buyTogether);
+
+        // Quick actions
+        document.getElementById('randomCombo').addEventListener('click', () => {
+            const randomTop = Math.floor(Math.random() * topCarousel.totalItems);
+            const randomBottom = Math.floor(Math.random() * bottomCarousel.totalItems);
+            topCarousel.currentIndex = randomTop;
+            bottomCarousel.currentIndex = randomBottom;
+            topCarousel.updateCarousel();
+            bottomCarousel.updateCarousel();
+            showRandomAIPrompt();
+        });
+
+        document.getElementById('saveCombo').addEventListener('click', () => {
+            const topItem = topCarousel.getCurrentItem();
+            const bottomItem = bottomCarousel.getCurrentItem();
+            
+            if (topItem && bottomItem) {
+                const combo = `${topItem.dataset.name} + ${bottomItem.dataset.name}`;
+                alert(`Combo saved: ${combo}`);
+            }
+        });
+
+        document.getElementById('shareCombo').addEventListener('click', () => {
+            const topItem = topCarousel.getCurrentItem();
+            const bottomItem = bottomCarousel.getCurrentItem();
+            
+            if (topItem && bottomItem) {
+                const text = `Check out this ATYR combo: ${topItem.dataset.name} + ${bottomItem.dataset.name} for $${(parseFloat(topItem.dataset.price) + parseFloat(bottomItem.dataset.price)).toFixed(2)}`;
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('Combo copied to clipboard!');
+                });
+            }
+        });
+
+        // Enter key support for AI search
+        document.getElementById('aiSearchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('aiSearchBtn').click();
+            }
+        });
+
+        // Touch/swipe support
+        let startX = 0;
+        let startY = 0;
+
+        function handleTouchStart(e) {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        }
+
+        function handleTouchEnd(e) {
+            if (!startX || !startY) return;
+
+            const endX = e.changedTouches[0].clientX;
+            const endY = e.changedTouches[0].clientY;
+            const diffX = startX - endX;
+            const diffY = startY - endY;
+
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (Math.abs(diffX) > 50) {
+                    if (diffX > 0) {
+                        // Swipe left - next
+                        if (e.target.closest('#topsCarousel')) topCarousel.next();
+                        if (e.target.closest('#bottomsCarousel')) bottomCarousel.next();
+                    } else {
+                        // Swipe right - prev
+                        if (e.target.closest('#topsCarousel')) topCarousel.prev();
+                        if (e.target.closest('#bottomsCarousel')) bottomCarousel.prev();
+                    }
+                }
+            }
+
+            startX = 0;
+            startY = 0;
+        }
+
+        // Add touch events to carousels
+        document.getElementById('topsCarousel').addEventListener('touchstart', handleTouchStart, false);
+        document.getElementById('topsCarousel').addEventListener('touchend', handleTouchEnd, false);
+        document.getElementById('bottomsCarousel').addEventListener('touchstart', handleTouchStart, false);
+        document.getElementById('bottomsCarousel').addEventListener('touchend', handleTouchEnd, false);
+
+        // Initialize
+        updateStats();
+        
+        // Show initial AI prompt
+        setTimeout(() => {
+            showRandomAIPrompt();
+        }, 2000);
+    </script>
+</body>
+</html>

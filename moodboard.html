@@ -1,0 +1,673 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATYR Mood Board</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: linear-gradient(135deg, #9CAF88 0%, #8BA077 100%);
+            min-height: 100vh; 
+            color: #333;
+            overflow-x: hidden;
+        }
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 20px;
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 2rem; 
+        }
+        .title { 
+            font-size: 3.5rem; 
+            font-weight: 300; 
+            margin-bottom: 0.5rem; 
+            color: white;
+            letter-spacing: -0.02em;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .subtitle { 
+            font-size: 1.2rem; 
+            color: rgba(255, 255, 255, 0.8); 
+            font-weight: 400;
+        }
+        
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 16px 32px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        .nav-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .nav-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Stats Bar */
+        .stats-bar {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .stats-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            z-index: -1;
+        }
+        .stat-item {
+            flex: 1;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            display: block;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 500;
+        }
+        
+        /* Mood Board Grid */
+        .moodboard-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 3rem;
+            box-shadow: 0 16px 64px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .moodboard-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            z-index: -1;
+        }
+        .moodboard-title {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: white;
+            margin-bottom: 2rem;
+            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .moodboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .combo-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+        }
+        .combo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            z-index: -1;
+        }
+        .combo-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 64px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        .combo-images {
+            display: flex;
+            height: 240px;
+            position: relative;
+        }
+        .combo-top, .combo-bottom {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        .combo-top img, .combo-bottom img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+        .combo-card:hover .combo-top img,
+        .combo-card:hover .combo-bottom img {
+            transform: scale(1.05);
+        }
+        .combo-divider {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 2px;
+            height: 80%;
+            background: linear-gradient(to bottom, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.3) 20%, 
+                rgba(255, 255, 255, 0.6) 50%, 
+                rgba(255, 255, 255, 0.3) 80%, 
+                transparent 100%);
+            border-radius: 1px;
+        }
+        .combo-info {
+            padding: 2rem;
+            position: relative;
+        }
+        .combo-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.8rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .combo-description {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        .combo-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        .combo-price.show {
+            display: block;
+            animation: fadeInUp 0.3s ease;
+        }
+        .combo-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+        .combo-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+        }
+        .combo-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        .combo-btn.primary {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+        .combo-btn.primary:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .combo-btn.danger {
+            background: rgba(255, 59, 48, 0.2);
+            border-color: rgba(255, 59, 48, 0.4);
+        }
+        .combo-btn.danger:hover {
+            background: rgba(255, 59, 48, 0.3);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 6rem 2rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .empty-state-icon {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            opacity: 0.6;
+        }
+        .empty-state h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: white;
+            font-weight: 300;
+        }
+        .empty-state p {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+        
+        /* Modal for combo details */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(30px);
+            border-radius: 32px;
+            padding: 3rem;
+            max-width: 700px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 64px rgba(0, 0, 0, 0.3);
+        }
+        .modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 32px;
+            z-index: -1;
+        }
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+        .close-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .combo-card {
+            animation: slideIn 0.6s ease forwards;
+        }
+        
+        .combo-card:nth-child(1) { animation-delay: 0.1s; }
+        .combo-card:nth-child(2) { animation-delay: 0.2s; }
+        .combo-card:nth-child(3) { animation-delay: 0.3s; }
+        .combo-card:nth-child(4) { animation-delay: 0.4s; }
+        .combo-card:nth-child(5) { animation-delay: 0.5s; }
+        .combo-card:nth-child(6) { animation-delay: 0.6s; }
+        
+        @media (max-width: 768px) {
+            .moodboard-grid {
+                grid-template-columns: 1fr;
+            }
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .combo-images {
+                height: 200px;
+            }
+            .title {
+                font-size: 2.5rem;
+            }
+            .moodboard-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">ATYR</h1>
+            <p class="subtitle">Mood Board</p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-buttons">
+            <a href="atyr-with-moodboard.html" class="nav-btn">
+                <span></span>
+                <span>Back to Mix & Match</span>
+            </a>
+            <button class="nav-btn secondary" onclick="clearAllCombos()">
+                <span></span>
+                <span>Clear All</span>
+            </button>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-number" id="totalCombos">0</span>
+                <span class="stat-label">Saved Combos</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="totalValue">$0</span>
+                <span class="stat-label">Total Value</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="favoriteCombo">-</span>
+                <span class="stat-label">Most Saved</span>
+            </div>
+        </div>
+
+        <!-- Mood Board -->
+        <div class="moodboard-container">
+            <h2 class="moodboard-title">Your Style Collection</h2>
+            <div class="moodboard-grid" id="moodboardGrid">
+                <!-- Saved combos will be dynamically added here -->
+            </div>
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-state-icon"></div>
+                <h3>No saved combos yet</h3>
+                <p>Start creating amazing outfits in the Mix & Match section!</p>
+                <a href="atyr-with-moodboard.html" class="nav-btn">Create Your First Combo</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for combo details -->
+    <div class="modal-overlay" id="comboModal">
+        <div class="modal">
+            <button class="close-button" onclick="closeComboModal()">&times;</button>
+            <div id="modalContent">
+                <!-- Modal content will be dynamically added -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+    <script>
+        // Load saved combos from localStorage
+        function loadSavedCombos() {
+            const savedCombos = JSON.parse(localStorage.getItem('savedCombos')) || [];
+            const moodboardGrid = document.getElementById('moodboardGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (savedCombos.length === 0) {
+                moodboardGrid.style.display = 'none';
+                emptyState.style.display = 'block';
+                updateStats([]);
+                return;
+            }
+            
+            moodboardGrid.style.display = 'grid';
+            emptyState.style.display = 'none';
+            
+            moodboardGrid.innerHTML = '';
+            
+            savedCombos.forEach((combo, index) => {
+                const comboCard = createComboCard(combo, index);
+                moodboardGrid.appendChild(comboCard);
+            });
+            
+            updateStats(savedCombos);
+        }
+        
+        // Create a combo card element with enhanced design
+        function createComboCard(combo, index) {
+            const card = document.createElement('div');
+            card.className = 'combo-card';
+            card.innerHTML = `
+                <div class="combo-images">
+                    <div class="combo-top">
+                        <img src="${combo.topImage}" alt="${combo.topName}" onerror="this.src='https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=200&h=200&fit=crop'">
+                    </div>
+                    <div class="combo-divider"></div>
+                    <div class="combo-bottom">
+                        <img src="${combo.bottomImage}" alt="${combo.bottomName}" onerror="this.src='https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=200&h=200&fit=crop'">
+                    </div>
+                </div>
+                <div class="combo-info">
+                    <div class="combo-name">${combo.topName} + ${combo.bottomName}</div>
+                    <div class="combo-description">${combo.description || 'Perfect combination for any occasion'}</div>
+                    <div class="combo-price" id="price-${index}">$${combo.totalPrice}</div>
+                    <div class="combo-actions">
+                        <button class="combo-btn primary" onclick="togglePrice(${index})"> Show Price</button>
+                        <button class="combo-btn primary" onclick="viewComboDetails(${index})"> Details</button>
+                        <button class="combo-btn" onclick="shareCombo(${index})"> Share</button>
+                        <button class="combo-btn danger" onclick="deleteCombo(${index})"> Delete</button>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+        
+        // Toggle price visibility
+        function togglePrice(index) {
+            const priceElement = document.getElementById(`price-${index}`);
+            const button = event.target;
+            
+            if (priceElement.classList.contains('show')) {
+                priceElement.classList.remove('show');
+                button.textContent = ' Show Price';
+            } else {
+                priceElement.classList.add('show');
+                button.textContent = ' Hide Price';
+            }
+        }
+        
+        // Update stats
+        function updateStats(combos) {
+            const totalCombos = combos.length;
+            const totalValue = combos.reduce((sum, combo) => sum + parseFloat(combo.totalPrice), 0);
+            
+            // Find most saved combo (for now, just show first one)
+            const mostSaved = combos.length > 0 ? combos[0].topName.split(' ')[0] : '-';
+            
+            document.getElementById('totalCombos').textContent = totalCombos;
+            document.getElementById('totalValue').textContent = `$${totalValue.toFixed(2)}`;
+            document.getElementById('favoriteCombo').textContent = mostSaved;
+        }
+        
+        // View combo details with enhanced modal
+        function viewComboDetails(index) {
+            const savedCombos = JSON.parse(localStorage.getItem('savedCombos')) || [];
+            const combo = savedCombos[index];
+            
+            if (!combo) return;
+            
+            const modal = document.getElementById('comboModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            modalContent.innerHTML = `
+                <h2 style="margin-bottom: 2rem; color: white; font-size: 2.5rem; font-weight: 300; text-align: center;">${combo.topName} + ${combo.bottomName}</h2>
+                <div style="display: flex; gap: 2rem; margin-bottom: 2rem;">
+                    <div style="flex: 1;">
+                        <img src="${combo.topImage}" alt="${combo.topName}" style="width: 100%; height: 300px; object-fit: cover; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);" onerror="this.src='https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=200&h=200&fit=crop'">
+                        <p style="text-align: center; margin-top: 1rem; font-weight: 600; color: white; font-size: 1.2rem;">${combo.topName}</p>
+                    </div>
+                    <div style="flex: 1;">
+                        <img src="${combo.bottomImage}" alt="${combo.bottomName}" style="width: 100%; height: 300px; object-fit: cover; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);" onerror="this.src='https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=200&h=200&fit=crop'">
+                        <p style="text-align: center; margin-top: 1rem; font-weight: 600; color: white; font-size: 1.2rem;">${combo.bottomName}</p>
+                    </div>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); padding: 2rem; border-radius: 20px; margin-bottom: 2rem; border: 1px solid rgba(255, 255, 255, 0.2);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <p style="color: rgba(255, 255, 255, 0.8); font-size: 1.1rem;"><strong>Total Price:</strong></p>
+                        <p style="color: white; font-size: 1.5rem; font-weight: 700;">$${combo.totalPrice}</p>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <p style="color: rgba(255, 255, 255, 0.8); font-size: 1.1rem;"><strong>Saved:</strong></p>
+                        <p style="color: white; font-size: 1.1rem;">${new Date(combo.timestamp).toLocaleDateString()}</p>
+                    </div>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 1.1rem; line-height: 1.6;"><strong>Description:</strong> ${combo.description || 'Perfect combination for any occasion'}</p>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button onclick="shareCombo(${index})" style="flex: 1; padding: 16px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(20px); color: white; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 16px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"> Share Combo</button>
+                    <button onclick="deleteCombo(${index})" style="flex: 1; padding: 16px; background: rgba(255, 59, 48, 0.2); backdrop-filter: blur(20px); color: white; border: 1px solid rgba(255, 59, 48, 0.3); border-radius: 16px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"> Delete Combo</button>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+        
+        // Close combo modal
+        function closeComboModal() {
+            document.getElementById('comboModal').classList.remove('active');
+        }
+        
+        // Share combo
+        function shareCombo(index) {
+            const savedCombos = JSON.parse(localStorage.getItem('savedCombos')) || [];
+            const combo = savedCombos[index];
+            
+            if (!combo) return;
+            
+            const shareText = `Check out this amazing ATYR combo: ${combo.topName} + ${combo.bottomName} for $${combo.totalPrice}! Created with ATYR Mix & Match.`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'ATYR Combo',
+                    text: shareText,
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('Combo copied to clipboard!');
+                }).catch(() => {
+                    alert('Share text copied to clipboard!');
+                });
+            }
+        }
+        
+        // Delete combo
+        function deleteCombo(index) {
+            if (!confirm('Are you sure you want to delete this combo?')) return;
+            
+            const savedCombos = JSON.parse(localStorage.getItem('savedCombos')) || [];
+            savedCombos.splice(index, 1);
+            localStorage.setItem('savedCombos', JSON.stringify(savedCombos));
+            
+            loadSavedCombos();
+            closeComboModal();
+        }
+        
+        // Clear all combos
+        function clearAllCombos() {
+            if (!confirm('Are you sure you want to delete ALL saved combos? This action cannot be undone.')) return;
+            
+            localStorage.removeItem('savedCombos');
+            loadSavedCombos();
+        }
+        
+        // Close modal when clicking outside
+        document.getElementById('comboModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('comboModal')) {
+                closeComboModal();
+            }
+        });
+        
+        // Initialize the mood board
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedCombos();
+        });
+    </script>
+</body>
+</html>

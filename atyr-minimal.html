@@ -1,0 +1,365 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATYR Fashion Mix & Match</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: #fafafa; 
+            min-height: 100vh; 
+            color: #333;
+        }
+        .container { 
+            max-width: 100%; 
+            margin: 0 auto; 
+            padding: 20px;
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 3rem; 
+        }
+        .title { 
+            font-size: 2.5rem; 
+            font-weight: 300; 
+            margin-bottom: 0.5rem; 
+            color: #1a1a1a;
+            letter-spacing: -0.02em;
+        }
+        .subtitle { 
+            font-size: 1rem; 
+            color: #666; 
+            font-weight: 400;
+        }
+        .outfit-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin: 3rem 0;
+            min-height: 400px;
+        }
+        .item-display {
+            position: relative;
+            width: 200px;
+            height: 300px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            background: white;
+            transition: all 0.3s ease;
+        }
+        .item-display:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+        .item-display img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .item-display.placeholder {
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 0.9rem;
+            border: 2px dashed #ddd;
+        }
+        .plus-sign {
+            font-size: 2rem;
+            color: #ccc;
+            font-weight: 300;
+        }
+        .carousel-container {
+            margin: 2rem 0;
+        }
+        .carousel-title {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .carousel {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+        .carousel::-webkit-scrollbar { display: none; }
+        .carousel-item {
+            flex: 0 0 120px;
+            height: 150px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            background: white;
+        }
+        .carousel-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        .carousel-item.selected {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+            border: 2px solid #000;
+        }
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .item-details {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        .item-display:hover .item-details {
+            transform: translateY(0);
+        }
+        .item-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+        .item-brand {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .item-price {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #000;
+        }
+        .buy-button {
+            background: #000;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            margin: 1rem auto;
+            display: block;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .buy-button:hover {
+            background: #333;
+            transform: translateY(-1px);
+        }
+        .buy-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .total-price {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+            margin: 1rem 0;
+        }
+        @media (max-width: 768px) {
+            .outfit-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .plus-sign {
+                transform: rotate(90deg);
+                font-size: 1.5rem;
+            }
+            .item-display {
+                width: 180px;
+                height: 250px;
+            }
+            .carousel-item {
+                flex: 0 0 100px;
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">ATYR</h1>
+            <p class="subtitle">Mix & Match</p>
+        </div>
+
+        <div class="outfit-container">
+            <div class="item-display placeholder" id="topDisplay">
+                Select a top
+            </div>
+            <div class="plus-sign">+</div>
+            <div class="item-display placeholder" id="bottomDisplay">
+                Select a bottom
+            </div>
+        </div>
+
+        <div class="carousel-container">
+            <h3 class="carousel-title">Tops</h3>
+            <div class="carousel" id="topsCarousel">
+                <div class="carousel-item" onclick="selectItem(this, 'top')" data-name="White T-Shirt" data-brand="ATYR" data-price="29.99">
+                    <img src="backend/uploads/Adobe Express - file (1).png" alt="White T-Shirt">
+                </div>
+                <div class="carousel-item" onclick="selectItem(this, 'top')" data-name="Striped Top" data-brand="ATYR" data-price="45.99">
+                    <img src="backend/uploads/Remove background project (10).png" alt="Striped Top">
+                </div>
+                <div class="carousel-item" onclick="selectItem(this, 'top')" data-name="Button Up" data-brand="ATYR" data-price="39.99">
+                    <img src="backend/uploads/Remove background project (11).png" alt="Button Up">
+                </div>
+                <div class="carousel-item" onclick="selectItem(this, 'top')" data-name="Blouse" data-brand="ATYR" data-price="55.99">
+                    <img src="backend/uploads/Remove background project (12).png" alt="Blouse">
+                </div>
+                <div class="carousel-item" onclick="selectItem(this, 'top')" data-name="Tank Top" data-brand="ATYR" data-price="24.99">
+                    <img src="backend/uploads/Remove background project (3).png" alt="Tank Top">
+                </div>
+                <div class="carousel-item" onclick="selectItem(this, 'top')" data-name="Shirt" data-brand="ATYR" data-price="49.99">
+                    <img src="backend/uploads/Remove background project (5).png" alt="Shirt">
+                </div>
+                <div class="carousel-item" onclick="selectItem(this, 'top')" data-name="Trendy Top" data-brand="ATYR" data-price="34.99">
+                    <img src="backend/uploads/Remove background project (7).png" alt="Trendy Top">
+                </div>
+                <div class="carousel-item" onclick="selectItem(this, 'top')" data-name="Fashion Top" data-brand="ATYR" data-price="42.99">
+                    <img src="backend/uploads/Remove background project.png" alt="Fashion Top">
+                </div>
+            </div>
+        </div>
+
+        <div class="carousel-container">
+            <h3 class="carousel-title">Bottoms</h3>
+            <div class="carousel" id="bottomsCarousel">
+                <div class="carousel-item" onclick="selectItem(this, 'bottom')" data-name="Jeans" data-brand="ATYR" data-price="79.99">
+                    <img src="backend/uploads/Remove background project (1).png" alt="Jeans">
+                </div>
+                <div class="carousel-item" onclick="selectItem(this, 'bottom')" data-name="Chinos" data-brand="ATYR" data-price="65.99">
+                    <img src="backend/uploads/Remove background project (13).png" alt="Chinos">
+                </div>
+                <div class="carousel-item" onclick="selectItem(this, 'bottom')" data-name="Trousers" data-brand="ATYR" data-price="59.99">
+                    <img src="backend/uploads/Remove background project (14).png" alt="Trousers">
+                </div>
+                <div class="carousel-item" onclick="selectItem(this, 'bottom')" data-name="Pants" data-brand="ATYR" data-price="89.99">
+                    <img src="backend/uploads/Remove background project (2).png" alt="Pants">
+                </div>
+                <div class="carousel-item" onclick="selectItem(this, 'bottom')" data-name="Shorts" data-brand="ATYR" data-price="39.99">
+                    <img src="backend/uploads/Remove background project (4).png" alt="Shorts">
+                </div>
+                <div class="carousel-item" onclick="selectItem(this, 'bottom')" data-name="Skirt" data-brand="ATYR" data-price="49.99">
+                    <img src="backend/uploads/Remove background project (6).png" alt="Skirt">
+                </div>
+                <div class="carousel-item" onclick="selectItem(this, 'bottom')" data-name="Trendy Pants" data-brand="ATYR" data-price="69.99">
+                    <img src="backend/uploads/Remove background project (8).png" alt="Trendy Pants">
+                </div>
+                <div class="carousel-item" onclick="selectItem(this, 'bottom')" data-name="Fashion Bottoms" data-brand="ATYR" data-price="54.99">
+                    <img src="backend/uploads/Remove background project (9).png" alt="Fashion Bottoms">
+                </div>
+            </div>
+        </div>
+
+        <div class="total-price" id="totalPrice" style="display: none;"></div>
+        <button class="buy-button" id="buyButton" disabled>Buy Together</button>
+    </div>
+
+    <script>
+        let selectedTop = null;
+        let selectedBottom = null;
+
+        function selectItem(element, type) {
+            // Remove previous selection
+            const carousel = element.parentElement;
+            carousel.querySelectorAll('.carousel-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+
+            // Add selection to clicked item
+            element.classList.add('selected');
+
+            // Store selection
+            if (type === 'top') {
+                selectedTop = element;
+                updateTopDisplay();
+            } else {
+                selectedBottom = element;
+                updateBottomDisplay();
+            }
+
+            updateBuyButton();
+        }
+
+        function updateTopDisplay() {
+            const topDisplay = document.getElementById('topDisplay');
+            if (selectedTop) {
+                const img = selectedTop.querySelector('img');
+                topDisplay.innerHTML = `<img src="${img.src}" alt="${img.alt}"><div class="item-details"><div class="item-name">${selectedTop.dataset.name}</div><div class="item-brand">${selectedTop.dataset.brand}</div><div class="item-price">$${selectedTop.dataset.price}</div></div>`;
+                topDisplay.classList.remove('placeholder');
+            } else {
+                topDisplay.innerHTML = 'Select a top';
+                topDisplay.classList.add('placeholder');
+            }
+        }
+
+        function updateBottomDisplay() {
+            const bottomDisplay = document.getElementById('bottomDisplay');
+            if (selectedBottom) {
+                const img = selectedBottom.querySelector('img');
+                bottomDisplay.innerHTML = `<img src="${img.src}" alt="${img.alt}"><div class="item-details"><div class="item-name">${selectedBottom.dataset.name}</div><div class="item-brand">${selectedBottom.dataset.brand}</div><div class="item-price">$${selectedBottom.dataset.price}</div></div>`;
+                bottomDisplay.classList.remove('placeholder');
+            } else {
+                bottomDisplay.innerHTML = 'Select a bottom';
+                bottomDisplay.classList.add('placeholder');
+            }
+        }
+
+        function updateBuyButton() {
+            const buyButton = document.getElementById('buyButton');
+            const totalPrice = document.getElementById('totalPrice');
+            
+            if (selectedTop && selectedBottom) {
+                const topPrice = parseFloat(selectedTop.dataset.price);
+                const bottomPrice = parseFloat(selectedBottom.dataset.price);
+                const total = topPrice + bottomPrice;
+                
+                totalPrice.textContent = `Total: $${total.toFixed(2)}`;
+                totalPrice.style.display = 'block';
+                buyButton.disabled = false;
+            } else {
+                totalPrice.style.display = 'none';
+                buyButton.disabled = true;
+            }
+        }
+
+        function buyTogether() {
+            if (selectedTop && selectedBottom) {
+                alert('Opening ATYR buy links!');
+                window.open('https://atyr.com/buy/top', '_blank');
+                window.open('https://atyr.com/buy/bottom', '_blank');
+            }
+        }
+    </script>
+</body>
+</html>

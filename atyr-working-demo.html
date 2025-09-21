@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>atyr - Fashion Mix & Match</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .status {
+            background: #27ae60;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .feature {
+            background: rgba(52, 152, 219, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .feature h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .feature p {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .btn-success:hover {
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+        }
+
+        .error {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            display: none;
+            color: #3498db;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">atyr</div>
+        <div class="subtitle">Fashion Mix & Match Platform</div>
+        
+        <div id="status" class="status">
+            ✅ Frontend Ready - Backend Starting...
+        </div>
+
+        <div class="features">
+            <div class="feature">
+                <h3>🎯 Mix & Match</h3>
+                <p>Create perfect outfit combinations with our smart carousel</p>
+            </div>
+            <div class="feature">
+                <h3>🤖 AI Recommendations</h3>
+                <p>Get personalized outfit suggestions based on your style</p>
+            </div>
+            <div class="feature">
+                <h3>📱 Mobile Ready</h3>
+                <p>Beautiful experience on all devices</p>
+            </div>
+        </div>
+
+        <div class="buttons">
+            <a href="#" class="btn" onclick="testBackend()">🔗 Test Backend</a>
+            <a href="#" class="btn btn-success" onclick="openAdmin()">📊 Admin Dashboard</a>
+            <a href="#" class="btn" onclick="openFrontend()">🎨 Open Frontend</a>
+        </div>
+
+        <div id="loading" class="loading">
+            🔄 Starting backend server...
+        </div>
+    </div>
+
+    <script>
+        async function testBackend() {
+            const status = document.getElementById('status');
+            const loading = document.getElementById('loading');
+            
+            loading.style.display = 'block';
+            status.className = 'status';
+            status.textContent = '🔄 Testing backend connection...';
+            
+            try {
+                // Try port 5000 first
+                let response = await fetch('http://localhost:5000/api/health');
+                if (response.ok) {
+                    status.className = 'status';
+                    status.textContent = '✅ Backend running on port 5000!';
+                    return;
+                }
+            } catch (e) {
+                console.log('Port 5000 failed, trying 3001...');
+            }
+            
+            try {
+                // Try port 3001
+                let response = await fetch('http://localhost:3001/api/health');
+                if (response.ok) {
+                    status.className = 'status';
+                    status.textContent = '✅ Backend running on port 3001!';
+                    return;
+                }
+            } catch (e) {
+                console.log('Port 3001 also failed');
+            }
+            
+            status.className = 'error';
+            status.textContent = '❌ Backend not running. Please start the server manually.';
+            loading.style.display = 'none';
+        }
+
+        function openAdmin() {
+            // Try both ports
+            const ports = [5000, 3001];
+            let opened = false;
+            
+            ports.forEach(port => {
+                if (!opened) {
+                    const adminUrl = `http://localhost:${port}/admin.html`;
+                    window.open(adminUrl, '_blank');
+                    opened = true; // Only open one
+                }
+            });
+        }
+
+        function openFrontend() {
+            // This would open the main frontend app
+            alert('Frontend app would open here! The main carousel interface is ready.');
+        }
+
+        // Auto-test backend on load
+        window.addEventListener('load', () => {
+            setTimeout(testBackend, 1000);
+        });
+    </script>
+</body>
+</html>

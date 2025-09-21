@@ -1,0 +1,1045 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATYR Fashion Mix & Match</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: #fafafa; 
+            min-height: 100vh; 
+            color: #333;
+            overflow-x: hidden;
+        }
+        .container { 
+            max-width: 100%; 
+            margin: 0 auto; 
+            padding: 20px;
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 2rem; 
+        }
+        .welcome-message {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-left: 4px solid #9CAF88;
+        }
+        .welcome-text {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        .welcome-name {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #333;
+        }
+        .title { 
+            font-size: 2.5rem; 
+            font-weight: 300; 
+            margin-bottom: 0.5rem; 
+            color: #1a1a1a;
+            letter-spacing: -0.02em;
+        }
+        .subtitle { 
+            font-size: 1rem; 
+            color: #666; 
+            font-weight: 400;
+        }
+        .outfit-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            max-width: 350px;
+            margin: 0 auto;
+        }
+        .carousel-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+            background: white;
+        }
+        .carousel {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+        .carousel-item {
+            flex: 0 0 100%;
+            height: 320px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            transition: transform 0.3s ease;
+            background: #f8f9fa;
+        }
+        .carousel-item:hover img {
+            transform: scale(1.05);
+        }
+        .carousel-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+        .carousel-item:hover::before {
+            opacity: 1;
+        }
+        .carousel-item:hover .item-details {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .item-details {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem;
+            transform: translateY(100%);
+            transition: all 0.3s ease;
+            opacity: 0;
+            z-index: 2;
+        }
+        .item-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+        .item-brand {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .item-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #9CAF88;
+        }
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #333;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        .nav-button:hover {
+            background: #9CAF88;
+            color: white;
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 6px 20px rgba(156,175,136,0.3);
+        }
+        .nav-button.prev {
+            left: -20px;
+        }
+        .nav-button.next {
+            right: -20px;
+        }
+        .nav-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .buy-button {
+            background: #9CAF88;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            margin: 2rem auto;
+            display: block;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 8px 24px rgba(156,175,136,0.3);
+        }
+        .buy-button:hover {
+            background: #8BA077;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(156,175,136,0.4);
+        }
+        .buy-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .total-price {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border-left: 4px solid #9CAF88;
+        }
+        
+        /* Addictive Features */
+        .stats-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 1rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+        .stat-item {
+            flex: 1;
+        }
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #9CAF88;
+            display: block;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .recent-combos {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .recent-combos h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: #333;
+            text-align: center;
+        }
+        .combo-item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: background 0.3s ease;
+        }
+        .combo-item:hover {
+            background: #f8f9fa;
+        }
+        .combo-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            margin-right: 1rem;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        .combo-info {
+            flex: 1;
+        }
+        .combo-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #333;
+        }
+        .combo-price {
+            font-size: 0.8rem;
+            color: #9CAF88;
+            font-weight: 600;
+        }
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        .quick-action-btn {
+            background: white;
+            border: 2px solid #9CAF88;
+            color: #9CAF88;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .quick-action-btn:hover {
+            background: #9CAF88;
+            color: white;
+        }
+        
+        /* Modal Styles - Properly translucent and glassy */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 24px;
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            display: flex;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .modal-image {
+            flex: 1;
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.05);
+        }
+        .modal-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+        }
+        .modal-content {
+            flex: 1;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            color: white;
+        }
+        .modal-brand {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+        .modal-name {
+            font-size: 2.2rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        .modal-price {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #9CAF88;
+        }
+        .modal-description {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        .sizes-container {
+            margin-bottom: 2rem;
+        }
+        .sizes-title {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+        .sizes {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .size-option {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .size-option:hover {
+            border-color: #9CAF88;
+            background: rgba(156,175,136,0.2);
+        }
+        .size-option.selected {
+            border-color: #9CAF88;
+            background: #9CAF88;
+            color: #000;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        .modal-button {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .modal-button.primary {
+            background: #9CAF88;
+            color: #000;
+        }
+        .modal-button.primary:hover {
+            background: #8BA077;
+            transform: translateY(-2px);
+        }
+        .modal-button.secondary {
+            background: transparent;
+            color: #fff;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .modal-button.secondary:hover {
+            border-color: #9CAF88;
+            background: rgba(156,175,136,0.1);
+        }
+        .close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+        .close-button:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+        }
+        
+        @media (max-width: 768px) {
+            .modal {
+                flex-direction: column;
+                max-height: 95vh;
+            }
+            .modal-image {
+                min-height: 250px;
+            }
+            .modal-content {
+                padding: 1.5rem;
+            }
+            .modal-name {
+                font-size: 1.8rem;
+            }
+            .modal-price {
+                font-size: 2.2rem;
+            }
+            .carousel-wrapper {
+                max-width: 320px;
+            }
+            .carousel-item {
+                height: 280px;
+            }
+            .nav-button {
+                width: 36px;
+                height: 36px;
+                font-size: 1.1rem;
+            }
+            .nav-button.prev {
+                left: -18px;
+            }
+            .nav-button.next {
+                right: -18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="welcome-message">
+                <div class="welcome-text">Welcome back,</div>
+                <div class="welcome-name" id="userName">Gourav</div>
+            </div>
+            <h1 class="title">ATYR</h1>
+            <p class="subtitle">Mix & Match</p>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-number" id="combosCreated">0</span>
+                <span class="stat-label">Combos Created</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="itemsViewed">0</span>
+                <span class="stat-label">Items Viewed</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="timeSpent">0m</span>
+                <span class="stat-label">Time Spent</span>
+            </div>
+        </div>
+
+        <div class="outfit-container">
+            <div class="carousel-container">
+                <div class="carousel-wrapper">
+                    <button class="nav-button prev" id="topPrev"></button>
+                    <div class="carousel" id="topsCarousel">
+                        <div class="carousel-item" data-name="White T-Shirt" data-brand="ATYR" data-price="29.99" data-description="Classic white cotton t-shirt with a relaxed fit. Perfect for everyday wear and easy to style." data-sizes="XS,S,M,L,XL">
+                            <img src="backend/uploads/Adobe Express - file (1).png" alt="White T-Shirt">
+                            <div class="item-details">
+                                <div class="item-name">White T-Shirt</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$29.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Striped Top" data-brand="ATYR" data-price="45.99" data-description="Elegant striped top with a modern silhouette. Made from premium materials for comfort and style." data-sizes="XS,S,M,L,XL">
+                            <img src="backend/uploads/Remove background project (10).png" alt="Striped Top">
+                            <div class="item-details">
+                                <div class="item-name">Striped Top</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$45.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Button Up" data-brand="ATYR" data-price="39.99" data-description="Versatile button-up shirt that transitions from casual to formal. Crisp and clean design." data-sizes="XS,S,M,L,XL">
+                            <img src="backend/uploads/Remove background project (11).png" alt="Button Up">
+                            <div class="item-details">
+                                <div class="item-name">Button Up</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$39.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Blouse" data-brand="ATYR" data-price="55.99" data-description="Sophisticated blouse with delicate details. Perfect for professional settings or special occasions." data-sizes="XS,S,M,L,XL">
+                            <img src="backend/uploads/Remove background project (12).png" alt="Blouse">
+                            <div class="item-details">
+                                <div class="item-name">Blouse</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$55.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Tank Top" data-brand="ATYR" data-price="24.99" data-description="Essential tank top for layering or wearing alone. Soft fabric with a comfortable fit." data-sizes="XS,S,M,L,XL">
+                            <img src="backend/uploads/Remove background project (3).png" alt="Tank Top">
+                            <div class="item-details">
+                                <div class="item-name">Tank Top</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$24.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Shirt" data-brand="ATYR" data-price="49.99" data-description="Classic shirt with a modern twist. Versatile piece that works for any occasion." data-sizes="XS,S,M,L,XL">
+                            <img src="backend/uploads/Remove background project (5).png" alt="Shirt">
+                            <div class="item-details">
+                                <div class="item-name">Shirt</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$49.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Trendy Top" data-brand="ATYR" data-price="34.99" data-description="Fashion-forward top with contemporary styling. Stand out with this unique piece." data-sizes="XS,S,M,L,XL">
+                            <img src="backend/uploads/Remove background project (7).png" alt="Trendy Top">
+                            <div class="item-details">
+                                <div class="item-name">Trendy Top</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$34.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Fashion Top" data-brand="ATYR" data-price="42.99" data-description="Stylish top designed for the modern wardrobe. Quality construction meets contemporary design." data-sizes="XS,S,M,L,XL">
+                            <img src="backend/uploads/Remove background project.png" alt="Fashion Top">
+                            <div class="item-details">
+                                <div class="item-name">Fashion Top</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$42.99</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="nav-button next" id="topNext"></button>
+                </div>
+            </div>
+
+            <div class="carousel-container">
+                <div class="carousel-wrapper">
+                    <button class="nav-button prev" id="bottomPrev"></button>
+                    <div class="carousel" id="bottomsCarousel">
+                        <div class="carousel-item" data-name="Jeans" data-brand="ATYR" data-price="79.99" data-description="Classic denim jeans with a perfect fit. Durable and comfortable for everyday wear." data-sizes="28,30,32,34,36">
+                            <img src="backend/uploads/Remove background project (1).png" alt="Jeans">
+                            <div class="item-details">
+                                <div class="item-name">Jeans</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$79.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Chinos" data-brand="ATYR" data-price="65.99" data-description="Smart chinos that bridge casual and formal. Perfect for business casual settings." data-sizes="28,30,32,34,36">
+                            <img src="backend/uploads/Remove background project (13).png" alt="Chinos">
+                            <div class="item-details">
+                                <div class="item-name">Chinos</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$65.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Trousers" data-brand="ATYR" data-price="59.99" data-description="Elegant trousers with a tailored fit. Professional and sophisticated styling." data-sizes="28,30,32,34,36">
+                            <img src="backend/uploads/Remove background project (14).png" alt="Trousers">
+                            <div class="item-details">
+                                <div class="item-name">Trousers</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$59.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Pants" data-brand="ATYR" data-price="89.99" data-description="Premium pants with exceptional quality. Designed for comfort and style." data-sizes="28,30,32,34,36">
+                            <img src="backend/uploads/Remove background project (2).png" alt="Pants">
+                            <div class="item-details">
+                                <div class="item-name">Pants</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$89.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Shorts" data-brand="ATYR" data-price="39.99" data-description="Comfortable shorts perfect for warm weather. Casual and versatile design." data-sizes="28,30,32,34,36">
+                            <img src="backend/uploads/Remove background project (4).png" alt="Shorts">
+                            <div class="item-details">
+                                <div class="item-name">Shorts</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$39.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Skirt" data-brand="ATYR" data-price="49.99" data-description="Elegant skirt with a flattering silhouette. Perfect for both casual and formal occasions." data-sizes="XS,S,M,L,XL">
+                            <img src="backend/uploads/Remove background project (6).png" alt="Skirt">
+                            <div class="item-details">
+                                <div class="item-name">Skirt</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$49.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Trendy Pants" data-brand="ATYR" data-price="69.99" data-description="Modern pants with contemporary styling. Stand out with this fashion-forward piece." data-sizes="28,30,32,34,36">
+                            <img src="backend/uploads/Remove background project (8).png" alt="Trendy Pants">
+                            <div class="item-details">
+                                <div class="item-name">Trendy Pants</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$69.99</div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" data-name="Fashion Bottoms" data-brand="ATYR" data-price="54.99" data-description="Stylish bottoms that complete any outfit. Quality meets contemporary design." data-sizes="28,30,32,34,36">
+                            <img src="backend/uploads/Remove background project (9).png" alt="Fashion Bottoms">
+                            <div class="item-details">
+                                <div class="item-name">Fashion Bottoms</div>
+                                <div class="item-brand">ATYR</div>
+                                <div class="item-price">$54.99</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="nav-button next" id="bottomNext"></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="total-price" id="totalPrice" style="display: none;"></div>
+        <button class="buy-button" id="buyButton" disabled>Buy Together</button>
+
+        <div class="quick-actions">
+            <button class="quick-action-btn" id="randomCombo"> Random Combo</button>
+            <button class="quick-action-btn" id="saveCombo"> Save Combo</button>
+            <button class="quick-action-btn" id="shareCombo"> Share</button>
+        </div>
+
+        <div class="recent-combos" id="recentCombos" style="display: none;">
+            <h3>Recent Combos</h3>
+            <div id="comboList"></div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <button class="close-button" id="closeModal"></button>
+            <div class="modal-image">
+                <img id="modalImage" src="" alt="">
+            </div>
+            <div class="modal-content">
+                <div class="modal-brand" id="modalBrand"></div>
+                <div class="modal-name" id="modalName"></div>
+                <div class="modal-price" id="modalPrice"></div>
+                <div class="modal-description" id="modalDescription"></div>
+                <div class="sizes-container">
+                    <div class="sizes-title">Size</div>
+                    <div class="sizes" id="modalSizes"></div>
+                </div>
+                <div class="modal-actions">
+                    <button class="modal-button primary" id="addToCart">Add to Cart</button>
+                    <button class="modal-button secondary" id="buyNow">Buy Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class Carousel {
+            constructor(containerId) {
+                this.container = document.getElementById(containerId);
+                this.currentIndex = 0;
+                this.items = this.container.querySelectorAll('.carousel-item');
+                this.totalItems = this.items.length;
+                
+                this.init();
+            }
+
+            init() {
+                this.updateCarousel();
+                this.addClickListeners();
+            }
+
+            addClickListeners() {
+                this.items.forEach(item => {
+                    item.addEventListener('click', () => this.openModal(item));
+                });
+            }
+
+            openModal(item) {
+                const modal = document.getElementById('modalOverlay');
+                const modalImage = document.getElementById('modalImage');
+                const modalBrand = document.getElementById('modalBrand');
+                const modalName = document.getElementById('modalName');
+                const modalPrice = document.getElementById('modalPrice');
+                const modalDescription = document.getElementById('modalDescription');
+                const modalSizes = document.getElementById('modalSizes');
+
+                const img = item.querySelector('img');
+                modalImage.src = img.src;
+                modalImage.alt = img.alt;
+                modalBrand.textContent = item.dataset.brand;
+                modalName.textContent = item.dataset.name;
+                modalPrice.textContent = '$' + item.dataset.price;
+                modalDescription.textContent = item.dataset.description;
+
+                // Create size options
+                modalSizes.innerHTML = '';
+                const sizes = item.dataset.sizes.split(',');
+                sizes.forEach(size => {
+                    const sizeOption = document.createElement('div');
+                    sizeOption.className = 'size-option';
+                    sizeOption.textContent = size.trim();
+                    sizeOption.addEventListener('click', () => {
+                        document.querySelectorAll('.size-option').forEach(s => s.classList.remove('selected'));
+                        sizeOption.classList.add('selected');
+                    });
+                    modalSizes.appendChild(sizeOption);
+                });
+
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+                
+                // Track item view
+                trackItemView();
+            }
+
+            next() {
+                this.currentIndex = (this.currentIndex + 1) % this.totalItems;
+                this.updateCarousel();
+                trackItemView();
+            }
+
+            prev() {
+                this.currentIndex = (this.currentIndex - 1 + this.totalItems) % this.totalItems;
+                this.updateCarousel();
+                trackItemView();
+            }
+
+            updateCarousel() {
+                const translateX = -this.currentIndex * 100;
+                this.container.style.transform = `translateX(${translateX}%)`;
+            }
+
+            getCurrentItem() {
+                return this.items[this.currentIndex];
+            }
+        }
+
+        // Initialize carousels
+        const topCarousel = new Carousel('topsCarousel');
+        const bottomCarousel = new Carousel('bottomsCarousel');
+
+        // Add event listeners
+        document.getElementById('topPrev').addEventListener('click', () => topCarousel.prev());
+        document.getElementById('topNext').addEventListener('click', () => topCarousel.next());
+        document.getElementById('bottomPrev').addEventListener('click', () => bottomCarousel.prev());
+        document.getElementById('bottomNext').addEventListener('click', () => bottomCarousel.next());
+
+        // Modal functionality
+        const modalOverlay = document.getElementById('modalOverlay');
+        const closeModal = document.getElementById('closeModal');
+
+        closeModal.addEventListener('click', () => {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Touch/swipe support
+        let startX = 0;
+        let startY = 0;
+
+        function handleTouchStart(e) {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        }
+
+        function handleTouchEnd(e) {
+            if (!startX || !startY) return;
+
+            const endX = e.changedTouches[0].clientX;
+            const endY = e.changedTouches[0].clientY;
+            const diffX = startX - endX;
+            const diffY = startY - endY;
+
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (Math.abs(diffX) > 50) {
+                    if (diffX > 0) {
+                        // Swipe left - next
+                        if (e.target.closest('#topsCarousel')) topCarousel.next();
+                        if (e.target.closest('#bottomsCarousel')) bottomCarousel.next();
+                    } else {
+                        // Swipe right - prev
+                        if (e.target.closest('#topsCarousel')) topCarousel.prev();
+                        if (e.target.closest('#bottomsCarousel')) bottomCarousel.prev();
+                    }
+                }
+            }
+
+            startX = 0;
+            startY = 0;
+        }
+
+        // Add touch events to carousels
+        document.getElementById('topsCarousel').addEventListener('touchstart', handleTouchStart, false);
+        document.getElementById('topsCarousel').addEventListener('touchend', handleTouchEnd, false);
+        document.getElementById('bottomsCarousel').addEventListener('touchstart', handleTouchStart, false);
+        document.getElementById('bottomsCarousel').addEventListener('touchend', handleTouchEnd, false);
+
+        // Addictive features
+        let stats = {
+            combosCreated: 0,
+            itemsViewed: 0,
+            timeSpent: 0,
+            savedCombos: []
+        };
+
+        function updateStats() {
+            document.getElementById('combosCreated').textContent = stats.combosCreated;
+            document.getElementById('itemsViewed').textContent = stats.itemsViewed;
+            document.getElementById('timeSpent').textContent = Math.floor(stats.timeSpent / 60) + 'm';
+        }
+
+        function trackItemView() {
+            stats.itemsViewed++;
+            updateStats();
+        }
+
+        function trackTimeSpent() {
+            stats.timeSpent++;
+            updateStats();
+        }
+
+        // Update time every second
+        setInterval(trackTimeSpent, 1000);
+
+        // Update buy button when carousel changes
+        function updateBuyButton() {
+            const topItem = topCarousel.getCurrentItem();
+            const bottomItem = bottomCarousel.getCurrentItem();
+            const buyButton = document.getElementById('buyButton');
+            const totalPrice = document.getElementById('totalPrice');
+            
+            if (topItem && bottomItem) {
+                const topPrice = parseFloat(topItem.dataset.price);
+                const bottomPrice = parseFloat(bottomItem.dataset.price);
+                const total = topPrice + bottomPrice;
+                
+                totalPrice.textContent = `Total: $${total.toFixed(2)}`;
+                totalPrice.style.display = 'block';
+                buyButton.disabled = false;
+            } else {
+                totalPrice.style.display = 'none';
+                buyButton.disabled = true;
+            }
+        }
+
+        // Update buy button when carousel changes
+        setInterval(updateBuyButton, 100);
+
+        function buyTogether() {
+            const topItem = topCarousel.getCurrentItem();
+            const bottomItem = bottomCarousel.getCurrentItem();
+            
+            if (topItem && bottomItem) {
+                stats.combosCreated++;
+                updateStats();
+                alert('Opening ATYR buy links!');
+                window.open('https://atyr.com/buy/top', '_blank');
+                window.open('https://atyr.com/buy/bottom', '_blank');
+            }
+        }
+
+        document.getElementById('buyButton').addEventListener('click', buyTogether);
+
+        // Quick actions
+        document.getElementById('randomCombo').addEventListener('click', () => {
+            const randomTop = Math.floor(Math.random() * topCarousel.totalItems);
+            const randomBottom = Math.floor(Math.random() * bottomCarousel.totalItems);
+            topCarousel.currentIndex = randomTop;
+            bottomCarousel.currentIndex = randomBottom;
+            topCarousel.updateCarousel();
+            bottomCarousel.updateCarousel();
+            trackItemView();
+        });
+
+        document.getElementById('saveCombo').addEventListener('click', () => {
+            const topItem = topCarousel.getCurrentItem();
+            const bottomItem = bottomCarousel.getCurrentItem();
+            
+            if (topItem && bottomItem) {
+                const combo = {
+                    top: topItem.dataset.name,
+                    bottom: bottomItem.dataset.name,
+                    price: (parseFloat(topItem.dataset.price) + parseFloat(bottomItem.dataset.price)).toFixed(2)
+                };
+                stats.savedCombos.unshift(combo);
+                if (stats.savedCombos.length > 5) stats.savedCombos.pop();
+                updateRecentCombos();
+                alert('Combo saved!');
+            }
+        });
+
+        document.getElementById('shareCombo').addEventListener('click', () => {
+            const topItem = topCarousel.getCurrentItem();
+            const bottomItem = bottomCarousel.getCurrentItem();
+            
+            if (topItem && bottomItem) {
+                const text = `Check out this ATYR combo: ${topItem.dataset.name} + ${bottomItem.dataset.name} for $${(parseFloat(topItem.dataset.price) + parseFloat(bottomItem.dataset.price)).toFixed(2)}`;
+                navigator.clipboard.writeText(text).then(() => {
+                    alert('Combo copied to clipboard!');
+                });
+            }
+        });
+
+        function updateRecentCombos() {
+            const recentCombos = document.getElementById('recentCombos');
+            const comboList = document.getElementById('comboList');
+            
+            if (stats.savedCombos.length > 0) {
+                recentCombos.style.display = 'block';
+                comboList.innerHTML = '';
+                stats.savedCombos.forEach(combo => {
+                    const comboItem = document.createElement('div');
+                    comboItem.className = 'combo-item';
+                    comboItem.innerHTML = `
+                        <div class="combo-preview"></div>
+                        <div class="combo-info">
+                            <div class="combo-name">${combo.top} + ${combo.bottom}</div>
+                            <div class="combo-price">$${combo.price}</div>
+                        </div>
+                    `;
+                    comboList.appendChild(comboItem);
+                });
+            }
+        }
+
+        // Modal action buttons
+        document.getElementById('addToCart').addEventListener('click', () => {
+            alert('Added to cart!');
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        document.getElementById('buyNow').addEventListener('click', () => {
+            alert('Proceeding to checkout!');
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+
+        // Update welcome message with user name (you can change this)
+        function updateUserName(name) {
+            document.getElementById('userName').textContent = name;
+        }
+
+        // Initialize
+        updateStats();
+    </script>
+</body>
+</html>
