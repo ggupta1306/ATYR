@@ -13,11 +13,13 @@
             -webkit-tap-highlight-color: transparent;
         }
         
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+        
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
-            background: #fafafa; 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: linear-gradient(135deg, #f8f6f0 0%, #ffffff 50%, #f0f2f5 100%);
             min-height: 100vh; 
-            color: #333;
+            color: #2c3e50;
             overflow-x: hidden;
             position: relative;
             touch-action: manipulation;
@@ -75,6 +77,8 @@
             margin-top: 2rem;
             opacity: 0;
             animation: logoSlideIn 1s ease-out 1.5s forwards;
+            justify-content: center;
+            align-items: center;
         }
         
         .dot {
@@ -104,7 +108,7 @@
         .main-app {
             display: none;
             min-height: 100vh;
-            background: #fafafa;
+            background: transparent;
         }
         
         .main-app.active {
@@ -142,21 +146,24 @@
         }
         
         .nav-btn {
-            background: rgba(156, 175, 136, 0.1);
-            border: 2px solid #9CAF88;
+            background: rgba(156, 175, 136, 0.08);
+            border: 2px solid rgba(156, 175, 136, 0.3);
             color: #9CAF88;
-            padding: 0.5rem 1rem;
-            border-radius: 25px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.95rem;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(156, 175, 136, 0.1);
         }
         
         .nav-btn:hover {
             background: #9CAF88;
             color: white;
-            transform: translateY(-2px);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(156, 175, 136, 0.3);
+            border-color: #9CAF88;
         }
         
         /* Welcome Message */
@@ -186,10 +193,17 @@
             max-width: 400px;
             margin: 0 auto 2rem auto;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12), 0 8px 25px rgba(0, 0, 0, 0.08);
             overflow: hidden;
             position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        
+        .carousel-container:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15), 0 12px 35px rgba(0, 0, 0, 0.1);
         }
         
         .carousel-section {
@@ -197,16 +211,28 @@
             position: relative;
         }
         
+        .carousel-section:first-child {
+            margin-bottom: -40px;
+            z-index: 2;
+        }
+        
+        .carousel-section:last-child {
+            z-index: 1;
+        }
+        
         .carousel {
             width: 100%;
             height: 350px;
             position: relative;
             overflow: hidden;
-            background: white;
+            background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+            border-radius: 20px;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
         }
         
         .carousel:first-child {
-            border-bottom: 2px solid #f0f0f0;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: -5px;
         }
         
         .carousel-controls {
@@ -257,33 +283,74 @@
         
         .action-buttons {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
             gap: 1rem;
             margin-top: 1rem;
         }
         
+        .secondary-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
         .action-btn {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             color: #9CAF88;
-            border: 2px solid #9CAF88;
-            padding: 12px 24px;
-            border-radius: 25px;
+            border: 2px solid rgba(156, 175, 136, 0.3);
+            padding: 14px 28px;
+            border-radius: 50px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 15px rgba(156, 175, 136, 0.2);
+            gap: 10px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 6px 20px rgba(156, 175, 136, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .action-btn.primary {
+            background: linear-gradient(135deg, #9CAF88 0%, #8BA077 100%);
+            color: white;
+            border: none;
+            padding: 18px 36px;
+            font-size: 16px;
+            font-weight: 700;
+            box-shadow: 0 8px 25px rgba(156, 175, 136, 0.4);
+        }
+        
+        .action-btn.primary:hover {
+            background: linear-gradient(135deg, #8BA077 0%, #7A8F66 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(156, 175, 136, 0.5);
+        }
+        
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(156, 175, 136, 0.1), transparent);
+            transition: left 0.5s;
         }
         
         .action-btn:hover {
             background: #9CAF88;
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(156, 175, 136, 0.3);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(156, 175, 136, 0.3);
+            border-color: #9CAF88;
+        }
+        
+        .action-btn:hover::before {
+            left: 100%;
         }
         
         .action-btn svg {
@@ -303,8 +370,19 @@
             cursor: pointer;
             background: #f8f9fa;
             display: flex;
-            align-items: center;
             justify-content: center;
+        }
+        
+        /* Top carousel items align to bottom with padding */
+        #topCarousel .carousel-item {
+            align-items: flex-end;
+            padding-bottom: 20px;
+        }
+        
+        /* Bottom carousel items align to top with padding */
+        #bottomCarousel .carousel-item {
+            align-items: flex-start;
+            padding-top: 20px;
         }
         
         .carousel-item.active {
@@ -318,10 +396,13 @@
         
         .carousel-item img {
             width: 100%;
-            height: 85%;
+            height: 90%;
             object-fit: contain;
             border-radius: 0;
             transition: transform 0.3s ease;
+            object-position: center;
+            display: block;
+            margin: 0 auto;
         }
         
         .carousel-item:hover img {
@@ -346,14 +427,19 @@
         }
         
         .item-name {
+            font-family: 'Playfair Display', serif;
             font-weight: 600;
+            font-size: 1.1rem;
             color: white;
             margin-bottom: 0.25rem;
+            letter-spacing: 0.5px;
         }
         
         .item-price {
-            color: #9CAF88;
-            font-weight: 500;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 400;
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
         
         /* Carousel Controls */
@@ -368,113 +454,403 @@
             background: linear-gradient(135deg, #9CAF88, #8BA077);
             color: white;
             border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 25px;
+            padding: 0.875rem 2rem;
+            border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.95rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(156, 175, 136, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
         }
         
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(156, 175, 136, 0.4);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(156, 175, 136, 0.4);
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:active {
+            transform: translateY(-1px) scale(0.98);
         }
         
         .btn-secondary {
-            background: rgba(156, 175, 136, 0.1);
+            background: rgba(156, 175, 136, 0.08);
             color: #9CAF88;
-            border: 2px solid #9CAF88;
+            border: 2px solid rgba(156, 175, 136, 0.3);
+            box-shadow: 0 2px 10px rgba(156, 175, 136, 0.1);
         }
         
         .btn-secondary:hover {
             background: #9CAF88;
             color: white;
+            border-color: #9CAF88;
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(156, 175, 136, 0.3);
         }
         
-        /* Combo Display */
-        .combo-display {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        /* Main Content Row */
+        .main-content-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
             margin: 2rem 0;
         }
         
-        .combo-title {
-            font-size: 1.5rem;
-            color: #333;
-            margin-bottom: 1rem;
+        /* Outfit Lookbook */
+        .outfit-lookbook {
+            background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+            border-radius: 25px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 8px 25px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
         }
         
-        .combo-price {
-            font-size: 2rem;
-            font-weight: bold;
+        .outfit-lookbook::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #9CAF88, #8BA077, #9CAF88);
+        }
+        
+        .lookbook-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 2rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .outfit-preview-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .outfit-mannequin {
+            width: 200px;
+            height: 300px;
+            position: relative;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 100px 100px 30px 30px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(156, 175, 136, 0.2);
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        
+        .outfit-mannequin:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+        
+        .mannequin-top {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            height: 48%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 20px 20px 5px 5px;
+            overflow: visible;
+            padding-bottom: 5px;
+        }
+        
+        .mannequin-bottom {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            height: 48%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 5px 5px 20px 20px;
+            overflow: visible;
+            padding-top: 5px;
+        }
+        
+        .mannequin-top img,
+        .mannequin-bottom img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            transition: all 0.3s ease;
+        }
+        
+        .mannequin-top:hover img,
+        .mannequin-bottom:hover img {
+            transform: scale(1.05);
+        }
+        
+        .outfit-details {
+            text-align: center;
+            width: 100%;
+        }
+        
+        .outfit-price {
+            font-family: 'Inter', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
             color: #9CAF88;
             margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(156, 175, 136, 0.2);
         }
         
-        .combo-description {
-            color: #666;
-            font-size: 1rem;
+        .outfit-description {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+        
+        .outfit-actions {
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .lookbook-btn {
+            padding: 0.875rem 2rem;
+            border-radius: 50px;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            flex: 1;
+            box-shadow: 0 4px 15px rgba(156, 175, 136, 0.2);
+        }
+        
+        .lookbook-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .lookbook-btn:hover::before {
+            left: 100%;
+        }
+        
+        .lookbook-btn.primary {
+            background: linear-gradient(135deg, #9CAF88, #8BA077);
+            color: white;
+            box-shadow: 0 4px 15px rgba(156, 175, 136, 0.3);
+        }
+        
+        .lookbook-btn.secondary {
+            background: rgba(156, 175, 136, 0.08);
+            color: #9CAF88;
+            border: 2px solid rgba(156, 175, 136, 0.3);
+        }
+        
+        .lookbook-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(156, 175, 136, 0.4);
+        }
+        
+        .lookbook-btn:active {
+            transform: translateY(-2px) scale(1.02);
+            transition: all 0.1s ease;
+        }
+        
+        .lookbook-btn.secondary:hover {
+            background: #9CAF88;
+            color: white;
+            border-color: #9CAF88;
         }
         
         /* AI Recommendation */
         .ai-section {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 25px;
+            padding: 2.5rem;
             margin: 2rem 0;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(156, 175, 136, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ai-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #9CAF88, #8BA077, #9CAF88);
         }
         
         .ai-title {
-            font-size: 1.3rem;
-            color: #333;
-            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
             text-align: center;
+            font-weight: 600;
+            letter-spacing: -0.5px;
         }
         
-        .ai-search {
-            display: flex;
-            gap: 1rem;
+        .ai-subtitle {
+            font-size: 1rem;
+            color: #7f8c8d;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+        
+        /* Chat Interface */
+        .chat-container {
+            height: 300px;
+            overflow-y: auto;
+            padding: 1rem;
             margin-bottom: 1rem;
+            background: rgba(248, 249, 250, 0.5);
+            border-radius: 15px;
+            border: 1px solid rgba(156, 175, 136, 0.1);
+        }
+        
+        .chat-bubble {
+            margin-bottom: 1rem;
+            max-width: 85%;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .ai-bubble {
+            background: linear-gradient(135deg, #9CAF88, #8BA077);
+            color: white;
+            padding: 1rem 1.25rem;
+            border-radius: 20px 20px 20px 5px;
+            margin-right: auto;
+            box-shadow: 0 4px 15px rgba(156, 175, 136, 0.2);
+        }
+        
+        .user-bubble {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            color: #2c3e50;
+            padding: 1rem 1.25rem;
+            border-radius: 20px 20px 5px 20px;
+            margin-left: auto;
+            border: 1px solid rgba(156, 175, 136, 0.2);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .message-content {
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+        }
+        
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            text-align: right;
+        }
+        
+        .chat-input-container {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
         }
         
         .ai-input {
             flex: 1;
-            padding: 0.75rem 1rem;
-            border: 2px solid #e0e0e0;
+            padding: 0.875rem 1.25rem;
+            border: 2px solid #e8f4f8;
             border-radius: 25px;
-            font-size: 1rem;
+            font-size: 0.95rem;
             outline: none;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s ease;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
         
         .ai-input:focus {
             border-color: #9CAF88;
+            box-shadow: 0 4px 20px rgba(156, 175, 136, 0.2);
+            transform: translateY(-1px);
         }
         
-        .ai-message {
-            background: linear-gradient(135deg, #9CAF88, #8BA077);
-            color: white;
-            padding: 1rem;
-            border-radius: 15px;
-            text-align: center;
+        .ai-input::placeholder {
+            color: #bdc3c7;
             font-style: italic;
-            margin-top: 1rem;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
         }
         
-        .ai-message.show {
+        .ai-suggestion-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .ai-suggestion-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
             opacity: 1;
             transform: translateY(0);
+            }
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
         
         /* Stats Bar */
@@ -781,11 +1157,102 @@
             .carousel {
                 max-width: 300px;
                 height: 400px;
+                margin: 0 auto;
+            }
+            
+            .carousel-container {
+                max-width: 350px;
+                margin: 0 auto 2rem auto;
+            }
+            
+            .carousel-item {
+                display: flex;
+                justify-content: center;
+            }
+            
+            /* Top carousel items align to bottom on mobile */
+            #topCarousel .carousel-item {
+                align-items: flex-end;
+                padding-bottom: 20px;
+            }
+            
+            /* Bottom carousel items align to top on mobile */
+            #bottomCarousel .carousel-item {
+                align-items: flex-start;
+                padding-top: 20px;
+            }
+            
+            .carousel-item img {
+                object-position: center;
+                width: 100%;
+                height: 90%;
+                display: block;
+                margin: 0 auto;
+            }
+            
+            .main-content-row {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .outfit-preview-container {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .outfit-mannequin {
+                width: 180px;
+                height: 280px;
+            }
+            
+            .outfit-details {
+                width: 100%;
+            }
+            
+            .outfit-actions {
+                flex-direction: column;
             }
             
             .stats-bar {
                 flex-direction: column;
                 gap: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .carousel-container {
+                max-width: 320px;
+                margin: 0 auto 2rem auto;
+            }
+            
+            .carousel {
+                max-width: 280px;
+                height: 350px;
+                margin: 0 auto;
+            }
+            
+            .carousel-item {
+                display: flex;
+                justify-content: center;
+            }
+            
+            /* Top carousel items align to bottom on small mobile */
+            #topCarousel .carousel-item {
+                align-items: flex-end;
+                padding-bottom: 20px;
+            }
+            
+            /* Bottom carousel items align to top on small mobile */
+            #bottomCarousel .carousel-item {
+                align-items: flex-start;
+                padding-top: 20px;
+            }
+            
+            .carousel-item img {
+                object-position: center;
+                display: block;
+                margin: 0 auto;
+                height: 90%;
             }
         }
     </style>
@@ -896,44 +1363,77 @@
                     </div>
                 </div>
 
-                <!-- Buy Together Button -->
-                <div class="buy-together-section">
-                    <button class="btn" onclick="buyTogether()">🛒 Buy Together</button>
-                    
-                    <!-- Action Buttons -->
+                <!-- Action Buttons -->
                     <div class="action-buttons">
-                        <button class="action-btn" onclick="saveToBoard()">
+                        <button class="action-btn primary" onclick="buyTogether()">
                             <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                                <path d="M7 4V2C7 1.45 7.45 1 8 1H16C16.55 1 17 1.45 17 2V4H20C20.55 4 21 4.45 21 5S20.55 6 20 6H19V19C19 20.1 18.1 21 17 21H7C5.9 21 5 20.1 5 19V6H4C3.45 6 3 5.55 3 5S3.45 4 4 4H7ZM9 3V4H15V3H9ZM7 6V19H17V6H7Z"/>
                             </svg>
-                            Save to Board
+                            Buy Together
                         </button>
-                        <button class="action-btn" onclick="shuffleCombo()">
-                            <svg viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>
-                            </svg>
-                            Shuffle
-                        </button>
+                        <div class="secondary-buttons">
+                            <button class="action-btn" onclick="saveToBoard()">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                                </svg>
+                                Save to Board
+                            </button>
+                            <button class="action-btn" onclick="shuffleCombo()">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>
+                                </svg>
+                                Shuffle
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Combo Display -->
-            <div class="combo-display">
-                <div class="combo-title">Perfect Combo</div>
-                <div class="combo-price" id="comboPrice">$109.98</div>
-                <div class="combo-description">Classic White Tee + Classic Denim Jeans</div>
+            <!-- Main Content Row -->
+            <div class="main-content-row">
+                <!-- Outfit Lookbook - Left Side -->
+                <div class="outfit-lookbook">
+                    <div class="lookbook-title">Your Outfit</div>
+                    <div class="outfit-preview-container">
+                        <div class="outfit-mannequin">
+                            <div class="mannequin-top" id="mannequinTop">
+                                <img id="topPreview" src="" alt="Top">
+                            </div>
+                            <div class="mannequin-bottom" id="mannequinBottom">
+                                <img id="bottomPreview" src="" alt="Bottom">
+                            </div>
+                        </div>
+                        <div class="outfit-details">
+                            <div class="outfit-price" id="outfitPrice">$109.98</div>
+                            <div class="outfit-description" id="outfitDescription">Classic White Tee + Classic Denim Jeans</div>
+                            <div class="outfit-actions">
+                                <button class="lookbook-btn primary" onclick="buyTogether()">Add to Cart</button>
+                                <button class="lookbook-btn secondary" onclick="saveToBoard()">Save Look</button>
+                            </div>
+                        </div>
+                    </div>
             </div>
 
-            <!-- AI Recommendation -->
+                <!-- AI Styler - Right Side -->
             <div class="ai-section">
-                <div class="ai-title">🤖 AI Style Assistant</div>
-                <div class="ai-search">
-                    <input type="text" class="ai-input" id="aiInput" placeholder="Tell me where you're heading... (e.g., weekend concert, office meeting)">
-                    <button class="btn" onclick="getAIRecommendation()">Get Recommendation</button>
+                    <div class="ai-title">Your Personal Styler</div>
+                    <div class="ai-subtitle">Chat with your AI stylist for personalized recommendations</div>
+                    
+                    <!-- Chat Messages Container -->
+                    <div class="chat-container" id="chatContainer">
+                        <div class="ai-message chat-bubble ai-bubble">
+                            <div class="message-content">
+                                👋 Hi! I'm your personal stylist. Tell me where you're heading and I'll help you find the perfect outfit!
                 </div>
-                <div class="ai-message" id="aiMessage">
-                    Perfect for a casual weekend! This combination balances comfort and style.
+                            <div class="message-time">Just now</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Chat Input -->
+                    <div class="chat-input-container">
+                        <input type="text" class="ai-input" id="aiInput" placeholder="Where are you heading? (e.g., office meeting, date night, party)">
+                        <button class="btn" onclick="sendMessage()">Send</button>
+                    </div>
                 </div>
             </div>
 
@@ -1061,16 +1561,39 @@
 
         // Initialize App
         document.addEventListener('DOMContentLoaded', function() {
+            // Check if returning from moodboard (no intro animation)
+            const urlParams = new URLSearchParams(window.location.search);
+            const skipIntro = urlParams.get('skipIntro') === 'true';
+            
+            if (skipIntro) {
+                // Skip intro animation and go straight to main app
+                document.getElementById('landingScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.add('active');
+                initializeApp();
+            } else {
             // Show landing screen for 3 seconds
             setTimeout(() => {
                 document.getElementById('landingScreen').classList.add('hidden');
                 document.getElementById('mainApp').classList.add('active');
+                    initializeApp();
+                }, 3000);
+            }
+        });
                 
+        function initializeApp() {
                 // Check for saved user data
                 const savedProfile = localStorage.getItem('userProfile');
                 if (savedProfile) {
                     const profile = JSON.parse(savedProfile);
                     document.getElementById('userName').textContent = profile.name;
+                
+                // Load user profile into AI
+                userProfile.name = profile.name;
+                userProfile.gender = profile.gender;
+                userProfile.style = profile.selectedStyles ? profile.selectedStyles.join(', ') : '';
+                
+                // Add personalized welcome message
+                addMessageToChat(`Welcome back, ${profile.name}! I remember you're into ${profile.selectedStyles ? profile.selectedStyles.join(', ') : 'fashion'} styles. What can I help you with today?`, 'ai');
                 }
                 
                 // Load saved stats
@@ -1086,8 +1609,7 @@
                     updateStats();
                     localStorage.setItem('userStats', JSON.stringify(stats));
                 }, 60000); // Every minute
-            }, 3000);
-        });
+        }
 
         // Carousel Functions
         function nextItem(type) {
@@ -1168,9 +1690,35 @@
             const bottomPrice = parseFloat(bottomItem.dataset.price);
             const totalPrice = topPrice + bottomPrice;
             
-            document.getElementById('comboPrice').textContent = `$${totalPrice.toFixed(2)}`;
-            document.querySelector('.combo-description').textContent = 
+            // Update outfit lookbook
+            document.getElementById('outfitPrice').textContent = `$${totalPrice.toFixed(2)}`;
+            document.getElementById('outfitDescription').textContent = 
                 `${topItem.dataset.name} + ${bottomItem.dataset.name}`;
+            
+            // Update mannequin with actual clothing images
+            updateMannequin(topItem, bottomItem);
+        }
+        
+        function updateMannequin(topItem, bottomItem) {
+            const topPreview = document.getElementById('topPreview');
+            const bottomPreview = document.getElementById('bottomPreview');
+            
+            // Get the actual clothing images
+            const topImage = topItem.querySelector('img').src;
+            const bottomImage = bottomItem.querySelector('img').src;
+            
+            // Update mannequin images
+            topPreview.src = topImage;
+            bottomPreview.src = bottomImage;
+            
+            // Add fade-in effect
+            topPreview.style.opacity = '0';
+            bottomPreview.style.opacity = '0';
+            
+            setTimeout(() => {
+                topPreview.style.opacity = '1';
+                bottomPreview.style.opacity = '1';
+            }, 100);
         }
 
         function buyTogether() {
@@ -1277,13 +1825,440 @@
             }, 1500);
         }
 
-        // AI Functions
-        function getAIRecommendation() {
-            const input = document.getElementById('aiInput').value;
-            if (!input.trim()) return;
+        // Chat Functions
+        let chatHistory = [];
+        let userProfile = {
+            name: '',
+            style: '',
+            preferences: [],
+            occasions: [],
+            lastOutfit: ''
+        };
+        
+        function sendMessage() {
+            const input = document.getElementById('aiInput');
+            const message = input.value.trim();
+            if (!message) return;
             
+            // Add user message to chat
+            addMessageToChat(message, 'user');
+            
+            // Learn about user
+            learnAboutUser(message);
+            
+            // Clear input
+            input.value = '';
+            
+            // Get AI response
+            setTimeout(() => {
+                const aiResponse = getAIResponse(message);
+                addMessageToChat(aiResponse, 'ai');
+            }, 1000);
+        }
+        
+        function learnAboutUser(message) {
+            const messageLower = message.toLowerCase();
+            
+            // Learn name
+            if (messageLower.includes('my name is') || messageLower.includes('i\'m ') || messageLower.includes('i am ')) {
+                const nameMatch = message.match(/(?:my name is|i'm|i am)\s+([a-zA-Z]+)/i);
+                if (nameMatch) {
+                    userProfile.name = nameMatch[1];
+                }
+            }
+            
+            // Learn style preferences
+            if (messageLower.includes('like') || messageLower.includes('prefer') || messageLower.includes('love')) {
+                if (messageLower.includes('casual')) userProfile.preferences.push('casual');
+                if (messageLower.includes('formal')) userProfile.preferences.push('formal');
+                if (messageLower.includes('elegant')) userProfile.preferences.push('elegant');
+                if (messageLower.includes('comfortable')) userProfile.preferences.push('comfortable');
+            }
+            
+            // Learn occasions
+            if (messageLower.includes('office') || messageLower.includes('work')) userProfile.occasions.push('office');
+            if (messageLower.includes('date') || messageLower.includes('romantic')) userProfile.occasions.push('date');
+            if (messageLower.includes('party') || messageLower.includes('celebration')) userProfile.occasions.push('party');
+            if (messageLower.includes('casual') || messageLower.includes('weekend')) userProfile.occasions.push('casual');
+        }
+        
+        function addMessageToChat(content, sender) {
+            const chatContainer = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-bubble ${sender}-bubble`;
+            
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            messageDiv.innerHTML = `
+                <div class="message-content">${content}</div>
+                <div class="message-time">${time}</div>
+            `;
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            // Store in history
+            chatHistory.push({ content, sender, time });
+        }
+        
+        function getAIResponse(message) {
+            const currentTop = document.querySelectorAll('#topCarousel .carousel-item')[currentTopIndex];
+            const currentBottom = document.querySelectorAll('#bottomCarousel .carousel-item')[currentBottomIndex];
+            
+            const currentTopName = currentTop.dataset.name;
+            const currentBottomName = currentBottom.dataset.name;
+            
+            const messageLower = message.toLowerCase();
+            
+            // More personal and friendly responses
+            const responses = {
+                'hello': getGreetingResponse(),
+                'hi': getGreetingResponse(),
+                'hey': getGreetingResponse(),
+                'office': getOfficeResponse(currentTopName, currentBottomName),
+                'meeting': getMeetingResponse(currentTopName, currentBottomName),
+                'date': getDateResponse(currentTopName, currentBottomName),
+                'party': getPartyResponse(currentTopName, currentBottomName),
+                'casual': getCasualResponse(currentTopName, currentBottomName),
+                'weekend': getWeekendResponse(currentTopName, currentBottomName),
+                'concert': getConcertResponse(currentTopName, currentBottomName),
+                'formal': getFormalResponse(currentTopName, currentBottomName),
+                'help': getHelpResponse(),
+                'thanks': getThanksResponse(),
+                'thank you': getThanksResponse(),
+                'default': getDefaultResponse(message, currentTopName, currentBottomName)
+            };
+            
+            // Find matching response
+            for (const [key, response] of Object.entries(responses)) {
+                if (messageLower.includes(key)) {
+                    return response;
+                }
+            }
+            
+            return responses.default;
+        }
+        
+        function getGreetingResponse() {
+            const greetings = [
+                `Hey there! 👋 ${userProfile.name ? `Nice to see you again, ${userProfile.name}!` : 'I\'m your personal stylist!'} What can I help you with today?`,
+                `Hi! ${userProfile.name ? `Welcome back, ${userProfile.name}!` : 'Ready to find your perfect outfit?'} What\'s the occasion?`,
+                `Hello! ${userProfile.name ? `Great to see you, ${userProfile.name}!` : 'Let\'s make you look amazing!'} ✨ Tell me where you\'re heading!`
+            ];
+            return greetings[Math.floor(Math.random() * greetings.length)];
+        }
+        
+        function getHelpResponse() {
+            return `I'm here to help you look amazing! 💫 ${userProfile.name ? `${userProfile.name}, ` : ''}just tell me where you're going - office, date, party, casual, or anything else! I'll recommend some perfect outfit combinations for you.`;
+        }
+        
+        function getThanksResponse() {
+            const thanks = [
+                `You're so welcome! 😊 ${userProfile.name ? `${userProfile.name}, ` : ''}I love helping you look your best!`,
+                `Happy to help! ✨ ${userProfile.name ? `That's what I'm here for, ${userProfile.name}!` : 'That\'s what I\'m here for!'}`,
+                `Anytime! 💫 ${userProfile.name ? `Always happy to help you, ${userProfile.name}!` : 'Always happy to help!'}`
+            ];
+            return thanks[Math.floor(Math.random() * thanks.length)];
+        }
+        
+        function getOfficeResponse(currentTop, currentBottom) {
+            const professional = ['Professional Button-Up', 'Business Chinos', 'Formal Trousers'];
+            const isProfessional = professional.some(item => currentTop.includes(item) || currentBottom.includes(item));
+            
+            // Check if user prefers formal style from quiz
+            const prefersFormal = userProfile.style && userProfile.style.includes('formal');
+            const prefersCasual = userProfile.style && userProfile.style.includes('casual');
+            
+            if (isProfessional) {
+                return `Perfect choice! ${userProfile.name ? `${userProfile.name}, ` : ''}Your ${currentTop} and ${currentBottom} combo is office-ready. ${prefersFormal ? 'I can see you love formal styles - this is perfect for you!' : 'You\'ll look professional and confident!'} 💼`;
+            } else {
+                const recommendation = prefersCasual ? 
+                    `For the office, ${userProfile.name ? `${userProfile.name}, ` : ''}I know you prefer casual styles, but let's find something that works for work: <br><br>💼 <strong>Professional Button-Up + Business Chinos</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Professional Button-Up', 'Business Chinos')">Preview This Look</button><br><br>💼 <strong>Elegant Blouse + Formal Trousers</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Elegant Blouse', 'Formal Trousers')">Preview This Look</button>` :
+                    `For the office, ${userProfile.name ? `${userProfile.name}, ` : ''}I recommend: <br><br>💼 <strong>Professional Button-Up + Business Chinos</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Professional Button-Up', 'Business Chinos')">Preview This Look</button><br><br>💼 <strong>Elegant Blouse + Formal Trousers</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Elegant Blouse', 'Formal Trousers')">Preview This Look</button>`;
+                
+                return recommendation;
+            }
+        }
+        
+        function getMeetingResponse(currentTop, currentBottom) {
+            const formal = ['Professional Button-Up', 'Elegant Blouse', 'Formal Trousers'];
+            const isFormal = formal.some(item => currentTop.includes(item) || currentBottom.includes(item));
+            
+            if (isFormal) {
+                return `Excellent choice! Your ${currentTop} and ${currentBottom} will make a great impression in that meeting. You've got this! 🎯`;
+            } else {
+                return `For an important meeting, I recommend: <br><br>🎯 <strong>Professional Button-Up + Formal Trousers</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Professional Button-Up', 'Formal Trousers')">Preview This Look</button><br><br>🎯 <strong>Elegant Blouse + Business Chinos</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Elegant Blouse', 'Business Chinos')">Preview This Look</button>`;
+            }
+        }
+        
+        function getDateResponse(currentTop, currentBottom) {
+            const romantic = ['Elegant Blouse', 'Professional Button-Up'];
+            const isRomantic = romantic.some(item => currentTop.includes(item));
+            
+            if (isRomantic) {
+                return `Lovely choice! The ${currentTop} is perfect for a date - sophisticated yet approachable. Have a wonderful time! 💕`;
+            } else {
+                return `For a date night, I recommend: <br><br>💕 <strong>Elegant Blouse + Business Chinos</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Elegant Blouse', 'Business Chinos')">Preview This Look</button><br><br>💕 <strong>Professional Button-Up + Classic Denim Jeans</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Professional Button-Up', 'Classic Denim Jeans')">Preview This Look</button>`;
+            }
+        }
+        
+        function getPartyResponse(currentTop, currentBottom) {
+            const party = ['Elegant Blouse', 'Professional Button-Up'];
+            const isParty = party.some(item => currentTop.includes(item));
+            
+            if (isParty) {
+                return `Party ready! Your ${currentTop} and ${currentBottom} combo will turn heads! Let's celebrate! 🎉`;
+            } else {
+                return `Time to party! I recommend: <br><br>🎉 <strong>Elegant Blouse + Business Chinos</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Elegant Blouse', 'Business Chinos')">Preview This Look</button><br><br>🎉 <strong>Professional Button-Up + Classic Denim Jeans</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Professional Button-Up', 'Classic Denim Jeans')">Preview This Look</button>`;
+            }
+        }
+        
+        function getCasualResponse(currentTop, currentBottom) {
+            const casual = ['Classic White Tee', 'Classic Denim Jeans'];
+            const isCasual = casual.some(item => currentTop.includes(item) || currentBottom.includes(item));
+            
+            // Check if user prefers casual style from quiz
+            const prefersCasual = userProfile.style && userProfile.style.includes('casual');
+            const prefersMinimalist = userProfile.style && userProfile.style.includes('minimalist');
+            
+            if (isCasual) {
+                return `Perfect casual vibes! ${userProfile.name ? `${userProfile.name}, ` : ''}Your ${currentTop} and ${currentBottom} combo is comfortable and stylish. ${prefersCasual ? 'This is exactly your style - I love it!' : 'Love it!'} 😎`;
+            } else {
+                const recommendation = prefersCasual ? 
+                    `For casual wear, ${userProfile.name ? `${userProfile.name}, ` : ''}I know this is your favorite style! Here are some great options: <br><br>😎 <strong>Classic White Tee + Classic Denim Jeans</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Classic White Tee', 'Classic Denim Jeans')">Preview This Look</button><br><br>😎 <strong>Elegant Blouse + Classic Denim Jeans</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Elegant Blouse', 'Classic Denim Jeans')">Preview This Look</button>` :
+                    `For casual wear, I recommend: <br><br>😎 <strong>Classic White Tee + Classic Denim Jeans</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Classic White Tee', 'Classic Denim Jeans')">Preview This Look</button><br><br>😎 <strong>Elegant Blouse + Classic Denim Jeans</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Elegant Blouse', 'Classic Denim Jeans')">Preview This Look</button>`;
+                
+                return recommendation;
+            }
+        }
+        
+        function getWeekendResponse(currentTop, currentBottom) {
+            return `Weekend vibes! Your ${currentTop} and ${currentBottom} combo is perfect for relaxing and having fun. Enjoy your weekend! 🌟`;
+        }
+        
+        function getConcertResponse(currentTop, currentBottom) {
+            const concert = ['Classic White Tee', 'Classic Denim Jeans'];
+            const isConcert = concert.some(item => currentTop.includes(item) || currentBottom.includes(item));
+            
+            if (isConcert) {
+                return `Rock on! Your ${currentTop} and ${currentBottom} combo is perfect for a concert. You'll be comfortable and look great! 🎸`;
+            } else {
+                return `For a concert, I recommend: <br><br>🎸 <strong>Classic White Tee + Classic Denim Jeans</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Classic White Tee', 'Classic Denim Jeans')">Preview This Look</button><br><br>🎸 <strong>Professional Button-Up + Classic Denim Jeans</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Professional Button-Up', 'Classic Denim Jeans')">Preview This Look</button>`;
+            }
+        }
+        
+        function getFormalResponse(currentTop, currentBottom) {
+            const formal = ['Professional Button-Up', 'Elegant Blouse', 'Formal Trousers'];
+            const isFormal = formal.some(item => currentTop.includes(item) || currentBottom.includes(item));
+            
+            if (isFormal) {
+                return `Elegant and sophisticated! Your ${currentTop} and ${currentBottom} combo is perfect for formal occasions. You look amazing! ✨`;
+            } else {
+                return `For a formal event, I recommend: <br><br>✨ <strong>Professional Button-Up + Formal Trousers</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Professional Button-Up', 'Formal Trousers')">Preview This Look</button><br><br>✨ <strong>Elegant Blouse + Business Chinos</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Elegant Blouse', 'Business Chinos')">Preview This Look</button>`;
+            }
+        }
+        
+        function getDefaultResponse(message, currentTop, currentBottom) {
+            const responses = [
+                `I see you mentioned "${message}". ${userProfile.name ? `${userProfile.name}, ` : ''}Your current ${currentTop} and ${currentBottom} combo looks great! Is this for a specific occasion?`,
+                `Interesting! ${userProfile.name ? `${userProfile.name}, ` : ''}Tell me more about where you're going. Your ${currentTop} and ${currentBottom} combo could work for many occasions!`,
+                `I'd love to help you find the perfect outfit! ${userProfile.name ? `${userProfile.name}, ` : ''}What's the occasion? Your current ${currentTop} and ${currentBottom} look nice, but I can suggest something even better!`,
+                `Tell me more about the occasion - is it office, casual, formal, date, or party? ${userProfile.name ? `${userProfile.name}, ` : ''}I can recommend some great outfit combinations!`
+            ];
+            
+            // Add style-specific responses if we know their preferences
+            if (userProfile.style) {
+                const styleResponses = [
+                    `I see you mentioned "${message}". ${userProfile.name ? `${userProfile.name}, ` : ''}I know you love ${userProfile.style} styles - your current ${currentTop} and ${currentBottom} combo fits perfectly! What's the occasion?`,
+                    `Interesting! ${userProfile.name ? `${userProfile.name}, ` : ''}I can see your ${userProfile.style} style preferences coming through. Tell me more about where you're going!`
+                ];
+                responses.push(...styleResponses);
+            }
+            
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+        
+        // Preview specific looks
+        function previewLook(suggestTop, suggestBottom) {
+            const topItems = document.querySelectorAll('#topCarousel .carousel-item');
+            const bottomItems = document.querySelectorAll('#bottomCarousel .carousel-item');
+            
+            // Find and navigate to suggested items
+            for (let i = 0; i < topItems.length; i++) {
+                if (topItems[i].dataset.name === suggestTop) {
+                    navigateToItem('top', i);
+                    break;
+                }
+            }
+            
+            for (let i = 0; i < bottomItems.length; i++) {
+                if (bottomItems[i].dataset.name === suggestBottom) {
+                    navigateToItem('bottom', i);
+                    break;
+                }
+            }
+            
+            updateComboDisplay();
+            addMessageToChat(`👀 Previewing: ${suggestTop} + ${suggestBottom}`, 'ai');
+        }
+        
+        function navigateToItem(type, index) {
+            const items = document.querySelectorAll(`#${type}Carousel .carousel-item`);
+            const currentItem = items[type === 'top' ? currentTopIndex : currentBottomIndex];
+            currentItem.classList.remove('active');
+            currentItem.classList.add('prev');
+            
+            if (type === 'top') currentTopIndex = index;
+            else currentBottomIndex = index;
+            
+            const nextItem = items[index];
+            nextItem.classList.add('active');
+            nextItem.classList.remove('prev');
+            
+            setTimeout(() => {
+                currentItem.classList.remove('prev');
+            }, 600);
+        }
+        
+        // Allow Enter key to send message
+        document.getElementById('aiInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        function getSmartRecommendation(occasion, currentTop, currentBottom, currentOccasion) {
+            const occasionLower = occasion.toLowerCase();
+            
+            // Define outfit recommendations based on occasion
+            const recommendations = {
+                'office': {
+                    good: ['Professional Button-Up', 'Business Chinos', 'Formal Trousers'],
+                    bad: ['Classic White Tee', 'Classic Denim Jeans'],
+                    message: 'For the office, I recommend switching to more professional pieces. Try the Professional Button-Up with Business Chinos for a polished look.',
+                    suggestTop: 'Professional Button-Up',
+                    suggestBottom: 'Business Chinos'
+                },
+                'meeting': {
+                    good: ['Professional Button-Up', 'Business Chinos', 'Formal Trousers', 'Elegant Blouse'],
+                    bad: ['Classic White Tee', 'Classic Denim Jeans'],
+                    message: 'For an important meeting, consider upgrading to the Professional Button-Up or Elegant Blouse with Formal Trousers for maximum impact.',
+                    suggestTop: 'Professional Button-Up',
+                    suggestBottom: 'Formal Trousers'
+                },
+                'date': {
+                    good: ['Elegant Blouse', 'Professional Button-Up', 'Classic White Tee'],
+                    bad: ['Formal Trousers'],
+                    message: 'For a date night, the Elegant Blouse would be perfect! It\'s sophisticated yet approachable. Pair it with the Business Chinos for a romantic dinner look.',
+                    suggestTop: 'Elegant Blouse',
+                    suggestBottom: 'Business Chinos'
+                },
+                'casual': {
+                    good: ['Classic White Tee', 'Classic Denim Jeans'],
+                    bad: ['Formal Trousers', 'Professional Button-Up'],
+                    message: 'For casual outings, your current Classic White Tee and Denim Jeans combo is perfect! It\'s comfortable and stylish for everyday wear.',
+                    suggestTop: 'Classic White Tee',
+                    suggestBottom: 'Classic Denim Jeans'
+                },
+                'weekend': {
+                    good: ['Classic White Tee', 'Classic Denim Jeans', 'Elegant Blouse'],
+                    bad: ['Formal Trousers'],
+                    message: 'Weekend vibes! Your current outfit works great, but if you want to dress it up slightly, try the Elegant Blouse with your current jeans.',
+                    suggestTop: 'Elegant Blouse',
+                    suggestBottom: 'Classic Denim Jeans'
+                },
+                'concert': {
+                    good: ['Classic White Tee', 'Classic Denim Jeans'],
+                    bad: ['Professional Button-Up', 'Formal Trousers'],
+                    message: 'Perfect for a concert! Your current casual look is ideal. The Classic White Tee and Denim Jeans combo will keep you comfortable while you rock out!',
+                    suggestTop: 'Classic White Tee',
+                    suggestBottom: 'Classic Denim Jeans'
+                },
+                'party': {
+                    good: ['Elegant Blouse', 'Professional Button-Up'],
+                    bad: ['Classic White Tee'],
+                    message: 'For a party, let\'s elevate your look! The Elegant Blouse would be perfect - it\'s stylish and party-ready. Pair it with the Business Chinos for a sophisticated party look.',
+                    suggestTop: 'Elegant Blouse',
+                    suggestBottom: 'Business Chinos'
+                }
+            };
+            
+            // Find matching recommendation
+            for (const [key, rec] of Object.entries(recommendations)) {
+                if (occasionLower.includes(key)) {
+                    const isGoodMatch = rec.good.some(item => 
+                        currentTop.includes(item) || currentBottom.includes(item)
+                    );
+                    
+                    if (isGoodMatch) {
+                        return `✅ Perfect choice for ${occasion}! Your current outfit (${currentTop} + ${currentBottom}) is ideal for this occasion. ${rec.message}`;
+                    } else {
+                        // Store recommendations for potential navigation
+                        window.currentRecommendation = rec;
+                        return `💡 For ${occasion}, I suggest: ${rec.message} <br><button class="ai-suggestion-btn" onclick="applyRecommendation()">Apply This Look</button>`;
+                    }
+                }
+            }
+            
+            // Default recommendation
+            return `🤔 For ${occasion}, consider the context: Is it formal or casual? Your current ${currentTop} + ${currentBottom} combo works for many occasions, but I can help you find the perfect match!`;
+        }
+        
+        function applyRecommendation() {
+            if (!window.currentRecommendation) return;
+            
+            const { suggestTop, suggestBottom } = window.currentRecommendation;
+            
+            // Find and navigate to suggested items
+            const topItems = document.querySelectorAll('#topCarousel .carousel-item');
+            const bottomItems = document.querySelectorAll('#bottomCarousel .carousel-item');
+            
+            // Find top item
+            for (let i = 0; i < topItems.length; i++) {
+                if (topItems[i].dataset.name === suggestTop) {
+                    // Navigate to this top
+                    const currentItem = topItems[currentTopIndex];
+                    currentItem.classList.remove('active');
+                    currentItem.classList.add('prev');
+                    
+                    currentTopIndex = i;
+                    const nextItem = topItems[currentTopIndex];
+                    nextItem.classList.add('active');
+                    nextItem.classList.remove('prev');
+                    
+                    setTimeout(() => {
+                        currentItem.classList.remove('prev');
+                    }, 600);
+                    break;
+                }
+            }
+            
+            // Find bottom item
+            for (let i = 0; i < bottomItems.length; i++) {
+                if (bottomItems[i].dataset.name === suggestBottom) {
+                    // Navigate to this bottom
+                    const currentItem = bottomItems[currentBottomIndex];
+                    currentItem.classList.remove('active');
+                    currentItem.classList.add('prev');
+                    
+                    currentBottomIndex = i;
+                    const nextItem = bottomItems[currentBottomIndex];
+                    nextItem.classList.add('active');
+                    nextItem.classList.remove('prev');
+                    
+                    setTimeout(() => {
+                        currentItem.classList.remove('prev');
+                    }, 600);
+                    break;
+                }
+            }
+            
+            // Update the display
+            updateComboDisplay();
+            
+            // Show success message
             const message = document.getElementById('aiMessage');
-            message.textContent = `Perfect for ${input}! This combination balances style and comfort.`;
+            message.innerHTML = '✨ Applied the recommended look! How do you like it?';
             message.classList.add('show');
             
             setTimeout(() => {
@@ -1350,8 +2325,16 @@
             // Save quiz data
             localStorage.setItem('userProfile', JSON.stringify(quizData));
             
+            // Update AI user profile with quiz data
+            userProfile.name = quizData.name;
+            userProfile.gender = quizData.gender;
+            userProfile.style = quizData.selectedStyles.join(', ');
+            
             // Update welcome message
             document.getElementById('userName').textContent = quizData.name;
+            
+            // Add welcome message to chat
+            addMessageToChat(`Welcome to atyr, ${quizData.name}! I'm your personal stylist and I'm excited to help you find the perfect outfits. I see you're into ${quizData.selectedStyles.join(', ')} styles - that's great! What can I help you with today?`, 'ai');
             
             // Close quiz modal
             document.getElementById('quizModal').classList.remove('active');
@@ -1519,7 +2502,7 @@
             }
         }
         
-        // Initialize combo display
+        // Initialize outfit lookbook
         updateComboDisplay();
         
         // Add swipe listeners after DOM is loaded

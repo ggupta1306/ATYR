@@ -431,7 +431,7 @@
 
         <!-- Navigation -->
         <div class="nav-buttons">
-            <a href="atyr-with-moodboard.html" class="nav-btn">
+            <a href="atyr-final-complete.html?skipIntro=true" class="nav-btn">
                 <span></span>
                 <span>Back to Mix & Match</span>
             </a>
@@ -467,7 +467,7 @@
                 <div class="empty-state-icon"></div>
                 <h3>No saved combos yet</h3>
                 <p>Start creating amazing outfits in the Mix & Match section!</p>
-                <a href="atyr-with-moodboard.html" class="nav-btn">Create Your First Combo</a>
+                <a href="atyr-final-complete.html?skipIntro=true" class="nav-btn">Create Your First Combo</a>
             </div>
         </div>
     </div>
@@ -517,17 +517,17 @@
             card.innerHTML = `
                 <div class="combo-images">
                     <div class="combo-top">
-                        <img src="${combo.topImage}" alt="${combo.topName}" onerror="this.src='https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=200&h=200&fit=crop'">
+                        <img src="${combo.top.image}" alt="${combo.top.name}" onerror="this.src='https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=200&h=200&fit=crop'">
                     </div>
                     <div class="combo-divider"></div>
                     <div class="combo-bottom">
-                        <img src="${combo.bottomImage}" alt="${combo.bottomName}" onerror="this.src='https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=200&h=200&fit=crop'">
+                        <img src="${combo.bottom.image}" alt="${combo.bottom.name}" onerror="this.src='https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=200&h=200&fit=crop'">
                     </div>
                 </div>
                 <div class="combo-info">
-                    <div class="combo-name">${combo.topName} + ${combo.bottomName}</div>
-                    <div class="combo-description">${combo.description || 'Perfect combination for any occasion'}</div>
-                    <div class="combo-price" id="price-${index}">$${combo.totalPrice}</div>
+                    <div class="combo-name">${combo.top.name} + ${combo.bottom.name}</div>
+                    <div class="combo-description">Perfect combination for any occasion</div>
+                    <div class="combo-price" id="price-${index}">$${combo.total}</div>
                     <div class="combo-actions">
                         <button class="combo-btn primary" onclick="togglePrice(${index})"> Show Price</button>
                         <button class="combo-btn primary" onclick="viewComboDetails(${index})"> Details</button>
@@ -556,10 +556,10 @@
         // Update stats
         function updateStats(combos) {
             const totalCombos = combos.length;
-            const totalValue = combos.reduce((sum, combo) => sum + parseFloat(combo.totalPrice), 0);
+            const totalValue = combos.reduce((sum, combo) => sum + parseFloat(combo.total), 0);
             
             // Find most saved combo (for now, just show first one)
-            const mostSaved = combos.length > 0 ? combos[0].topName.split(' ')[0] : '-';
+            const mostSaved = combos.length > 0 ? combos[0].top.name.split(' ')[0] : '-';
             
             document.getElementById('totalCombos').textContent = totalCombos;
             document.getElementById('totalValue').textContent = `$${totalValue.toFixed(2)}`;
@@ -577,27 +577,27 @@
             const modalContent = document.getElementById('modalContent');
             
             modalContent.innerHTML = `
-                <h2 style="margin-bottom: 2rem; color: white; font-size: 2.5rem; font-weight: 300; text-align: center;">${combo.topName} + ${combo.bottomName}</h2>
+                <h2 style="margin-bottom: 2rem; color: white; font-size: 2.5rem; font-weight: 300; text-align: center;">${combo.top.name} + ${combo.bottom.name}</h2>
                 <div style="display: flex; gap: 2rem; margin-bottom: 2rem;">
                     <div style="flex: 1;">
-                        <img src="${combo.topImage}" alt="${combo.topName}" style="width: 100%; height: 300px; object-fit: cover; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);" onerror="this.src='https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=200&h=200&fit=crop'">
-                        <p style="text-align: center; margin-top: 1rem; font-weight: 600; color: white; font-size: 1.2rem;">${combo.topName}</p>
+                        <img src="${combo.top.image}" alt="${combo.top.name}" style="width: 100%; height: 300px; object-fit: cover; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);" onerror="this.src='https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=200&h=200&fit=crop'">
+                        <p style="text-align: center; margin-top: 1rem; font-weight: 600; color: white; font-size: 1.2rem;">${combo.top.name}</p>
                     </div>
                     <div style="flex: 1;">
-                        <img src="${combo.bottomImage}" alt="${combo.bottomName}" style="width: 100%; height: 300px; object-fit: cover; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);" onerror="this.src='https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=200&h=200&fit=crop'">
-                        <p style="text-align: center; margin-top: 1rem; font-weight: 600; color: white; font-size: 1.2rem;">${combo.bottomName}</p>
+                        <img src="${combo.bottom.image}" alt="${combo.bottom.name}" style="width: 100%; height: 300px; object-fit: cover; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);" onerror="this.src='https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=200&h=200&fit=crop'">
+                        <p style="text-align: center; margin-top: 1rem; font-weight: 600; color: white; font-size: 1.2rem;">${combo.bottom.name}</p>
                     </div>
                 </div>
                 <div style="background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); padding: 2rem; border-radius: 20px; margin-bottom: 2rem; border: 1px solid rgba(255, 255, 255, 0.2);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                         <p style="color: rgba(255, 255, 255, 0.8); font-size: 1.1rem;"><strong>Total Price:</strong></p>
-                        <p style="color: white; font-size: 1.5rem; font-weight: 700;">$${combo.totalPrice}</p>
+                        <p style="color: white; font-size: 1.5rem; font-weight: 700;">$${combo.total}</p>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                         <p style="color: rgba(255, 255, 255, 0.8); font-size: 1.1rem;"><strong>Saved:</strong></p>
-                        <p style="color: white; font-size: 1.1rem;">${new Date(combo.timestamp).toLocaleDateString()}</p>
+                        <p style="color: white; font-size: 1.1rem;">${combo.savedAt}</p>
                     </div>
-                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 1.1rem; line-height: 1.6;"><strong>Description:</strong> ${combo.description || 'Perfect combination for any occasion'}</p>
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 1.1rem; line-height: 1.6;"><strong>Description:</strong> Perfect combination for any occasion</p>
                 </div>
                 <div style="display: flex; gap: 1rem;">
                     <button onclick="shareCombo(${index})" style="flex: 1; padding: 16px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(20px); color: white; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 16px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"> Share Combo</button>
@@ -620,7 +620,7 @@
             
             if (!combo) return;
             
-            const shareText = `Check out this amazing ATYR combo: ${combo.topName} + ${combo.bottomName} for $${combo.totalPrice}! Created with ATYR Mix & Match.`;
+            const shareText = `Check out this amazing ATYR combo: ${combo.top.name} + ${combo.bottom.name} for $${combo.total}! Created with ATYR Mix & Match.`;
             
             if (navigator.share) {
                 navigator.share({
