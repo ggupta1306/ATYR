@@ -2,574 +2,824 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATYR Style Quiz</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Style Quiz - atyr</title>
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
-            background: linear-gradient(135deg, #9CAF88 0%, #8BA077 100%);
-            min-height: 100vh; 
-            color: #333;
-            overflow-x: hidden;
-        }
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            padding: 20px;
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent;
         }
         
-        /* Quiz Header */
-        .quiz-header {
-            text-align: center;
-            margin-bottom: 3rem;
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: linear-gradient(135deg, #f8f6f0 0%, #ffffff 50%, #f0f2f5 100%);
+            min-height: 100vh; 
+            color: #2c3e50;
+            overflow-x: hidden;
+            position: relative;
+            touch-action: manipulation;
         }
-        .quiz-title {
-            font-size: 3.5rem;
+        
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
             font-weight: 300;
+            color: #9CAF88;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+        }
+        
+        .back-btn {
+            background: rgba(156, 175, 136, 0.1);
+            border: 2px solid #9CAF88;
+            color: #9CAF88;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .back-btn:hover {
+            background: #9CAF88;
             color: white;
-            margin-bottom: 1rem;
-            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
         }
-        .quiz-subtitle {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.8);
+        
+        /* Main Container */
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
             margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .progress-step {
+            font-size: 0.9rem;
+            color: #9CAF88;
+            font-weight: 500;
+        }
+        
         .progress-bar {
             width: 100%;
             height: 8px;
-            background: rgba(255, 255, 255, 0.2);
+            background: #f0f0f0;
             border-radius: 4px;
             overflow: hidden;
-            margin-bottom: 2rem;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ffffff, rgba(255, 255, 255, 0.8));
-            border-radius: 4px;
-            transition: width 0.5s ease;
-            width: 0%;
         }
         
-        /* Quiz Steps */
-        .quiz-step {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 3rem;
-            margin: 2rem 0;
-            box-shadow: 0 16px 64px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            display: none;
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #9CAF88, #8BA077);
+            border-radius: 4px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            overflow: hidden;
         }
-        .quiz-step.active {
-            display: block;
-            animation: slideInUp 0.6s ease;
-        }
-        .quiz-step::before {
+        
+        .progress-fill::after {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-            z-index: -1;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* Quiz Steps */
+        .quiz-step {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .quiz-step.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .quiz-step.hidden {
+            display: none;
         }
         
         .step-title {
             font-size: 2rem;
             font-weight: 600;
-            color: white;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-        .step-description {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 2rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
             text-align: center;
         }
         
-        /* Form Elements */
-        .form-group {
+        .step-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            text-align: center;
             margin-bottom: 2rem;
         }
-        .form-label {
-            display: block;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 1rem;
+        
+        /* Name Input */
+        .name-input-container {
+            text-align: center;
         }
-        .form-input {
+        
+        .name-input {
             width: 100%;
-            padding: 16px 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 16px;
-            font-size: 1rem;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            color: white;
-            transition: all 0.3s ease;
-        }
-        .form-input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-        .form-input:focus {
+            max-width: 400px;
+            padding: 1rem 1.5rem;
+            border: 3px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 1.1rem;
             outline: none;
-            border-color: rgba(255, 255, 255, 0.6);
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .name-input:focus {
+            border-color: #9CAF88;
+            box-shadow: 0 0 0 3px rgba(156, 175, 136, 0.1);
         }
         
         /* Gender Selection */
         .gender-options {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin: 2rem 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
+        
         .gender-option {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 16px;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border: 3px solid #e0e0e0;
+            border-radius: 20px;
             padding: 2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
             text-align: center;
-            min-width: 150px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
+        
+        .gender-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(156, 175, 136, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+        
+        .gender-option:hover::before {
+            left: 100%;
+        }
+        
         .gender-option:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-4px);
+            border-color: #9CAF88;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(156, 175, 136, 0.2);
         }
+        
         .gender-option.selected {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.6);
-            transform: translateY(-4px);
+            border-color: #9CAF88;
+            background: linear-gradient(135deg, #9CAF88, #8BA077);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(156, 175, 136, 0.3);
         }
+        
         .gender-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
-        }
-        .gender-label {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: white;
+            display: block;
         }
         
-        /* Pinterest Style Board */
-        .style-board {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
+        .gender-label {
+            font-size: 1.2rem;
+            font-weight: 600;
         }
-        .style-image {
-            position: relative;
-            border-radius: 16px;
-            overflow: hidden;
+        
+        /* Style Selection */
+        .style-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .style-option {
+            background: white;
+            border: 3px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 0;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
             aspect-ratio: 1;
         }
-        .style-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-        .style-image:hover {
-            transform: scale(1.05);
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
-        }
-        .style-image.selected {
-            transform: scale(1.05);
-            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.8);
-        }
-        .style-image.selected::after {
+        
+        .style-option::before {
             content: '';
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.9);
-            color: #9CAF88;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.2rem;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(156, 175, 136, 0.1), rgba(139, 160, 119, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
         }
         
-        /* Navigation Buttons */
-        .quiz-nav {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 3rem;
+        .style-option:hover::before {
+            opacity: 1;
         }
-        .quiz-btn {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 16px 32px;
-            border-radius: 20px;
-            font-size: 1rem;
+        
+        .style-option:hover {
+            border-color: #9CAF88;
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(156, 175, 136, 0.2);
+        }
+        
+        .style-option.selected {
+            border-color: #9CAF88;
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(156, 175, 136, 0.3);
+        }
+        
+        .style-option.selected::before {
+            opacity: 1;
+        }
+        
+        .style-image {
+            width: 100%;
+            height: 70%;
+            object-fit: cover;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .style-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            text-align: center;
             font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 2;
+        }
+        
+        .style-option.selected .style-label {
+            background: linear-gradient(135deg, #9CAF88, #8BA077);
+            color: white;
+        }
+        
+        .selection-count {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .selection-count.highlight {
+            color: #9CAF88;
+            font-weight: 600;
+        }
+        
+        /* Buttons */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #9CAF88, #8BA077);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-        }
-        .quiz-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-        }
-        .quiz-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .quiz-btn.primary {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.4);
+            min-width: 120px;
+            justify-content: center;
         }
         
-        /* Results Page */
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(156, 175, 136, 0.4);
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-secondary {
+            background: rgba(156, 175, 136, 0.1);
+            color: #9CAF88;
+            border: 2px solid #9CAF88;
+        }
+        
+        .btn-secondary:hover {
+            background: #9CAF88;
+            color: white;
+        }
+        
+        /* Results Step */
         .results-container {
             text-align: center;
-            padding: 3rem;
         }
-        .results-title {
+        
+        .welcome-message {
             font-size: 2.5rem;
             font-weight: 300;
-            color: white;
-            margin-bottom: 2rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
         }
+        
+        .welcome-name {
+            color: #9CAF88;
+            font-weight: 600;
+        }
+        
         .results-description {
             font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 3rem;
+            color: #666;
+            margin-bottom: 2rem;
             line-height: 1.6;
         }
-        .style-tags {
+        
+        .style-summary {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .style-summary-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .selected-styles {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 0.5rem;
             justify-content: center;
-            margin: 2rem 0;
         }
+        
         .style-tag {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, #9CAF88, #8BA077);
             color: white;
-            padding: 8px 16px;
+            padding: 0.5rem 1rem;
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: 500;
         }
         
         /* Animations */
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 0.6s ease-out;
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 0.6s ease-out;
+        }
+        
+        .bounce-in {
+            animation: bounceIn 0.8s ease-out;
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.3); }
+            50% { opacity: 1; transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { opacity: 1; transform: scale(1); }
         }
         
         /* Responsive */
         @media (max-width: 768px) {
+            .quiz-container {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .style-options {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+            
             .gender-options {
-                flex-direction: column;
-                align-items: center;
+                grid-template-columns: 1fr;
+                gap: 1rem;
             }
-            .style-board {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            
+            .step-title {
+                font-size: 1.5rem;
             }
-            .quiz-title {
-                font-size: 2.5rem;
+            
+            .welcome-message {
+                font-size: 2rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="quiz-header">
-            <h1 class="quiz-title">ATYR Style Quiz</h1>
-            <p class="quiz-subtitle">Let's discover your unique style together</p>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">atyr</a>
+            <a href="index.html" class="back-btn">
+                ← Back to App
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="quiz-container">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-header">
+                <div class="progress-title">Style Quiz</div>
+                <div class="progress-step">Step <span id="currentStep">1</span> of 4</div>
+            </div>
             <div class="progress-bar">
-                <div class="progress-fill" id="progressFill"></div>
+                <div class="progress-fill" id="progressFill" style="width: 25%"></div>
             </div>
         </div>
 
         <!-- Step 1: Name -->
         <div class="quiz-step active" id="step1">
-            <h2 class="step-title">What's your name?</h2>
-            <p class="step-description">We'd love to personalize your experience</p>
-            <div class="form-group">
-                <label class="form-label" for="userName">Your Name</label>
-                <input type="text" class="form-input" id="userName" placeholder="Enter your name">
+            <div class="step-title">What's your name?</div>
+            <div class="step-subtitle">Let's personalize your style journey</div>
+            <div class="name-input-container">
+                <input type="text" id="userName" class="name-input" placeholder="Enter your name" maxlength="30">
             </div>
-            <div class="quiz-nav">
-                <button class="quiz-btn" disabled>Previous</button>
-                <button class="quiz-btn primary" onclick="nextStep()">Next </button>
+            <div class="btn-container">
+                <button class="btn" id="nextBtn1" onclick="nextStep()" disabled>Next</button>
             </div>
         </div>
 
         <!-- Step 2: Gender -->
-        <div class="quiz-step" id="step2">
-            <h2 class="step-title">How do you identify?</h2>
-            <p class="step-description">This helps us recommend the right styles for you</p>
+        <div class="quiz-step hidden" id="step2">
+            <div class="step-title">How do you identify?</div>
+            <div class="step-subtitle">This helps us tailor recommendations for you</div>
             <div class="gender-options">
-                <div class="gender-option" onclick="selectGender('male')">
-                    <div class="gender-icon"></div>
+                <div class="gender-option" onclick="selectGender('male', this)">
+                    <span class="gender-icon">👨</span>
                     <div class="gender-label">Male</div>
                 </div>
-                <div class="gender-option" onclick="selectGender('female')">
-                    <div class="gender-icon"></div>
+                <div class="gender-option" onclick="selectGender('female', this)">
+                    <span class="gender-icon">👩</span>
                     <div class="gender-label">Female</div>
                 </div>
-                <div class="gender-option" onclick="selectGender('other')">
-                    <div class="gender-icon"></div>
-                    <div class="gender-label">Other</div>
+                <div class="gender-option" onclick="selectGender('non-binary', this)">
+                    <span class="gender-icon">⚧</span>
+                    <div class="gender-label">Non-binary</div>
                 </div>
             </div>
-            <div class="quiz-nav">
-                <button class="quiz-btn" onclick="prevStep()"> Previous</button>
-                <button class="quiz-btn primary" onclick="nextStep()" disabled id="nextBtn2">Next </button>
+            <div class="btn-container">
+                <button class="btn" id="nextBtn2" onclick="nextStep()" disabled>Next</button>
             </div>
         </div>
 
         <!-- Step 3: Style Selection -->
-        <div class="quiz-step" id="step3">
-            <h2 class="step-title">Select your style vibes</h2>
-            <p class="step-description">Choose 5-10 images that represent your style (click to select)</p>
-            <div class="style-board" id="styleBoard">
-                <!-- Style images will be loaded here -->
+        <div class="quiz-step hidden" id="step3">
+            <div class="step-title">Select your favorite styles</div>
+            <div class="step-subtitle">Choose 5-10 styles that resonate with you</div>
+            <div class="selection-count" id="selectionCount">Select at least 5 styles</div>
+            <div class="style-options">
+                <div class="style-option" onclick="toggleStyle('casual', this)">
+                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&h=200&fit=crop&crop=center" alt="Casual Style" class="style-image">
+                    <div class="style-label">Casual</div>
+                </div>
+                <div class="style-option" onclick="toggleStyle('formal', this)">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop&crop=center" alt="Formal Style" class="style-image">
+                    <div class="style-label">Formal</div>
+                </div>
+                <div class="style-option" onclick="toggleStyle('streetwear', this)">
+                    <img src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=300&h=200&fit=crop&crop=center" alt="Streetwear Style" class="style-image">
+                    <div class="style-label">Streetwear</div>
+                </div>
+                <div class="style-option" onclick="toggleStyle('bohemian', this)">
+                    <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=200&fit=crop&crop=center" alt="Bohemian Style" class="style-image">
+                    <div class="style-label">Bohemian</div>
+                </div>
+                <div class="style-option" onclick="toggleStyle('minimalist', this)">
+                    <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=300&h=200&fit=crop&crop=center" alt="Minimalist Style" class="style-image">
+                    <div class="style-label">Minimalist</div>
+                </div>
+                <div class="style-option" onclick="toggleStyle('vintage', this)">
+                    <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300&h=200&fit=crop&crop=center" alt="Vintage Style" class="style-image">
+                    <div class="style-label">Vintage</div>
+                </div>
+                <div class="style-option" onclick="toggleStyle('athletic', this)">
+                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop&crop=center" alt="Athletic Style" class="style-image">
+                    <div class="style-label">Athletic</div>
+                </div>
+                <div class="style-option" onclick="toggleStyle('romantic', this)">
+                    <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=200&fit=crop&crop=center" alt="Romantic Style" class="style-image">
+                    <div class="style-label">Romantic</div>
+                </div>
+                <div class="style-option" onclick="toggleStyle('edgy', this)">
+                    <img src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=300&h=200&fit=crop&crop=center" alt="Edgy Style" class="style-image">
+                    <div class="style-label">Edgy</div>
+                </div>
+                <div class="style-option" onclick="toggleStyle('preppy', this)">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop&crop=center" alt="Preppy Style" class="style-image">
+                    <div class="style-label">Preppy</div>
+                </div>
             </div>
-            <div class="quiz-nav">
-                <button class="quiz-btn" onclick="prevStep()"> Previous</button>
-                <button class="quiz-btn primary" onclick="nextStep()" disabled id="nextBtn3">Next </button>
+            <div class="btn-container">
+                <button class="btn" id="nextBtn3" onclick="nextStep()" disabled>Next</button>
             </div>
         </div>
 
         <!-- Step 4: Results -->
-        <div class="quiz-step" id="step4">
+        <div class="quiz-step hidden" id="step4">
             <div class="results-container">
-                <h2 class="results-title">Welcome to ATYR, <span id="resultName"></span>!</h2>
-                <p class="results-description">
-                    Based on your preferences, we've created a personalized style profile just for you. 
-                    Our AI will now recommend outfits that match your unique taste and personality.
-                </p>
-                <div class="style-tags" id="styleTags">
-                    <!-- Style tags will be generated here -->
+                <div class="welcome-message">
+                    Welcome to atyr, <span class="welcome-name" id="resultName"></span>!
                 </div>
-                <div class="quiz-nav">
-                    <button class="quiz-btn" onclick="prevStep()"> Previous</button>
-                    <button class="quiz-btn primary" onclick="startMixing()">Start Mixing & Matching </button>
+                <div class="results-description">
+                    Your style preferences have been saved. We'll use this to recommend the perfect outfits for you!
+                </div>
+                <div class="style-summary">
+                    <div class="style-summary-title">Your Style Profile</div>
+                    <div class="selected-styles" id="selectedStylesList"></div>
+                </div>
+                <div class="btn-container">
+                    <button class="btn" onclick="completeQuiz()">Start Mixing & Matching</button>
                 </div>
             </div>
         </div>
     </div>
-</body>
-</html>
+
     <script>
-        // Quiz state
+        // Quiz State
         let currentStep = 1;
-        let totalSteps = 4;
         let quizData = {
             name: '',
             gender: '',
             selectedStyles: []
         };
 
-        // Style images with different aesthetics
-        const styleImages = [
-            { url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop', style: 'minimalist' },
-            { url: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=400&fit=crop', style: 'bohemian' },
-            { url: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=400&fit=crop', style: 'streetwear' },
-            { url: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop', style: 'classic' },
-            { url: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=400&fit=crop', style: 'vintage' },
-            { url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop', style: 'modern' },
-            { url: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop', style: 'edgy' },
-            { url: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=400&fit=crop', style: 'romantic' },
-            { url: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=400&fit=crop', style: 'athletic' },
-            { url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop', style: 'preppy' },
-            { url: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop', style: 'artistic' },
-            { url: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=400&fit=crop', style: 'casual' },
-            { url: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=400&h=400&fit=crop', style: 'elegant' },
-            { url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop', style: 'trendy' },
-            { url: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop', style: 'sophisticated' },
-            { url: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=400&fit=crop', style: 'playful' }
-        ];
-
-        // Initialize quiz
-        function initQuiz() {
-            loadStyleImages();
-            updateProgress();
-        }
-
-        // Load style images
-        function loadStyleImages() {
-            const styleBoard = document.getElementById('styleBoard');
-            styleBoard.innerHTML = '';
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Name input validation
+            const nameInput = document.getElementById('userName');
+            const nextBtn1 = document.getElementById('nextBtn1');
             
-            styleImages.forEach((image, index) => {
-                const imageDiv = document.createElement('div');
-                imageDiv.className = 'style-image';
-                imageDiv.innerHTML = `<img src="${image.url}" alt="${image.style}" loading="lazy">`;
-                imageDiv.onclick = () => selectStyle(image.style, imageDiv);
-                styleBoard.appendChild(imageDiv);
-            });
-        }
-
-        // Select style image
-        function selectStyle(style, element) {
-            if (element.classList.contains('selected')) {
-                element.classList.remove('selected');
-                quizData.selectedStyles = quizData.selectedStyles.filter(s => s !== style);
-            } else {
-                if (quizData.selectedStyles.length < 10) {
-                    element.classList.add('selected');
-                    quizData.selectedStyles.push(style);
+            nameInput.addEventListener('input', function() {
+                if (this.value.trim().length >= 2) {
+                    nextBtn1.disabled = false;
+                    nextBtn1.style.background = 'linear-gradient(135deg, #9CAF88, #8BA077)';
                 } else {
-                    alert('You can select up to 10 styles!');
+                    nextBtn1.disabled = true;
+                    nextBtn1.style.background = '#ccc';
+                }
+            });
+        });
+
+        // Navigation Functions
+        function nextStep() {
+            if (currentStep === 1) {
+                const name = document.getElementById('userName').value.trim();
+                if (!name) {
+                    alert('Please enter your name');
+                    return;
+                }
+                quizData.name = name;
+            } else if (currentStep === 3) {
+                if (quizData.selectedStyles.length < 5) {
+                    alert('Please select at least 5 styles');
                     return;
                 }
             }
             
-            updateNextButton();
+            // Hide current step
+            const currentStepEl = document.getElementById(`step${currentStep}`);
+            currentStepEl.classList.add('hidden');
+            
+            // Update progress
+            currentStep++;
+            updateProgress();
+            
+            // Show next step
+            const nextStepEl = document.getElementById(`step${currentStep}`);
+            nextStepEl.classList.remove('hidden');
+            nextStepEl.classList.add('active');
+            
+            // Add animation
+            nextStepEl.style.animation = 'fadeIn 0.6s ease-out';
+            
+            // Handle results step
+            if (currentStep === 4) {
+                showResults();
+            }
         }
 
-        // Select gender
-        function selectGender(gender) {
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const currentStepEl = document.getElementById('currentStep');
+            const progress = (currentStep / 4) * 100;
+            
+            progressFill.style.width = progress + '%';
+            currentStepEl.textContent = currentStep;
+        }
+
+        // Gender Selection
+        function selectGender(gender, element) {
             // Remove previous selection
             document.querySelectorAll('.gender-option').forEach(option => {
                 option.classList.remove('selected');
             });
             
-            // Add selection to clicked option
-            event.target.closest('.gender-option').classList.add('selected');
+            // Add selection to clicked element
+            element.classList.add('selected');
             
+            // Update data
             quizData.gender = gender;
-            document.getElementById('nextBtn2').disabled = false;
+            
+            // Enable next button
+            const nextBtn2 = document.getElementById('nextBtn2');
+            nextBtn2.disabled = false;
+            nextBtn2.style.background = 'linear-gradient(135deg, #9CAF88, #8BA077)';
         }
 
-        // Next step
-        function nextStep() {
-            if (currentStep < totalSteps) {
-                // Validate current step
-                if (currentStep === 1) {
-                    const name = document.getElementById('userName').value.trim();
-                    if (!name) {
-                        alert('Please enter your name!');
-                        return;
-                    }
-                    quizData.name = name;
-                } else if (currentStep === 3) {
-                    if (quizData.selectedStyles.length < 5) {
-                        alert('Please select at least 5 styles!');
-                        return;
-                    }
-                }
-                
-                // Hide current step
-                document.getElementById(`step${currentStep}`).classList.remove('active');
-                
-                // Show next step
-                currentStep++;
-                document.getElementById(`step${currentStep}`).classList.add('active');
-                
-                // Update progress
-                updateProgress();
-                
-                // Generate results if on last step
-                if (currentStep === 4) {
-                    generateResults();
+        // Style Selection
+        function toggleStyle(style, element) {
+            if (quizData.selectedStyles.includes(style)) {
+                // Remove style
+                element.classList.remove('selected');
+                quizData.selectedStyles = quizData.selectedStyles.filter(s => s !== style);
+            } else {
+                // Add style (max 10)
+                if (quizData.selectedStyles.length < 10) {
+                    element.classList.add('selected');
+                    quizData.selectedStyles.push(style);
+                } else {
+                    alert('You can select up to 10 styles');
+                    return;
                 }
             }
+            
+            updateStyleCount();
         }
 
-        // Previous step
-        function prevStep() {
-            if (currentStep > 1) {
-                // Hide current step
-                document.getElementById(`step${currentStep}`).classList.remove('active');
-                
-                // Show previous step
-                currentStep--;
-                document.getElementById(`step${currentStep}`).classList.add('active');
-                
-                // Update progress
-                updateProgress();
+        function updateStyleCount() {
+            const count = quizData.selectedStyles.length;
+            const countEl = document.getElementById('selectionCount');
+            const nextBtn3 = document.getElementById('nextBtn3');
+            
+            if (count < 5) {
+                countEl.textContent = `Select at least ${5 - count} more styles`;
+                countEl.classList.remove('highlight');
+                nextBtn3.disabled = true;
+                nextBtn3.style.background = '#ccc';
+            } else {
+                countEl.textContent = `${count} styles selected - Great choice!`;
+                countEl.classList.add('highlight');
+                nextBtn3.disabled = false;
+                nextBtn3.style.background = 'linear-gradient(135deg, #9CAF88, #8BA077)';
             }
         }
 
-        // Update progress bar
-        function updateProgress() {
-            const progress = (currentStep / totalSteps) * 100;
-            document.getElementById('progressFill').style.width = `${progress}%`;
-        }
-
-        // Update next button state
-        function updateNextButton() {
-            const nextBtn = document.getElementById('nextBtn3');
-            if (nextBtn) {
-                nextBtn.disabled = quizData.selectedStyles.length < 5;
-            }
-        }
-
-        // Generate results
-        function generateResults() {
-            // Update name
+        // Results
+        function showResults() {
             document.getElementById('resultName').textContent = quizData.name;
             
-            // Generate style tags
-            const styleTags = document.getElementById('styleTags');
-            styleTags.innerHTML = '';
+            const stylesList = document.getElementById('selectedStylesList');
+            stylesList.innerHTML = '';
             
             quizData.selectedStyles.forEach(style => {
                 const tag = document.createElement('div');
                 tag.className = 'style-tag';
                 tag.textContent = style.charAt(0).toUpperCase() + style.slice(1);
-                styleTags.appendChild(tag);
+                stylesList.appendChild(tag);
+            });
+        }
+
+        function completeQuiz() {
+            // Save quiz data
+            localStorage.setItem('userProfile', JSON.stringify(quizData));
+            
+            // Redirect to main app
+            window.location.href = 'index.html';
+        }
+
+        // Add some interactive effects
+        document.querySelectorAll('.style-option').forEach(option => {
+            option.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
             });
             
-            // Save quiz data to localStorage
-            localStorage.setItem('userProfile', JSON.stringify(quizData));
-        }
-
-        // Start mixing and matching
-        function startMixing() {
-            // Redirect to main app
-            window.location.href = 'atyr-with-moodboard.html';
-        }
-
-        // Enter key support for name input
-        document.getElementById('userName').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                nextStep();
-            }
+            option.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('selected')) {
+                    this.style.transform = 'translateY(0) scale(1)';
+                }
+            });
         });
-
-        // Initialize quiz when page loads
-        document.addEventListener('DOMContentLoaded', initQuiz);
     </script>
 </body>
 </html>
