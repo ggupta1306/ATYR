@@ -2103,24 +2103,24 @@
             const randomBottom = allBottoms[Math.floor(Math.random() * allBottoms.length)];
             
             const greetings = [
-                `Hey there! 👋 ${userProfile.name ? `Nice to see you again, ${userProfile.name}!` : 'I\'m your personal stylist!'} I see you have ${currentTopName} + ${currentBottomName} selected. Want to see this look?<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">✨ Show This Fit</button><br><br>Or try this fresh combination: <strong>${randomTop} + ${randomBottom}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop}', '${randomBottom}')">Preview This Look</button>`,
+                `Hey! 👋 ${userProfile.name ? `What's up ${userProfile.name}!` : 'I\'m your stylist!'} You've got ${currentTopName} + ${currentBottomName} - looks good!<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">Show this fit</button><br><br>Or check out this combo: <strong>${randomTop} + ${randomBottom}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop}', '${randomBottom}')">Preview</button>`,
                 
-                `Hi! ${userProfile.name ? `Welcome back, ${userProfile.name}!` : 'Ready to find your perfect outfit?'} Your current selection looks great: ${currentTopName} + ${currentBottomName}<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">✨ Show This Fit</button><br><br>Here's another great option: <strong>${randomTop} + ${randomBottom}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop}', '${randomBottom}')">Preview This Look</button>`,
+                `Yo! ${userProfile.name ? `Hey ${userProfile.name}!` : 'Ready to look fresh?'} Your ${currentTopName} + ${currentBottomName} is solid<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">Show this fit</button><br><br>Want something different? Try <strong>${randomTop} + ${randomBottom}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop}', '${randomBottom}')">Preview</button>`,
                 
-                `Hello! ${userProfile.name ? `Great to see you, ${userProfile.name}!` : 'Let\'s make you look amazing!'} ✨ I love your current choice: ${currentTopName} + ${currentBottomName}<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">✨ Show This Fit</button><br><br>Want to try something different? <strong>${randomTop} + ${randomBottom}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop}', '${randomBottom}')">Preview This Look</button>`
+                `Hey! ${userProfile.name ? `Good to see you ${userProfile.name}!` : 'Let\'s find you something cool!'} ${currentTopName} + ${currentBottomName} is nice<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">Show this fit</button><br><br>Here's another option: <strong>${randomTop} + ${randomBottom}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop}', '${randomBottom}')">Preview</button>`
             ];
             return greetings[Math.floor(Math.random() * greetings.length)];
         }
         
         function getHelpResponse() {
-            return `I'm here to help you look amazing! 💫 ${userProfile.name ? `${userProfile.name}, ` : ''}just tell me where you're going - office, date, party, casual, or anything else! I'll recommend some perfect outfit combinations for you.`;
+            return `I'm here to help you look fresh! 💫 ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}just tell me where you're going - office, date, party, casual, whatever! I'll hook you up with some fire outfits.`;
         }
         
         function getThanksResponse() {
             const thanks = [
-                `You're so welcome! 😊 ${userProfile.name ? `${userProfile.name}, ` : ''}I love helping you look your best!`,
-                `Happy to help! ✨ ${userProfile.name ? `That's what I'm here for, ${userProfile.name}!` : 'That\'s what I\'m here for!'}`,
-                `Anytime! 💫 ${userProfile.name ? `Always happy to help you, ${userProfile.name}!` : 'Always happy to help!'}`
+                `No problem! 😊 ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}I got you!`,
+                `You're good! ✨ ${userProfile.name ? `That's what I'm here for ${userProfile.name}!` : 'That\'s what I\'m here for!'}`,
+                `Anytime! 💫 ${userProfile.name ? `Always here to help ${userProfile.name}!` : 'Always here to help!'}`
             ];
             return thanks[Math.floor(Math.random() * thanks.length)];
         }
@@ -2243,11 +2243,11 @@
             const randomBottom2 = allBottoms[Math.floor(Math.random() * allBottoms.length)];
             
             const responses = [
-                `I see you mentioned "${message}". ${userProfile.name ? `${userProfile.name}, ` : ''}Let me suggest some fresh outfit combinations for you:<br><br>✨ <strong>${randomTop1} + ${randomBottom1}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop1}', '${randomBottom1}')">Preview This Look</button><br><br>✨ <strong>${randomTop2} + ${randomBottom2}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop2}', '${randomBottom2}')">Preview This Look</button><br><br>Or tell me the specific occasion for more targeted recommendations!`,
+                `Got it! ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}here are some fresh combos:<br><br>🔥 <strong>${randomTop1} + ${randomBottom1}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop1}', '${randomBottom1}')">Preview</button><br><br>🔥 <strong>${randomTop2} + ${randomBottom2}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop2}', '${randomBottom2}')">Preview</button><br><br>What's the vibe? Office, date, party?`,
                 
-                `Interesting! ${userProfile.name ? `${userProfile.name}, ` : ''}Here are some great outfit ideas:<br><br>🎯 <strong>${randomTop1} + ${randomBottom1}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop1}', '${randomBottom1}')">Preview This Look</button><br><br>🎯 <strong>${randomTop2} + ${randomBottom2}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop2}', '${randomBottom2}')">Preview This Look</button><br><br>What's the occasion? I can give you more specific suggestions!`,
+                `Nice! ${userProfile.name ? `${userProfile.name}, ` : ''}check these out:<br><br>✨ <strong>${randomTop1} + ${randomBottom1}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop1}', '${randomBottom1}')">Preview</button><br><br>✨ <strong>${randomTop2} + ${randomBottom2}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop2}', '${randomBottom2}')">Preview</button><br><br>Where you headed?`,
                 
-                `Perfect! ${userProfile.name ? `${userProfile.name}, ` : ''}I have some amazing outfit combinations for you:<br><br>💫 <strong>${randomTop1} + ${randomBottom1}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop1}', '${randomBottom1}')">Preview This Look</button><br><br>💫 <strong>${randomTop2} + ${randomBottom2}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop2}', '${randomBottom2}')">Preview This Look</button><br><br>Tell me where you're heading for personalized recommendations!`
+                `Cool! ${userProfile.name ? `${userProfile.name}, ` : ''}try these:<br><br>💫 <strong>${randomTop1} + ${randomBottom1}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop1}', '${randomBottom1}')">Preview</button><br><br>💫 <strong>${randomTop2} + ${randomBottom2}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop2}', '${randomBottom2}')">Preview</button><br><br>What's the occasion?`
             ];
             
             return responses[Math.floor(Math.random() * responses.length)];
