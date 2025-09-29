@@ -2086,10 +2086,28 @@
             const currentTopName = currentTop.dataset.name;
             const currentBottomName = currentBottom.dataset.name;
             
+            // Generate random outfit suggestions
+            const allTops = [
+                'Classic White Tee', 'Black Sleeveless Dress', 'Yellow Vest', 'Brown Casual Shirt',
+                'Grey Loose Shirt', 'Black Blazer', 'Blue Striped T-Shirt', 'White Crewneck Sweater',
+                'White Long Sleeve', 'Elegant Blouse', 'Professional Button-Up'
+            ];
+            
+            const allBottoms = [
+                'Classic Denim Jeans', 'Black Soft Pants', 'Blue Striped Shorts', 'White Skirt',
+                'Black Jeans', 'Blue Denim Jeans', 'Brown Pants', 'Comfortable Joggers',
+                'White Trousers', 'Business Chinos', 'Formal Trousers'
+            ];
+            
+            const randomTop = allTops[Math.floor(Math.random() * allTops.length)];
+            const randomBottom = allBottoms[Math.floor(Math.random() * allBottoms.length)];
+            
             const greetings = [
-                `Hey there! 👋 ${userProfile.name ? `Nice to see you again, ${userProfile.name}!` : 'I\'m your personal stylist!'} I see you have ${currentTopName} + ${currentBottomName} selected. Want to see this look?<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">✨ Show This Fit</button><br><br>Or tell me where you're heading for more suggestions!`,
-                `Hi! ${userProfile.name ? `Welcome back, ${userProfile.name}!` : 'Ready to find your perfect outfit?'} Your current selection looks great: ${currentTopName} + ${currentBottomName}<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">✨ Show This Fit</button><br><br>Need suggestions for a specific occasion?`,
-                `Hello! ${userProfile.name ? `Great to see you, ${userProfile.name}!` : 'Let\'s make you look amazing!'} ✨ I love your current choice: ${currentTopName} + ${currentBottomName}<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">✨ Show This Fit</button><br><br>Tell me where you're heading for personalized recommendations!`
+                `Hey there! 👋 ${userProfile.name ? `Nice to see you again, ${userProfile.name}!` : 'I\'m your personal stylist!'} I see you have ${currentTopName} + ${currentBottomName} selected. Want to see this look?<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">✨ Show This Fit</button><br><br>Or try this fresh combination: <strong>${randomTop} + ${randomBottom}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop}', '${randomBottom}')">Preview This Look</button>`,
+                
+                `Hi! ${userProfile.name ? `Welcome back, ${userProfile.name}!` : 'Ready to find your perfect outfit?'} Your current selection looks great: ${currentTopName} + ${currentBottomName}<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">✨ Show This Fit</button><br><br>Here's another great option: <strong>${randomTop} + ${randomBottom}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop}', '${randomBottom}')">Preview This Look</button>`,
+                
+                `Hello! ${userProfile.name ? `Great to see you, ${userProfile.name}!` : 'Let\'s make you look amazing!'} ✨ I love your current choice: ${currentTopName} + ${currentBottomName}<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">✨ Show This Fit</button><br><br>Want to try something different? <strong>${randomTop} + ${randomBottom}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop}', '${randomBottom}')">Preview This Look</button>`
             ];
             return greetings[Math.floor(Math.random() * greetings.length)];
         }
@@ -2205,21 +2223,32 @@
         }
         
         function getDefaultResponse(message, currentTop, currentBottom) {
-            const responses = [
-                `I see you mentioned "${message}". ${userProfile.name ? `${userProfile.name}, ` : ''}Your current ${currentTop} and ${currentBottom} combo looks great! Is this for a specific occasion?`,
-                `Interesting! ${userProfile.name ? `${userProfile.name}, ` : ''}Tell me more about where you're going. Your ${currentTop} and ${currentBottom} combo could work for many occasions!`,
-                `I'd love to help you find the perfect outfit! ${userProfile.name ? `${userProfile.name}, ` : ''}What's the occasion? Your current ${currentTop} and ${currentBottom} look nice, but I can suggest something even better!`,
-                `Tell me more about the occasion - is it office, casual, formal, date, or party? ${userProfile.name ? `${userProfile.name}, ` : ''}I can recommend some great outfit combinations!`
+            // Generate random outfit recommendations
+            const allTops = [
+                'Classic White Tee', 'Black Sleeveless Dress', 'Yellow Vest', 'Brown Casual Shirt',
+                'Grey Loose Shirt', 'Black Blazer', 'Blue Striped T-Shirt', 'White Crewneck Sweater',
+                'White Long Sleeve', 'Elegant Blouse', 'Professional Button-Up'
             ];
             
-            // Add style-specific responses if we know their preferences
-            if (userProfile.style) {
-                const styleResponses = [
-                    `I see you mentioned "${message}". ${userProfile.name ? `${userProfile.name}, ` : ''}I know you love ${userProfile.style} styles - your current ${currentTop} and ${currentBottom} combo fits perfectly! What's the occasion?`,
-                    `Interesting! ${userProfile.name ? `${userProfile.name}, ` : ''}I can see your ${userProfile.style} style preferences coming through. Tell me more about where you're going!`
-                ];
-                responses.push(...styleResponses);
-            }
+            const allBottoms = [
+                'Classic Denim Jeans', 'Black Soft Pants', 'Blue Striped Shorts', 'White Skirt',
+                'Black Jeans', 'Blue Denim Jeans', 'Brown Pants', 'Comfortable Joggers',
+                'White Trousers', 'Business Chinos', 'Formal Trousers'
+            ];
+            
+            // Get random combinations (different each time)
+            const randomTop1 = allTops[Math.floor(Math.random() * allTops.length)];
+            const randomBottom1 = allBottoms[Math.floor(Math.random() * allBottoms.length)];
+            const randomTop2 = allTops[Math.floor(Math.random() * allTops.length)];
+            const randomBottom2 = allBottoms[Math.floor(Math.random() * allBottoms.length)];
+            
+            const responses = [
+                `I see you mentioned "${message}". ${userProfile.name ? `${userProfile.name}, ` : ''}Let me suggest some fresh outfit combinations for you:<br><br>✨ <strong>${randomTop1} + ${randomBottom1}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop1}', '${randomBottom1}')">Preview This Look</button><br><br>✨ <strong>${randomTop2} + ${randomBottom2}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop2}', '${randomBottom2}')">Preview This Look</button><br><br>Or tell me the specific occasion for more targeted recommendations!`,
+                
+                `Interesting! ${userProfile.name ? `${userProfile.name}, ` : ''}Here are some great outfit ideas:<br><br>🎯 <strong>${randomTop1} + ${randomBottom1}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop1}', '${randomBottom1}')">Preview This Look</button><br><br>🎯 <strong>${randomTop2} + ${randomBottom2}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop2}', '${randomBottom2}')">Preview This Look</button><br><br>What's the occasion? I can give you more specific suggestions!`,
+                
+                `Perfect! ${userProfile.name ? `${userProfile.name}, ` : ''}I have some amazing outfit combinations for you:<br><br>💫 <strong>${randomTop1} + ${randomBottom1}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop1}', '${randomBottom1}')">Preview This Look</button><br><br>💫 <strong>${randomTop2} + ${randomBottom2}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop2}', '${randomBottom2}')">Preview This Look</button><br><br>Tell me where you're heading for personalized recommendations!`
+            ];
             
             return responses[Math.floor(Math.random() * responses.length)];
         }
@@ -2727,5 +2756,6 @@
     </script>
 </body>
 </html>
-< ! - -   F o r c e   V e r c e l   r e d e p l o y   0 9 / 2 8 / 2 0 2 5   2 2 : 4 5 : 4 4   - - >  
+< ! - -   F o r c e   V e r c e l   r e d e p l o y   0 9 / 2 8 / 2 0 2 5   2 2 : 4 5 : 4 4   - - > 
+ 
  
