@@ -2068,6 +2068,19 @@
                 'sleep over': getSleepoverResponse(currentTopName, currentBottomName),
                 'sleep': getSleepoverResponse(currentTopName, currentBottomName),
                 'night': getSleepoverResponse(currentTopName, currentBottomName),
+                'blue jeans': getItemResponse('blue jeans', message),
+                'jeans': getItemResponse('jeans', message),
+                'white tee': getItemResponse('white tee', message),
+                'black dress': getItemResponse('black dress', message),
+                'blazer': getItemResponse('blazer', message),
+                'sweater': getItemResponse('sweater', message),
+                'shirt': getItemResponse('shirt', message),
+                'pants': getItemResponse('pants', message),
+                'skirt': getItemResponse('skirt', message),
+                'shorts': getItemResponse('shorts', message),
+                'goes with': getItemResponse('goes with', message),
+                'pairs with': getItemResponse('pairs with', message),
+                'matches': getItemResponse('matches', message),
                 'help': getHelpResponse(),
                 'thanks': getThanksResponse(),
                 'thank you': getThanksResponse(),
@@ -2237,6 +2250,40 @@
             }
         }
         
+        function getItemResponse(itemType, message) {
+            const messageLower = message.toLowerCase();
+            
+            // Handle specific item questions
+            if (itemType === 'blue jeans' || itemType === 'jeans') {
+                const responses = [
+                    `Blue jeans are super versatile! ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}They go great with:<br><br>👕 <strong>Classic White Tee</strong> - timeless combo<br><button class="ai-suggestion-btn" onclick="previewLook('Classic White Tee', 'Classic Denim Jeans')">Preview</button><br><br>👔 <strong>Professional Button-Up</strong> - smart casual<br><button class="ai-suggestion-btn" onclick="previewLook('Professional Button-Up', 'Classic Denim Jeans')">Preview</button><br><br>🧥 <strong>Black Blazer</strong> - elevated look<br><button class="ai-suggestion-btn" onclick="previewLook('Black Blazer', 'Classic Denim Jeans')">Preview</button>`,
+                    
+                    `Jeans are a wardrobe staple! ${userProfile.name ? `${userProfile.name}, ` : ''}Try pairing them with:<br><br>✨ <strong>White Crewneck Sweater</strong> - cozy and cool<br><button class="ai-suggestion-btn" onclick="previewLook('White Crewneck Sweater', 'Classic Denim Jeans')">Preview</button><br><br>✨ <strong>Elegant Blouse</strong> - feminine touch<br><button class="ai-suggestion-btn" onclick="previewLook('Elegant Blouse', 'Classic Denim Jeans')">Preview</button><br><br>✨ <strong>Brown Casual Shirt</strong> - earthy vibes<br><button class="ai-suggestion-btn" onclick="previewLook('Brown Casual Shirt', 'Classic Denim Jeans')">Preview</button>`
+                ];
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+            
+            if (itemType === 'white tee') {
+                const responses = [
+                    `White tees are classic! ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}They work with almost everything:<br><br>👖 <strong>Classic Denim Jeans</strong> - never fails<br><button class="ai-suggestion-btn" onclick="previewLook('Classic White Tee', 'Classic Denim Jeans')">Preview</button><br><br>🖤 <strong>Black Jeans</strong> - monochrome vibes<br><button class="ai-suggestion-btn" onclick="previewLook('Classic White Tee', 'Black Jeans')">Preview</button><br><br>🤍 <strong>White Skirt</strong> - clean look<br><button class="ai-suggestion-btn" onclick="previewLook('Classic White Tee', 'White Skirt')">Preview</button>`,
+                    
+                    `White tees are so versatile! ${userProfile.name ? `${userProfile.name}, ` : ''}Great with:<br><br>🔥 <strong>Comfortable Joggers</strong> - relaxed fit<br><button class="ai-suggestion-btn" onclick="previewLook('Classic White Tee', 'Comfortable Joggers')">Preview</button><br><br>🔥 <strong>Blue Striped Shorts</strong> - summer vibes<br><button class="ai-suggestion-btn" onclick="previewLook('Classic White Tee', 'Blue Striped Shorts')">Preview</button><br><br>🔥 <strong>Brown Pants</strong> - casual chic<br><button class="ai-suggestion-btn" onclick="previewLook('Classic White Tee', 'Brown Pants')">Preview</button>`
+                ];
+                return responses[Math.floor(Math.random() * responses.length)];
+            }
+            
+            if (itemType === 'black dress') {
+                return `Black dresses are elegant! ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}They're perfect on their own, but you can layer with:<br><br>🤍 <strong>White Skirt</strong> - layered look<br><button class="ai-suggestion-btn" onclick="previewLook('Black Sleeveless Dress', 'White Skirt')">Preview</button><br><br>👔 <strong>Black Blazer</strong> - professional<br><button class="ai-suggestion-btn" onclick="previewLook('Black Blazer', 'White Skirt')">Preview</button><br><br>✨ <strong>Elegant Blouse</strong> - sophisticated<br><button class="ai-suggestion-btn" onclick="previewLook('Elegant Blouse', 'White Skirt')">Preview</button>`;
+            }
+            
+            if (itemType === 'blazer') {
+                return `Blazers are perfect for smart casual! ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}Try with:<br><br>👖 <strong>Classic Denim Jeans</strong> - casual blazer look<br><button class="ai-suggestion-btn" onclick="previewLook('Black Blazer', 'Classic Denim Jeans')">Preview</button><br><br>👔 <strong>Formal Trousers</strong> - business ready<br><button class="ai-suggestion-btn" onclick="previewLook('Black Blazer', 'Formal Trousers')">Preview</button><br><br>🤍 <strong>White Skirt</strong> - elegant contrast<br><button class="ai-suggestion-btn" onclick="previewLook('Black Blazer', 'White Skirt')">Preview</button>`;
+            }
+            
+            // Generic response for other items
+            return `That's a great piece! ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}What kind of look are you going for? I can help you find the perfect pairing!`;
+        }
+        
         function getDefaultResponse(message, currentTop, currentBottom) {
             // Check if user is asking for something specific
             const messageLower = message.toLowerCase();
@@ -2272,8 +2319,15 @@
                 
                 return responses[Math.floor(Math.random() * responses.length)];
             } else {
-                // Generic response for other messages
-                return `Hey! ${userProfile.name ? `What's up ${userProfile.name}! ` : ''}What's going on? Need help with anything?`;
+                // Generic conversational responses
+                const responses = [
+                    `Hey! ${userProfile.name ? `What's up ${userProfile.name}! ` : ''}What's going on?`,
+                    `Yo! ${userProfile.name ? `How's it going ${userProfile.name}? ` : ''}What's happening?`,
+                    `Hey! ${userProfile.name ? `Good to see you ${userProfile.name}! ` : ''}What's up?`,
+                    `What's good? ${userProfile.name ? `Hey ${userProfile.name}! ` : ''}Need help with anything?`,
+                    `Hey! ${userProfile.name ? `What's up ${userProfile.name}! ` : ''}Anything I can help with?`
+                ];
+                return responses[Math.floor(Math.random() * responses.length)];
             }
         }
         
