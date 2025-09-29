@@ -2064,6 +2064,10 @@
                 'weekend': getWeekendResponse(currentTopName, currentBottomName),
                 'concert': getConcertResponse(currentTopName, currentBottomName),
                 'formal': getFormalResponse(currentTopName, currentBottomName),
+                'sleepover': getSleepoverResponse(currentTopName, currentBottomName),
+                'sleep over': getSleepoverResponse(currentTopName, currentBottomName),
+                'sleep': getSleepoverResponse(currentTopName, currentBottomName),
+                'night': getSleepoverResponse(currentTopName, currentBottomName),
                 'help': getHelpResponse(),
                 'thanks': getThanksResponse(),
                 'thank you': getThanksResponse(),
@@ -2222,35 +2226,55 @@
             }
         }
         
+        function getSleepoverResponse(currentTop, currentBottom) {
+            const comfy = ['Classic White Tee', 'White Crewneck Sweater', 'Comfortable Joggers', 'Classic Denim Jeans'];
+            const isComfy = comfy.some(item => currentTop.includes(item) || currentBottom.includes(item));
+            
+            if (isComfy) {
+                return `Perfect! ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}Your ${currentTop} + ${currentBottom} is ideal for a sleepover - comfy and cute! 🛋️<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTop}', '${currentBottom}')">Show this fit</button>`;
+            } else {
+                return `For a sleepover, ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}you want something comfy and cute:<br><br>🛋️ <strong>Classic White Tee + Comfortable Joggers</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Classic White Tee', 'Comfortable Joggers')">Preview</button><br><br>🛋️ <strong>White Crewneck Sweater + Classic Denim Jeans</strong><br><button class="ai-suggestion-btn" onclick="previewLook('White Crewneck Sweater', 'Classic Denim Jeans')">Preview</button><br><br>🛋️ <strong>Grey Loose Shirt + Black Soft Pants</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Grey Loose Shirt', 'Black Soft Pants')">Preview</button>`;
+            }
+        }
+        
         function getDefaultResponse(message, currentTop, currentBottom) {
-            // Generate random outfit recommendations
-            const allTops = [
-                'Classic White Tee', 'Black Sleeveless Dress', 'Yellow Vest', 'Brown Casual Shirt',
-                'Grey Loose Shirt', 'Black Blazer', 'Blue Striped T-Shirt', 'White Crewneck Sweater',
-                'White Long Sleeve', 'Elegant Blouse', 'Professional Button-Up'
-            ];
+            // Check if user is asking for something specific
+            const messageLower = message.toLowerCase();
             
-            const allBottoms = [
-                'Classic Denim Jeans', 'Black Soft Pants', 'Blue Striped Shorts', 'White Skirt',
-                'Black Jeans', 'Blue Denim Jeans', 'Brown Pants', 'Comfortable Joggers',
-                'White Trousers', 'Business Chinos', 'Formal Trousers'
-            ];
-            
-            // Get random combinations (different each time)
-            const randomTop1 = allTops[Math.floor(Math.random() * allTops.length)];
-            const randomBottom1 = allBottoms[Math.floor(Math.random() * allBottoms.length)];
-            const randomTop2 = allTops[Math.floor(Math.random() * allTops.length)];
-            const randomBottom2 = allBottoms[Math.floor(Math.random() * allBottoms.length)];
-            
-            const responses = [
-                `Got it! ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}here are some fresh combos:<br><br>🔥 <strong>${randomTop1} + ${randomBottom1}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop1}', '${randomBottom1}')">Preview</button><br><br>🔥 <strong>${randomTop2} + ${randomBottom2}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop2}', '${randomBottom2}')">Preview</button><br><br>What's the vibe? Office, date, party?`,
+            // Check for specific requests
+            if (messageLower.includes('need') || messageLower.includes('want') || messageLower.includes('looking for')) {
+                // Generate random outfit recommendations
+                const allTops = [
+                    'Classic White Tee', 'Black Sleeveless Dress', 'Yellow Vest', 'Brown Casual Shirt',
+                    'Grey Loose Shirt', 'Black Blazer', 'Blue Striped T-Shirt', 'White Crewneck Sweater',
+                    'White Long Sleeve', 'Elegant Blouse', 'Professional Button-Up'
+                ];
                 
-                `Nice! ${userProfile.name ? `${userProfile.name}, ` : ''}check these out:<br><br>✨ <strong>${randomTop1} + ${randomBottom1}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop1}', '${randomBottom1}')">Preview</button><br><br>✨ <strong>${randomTop2} + ${randomBottom2}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop2}', '${randomBottom2}')">Preview</button><br><br>Where you headed?`,
+                const allBottoms = [
+                    'Classic Denim Jeans', 'Black Soft Pants', 'Blue Striped Shorts', 'White Skirt',
+                    'Black Jeans', 'Blue Denim Jeans', 'Brown Pants', 'Comfortable Joggers',
+                    'White Trousers', 'Business Chinos', 'Formal Trousers'
+                ];
                 
-                `Cool! ${userProfile.name ? `${userProfile.name}, ` : ''}try these:<br><br>💫 <strong>${randomTop1} + ${randomBottom1}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop1}', '${randomBottom1}')">Preview</button><br><br>💫 <strong>${randomTop2} + ${randomBottom2}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop2}', '${randomBottom2}')">Preview</button><br><br>What's the occasion?`
-            ];
-            
-            return responses[Math.floor(Math.random() * responses.length)];
+                // Get random combinations (different each time)
+                const randomTop1 = allTops[Math.floor(Math.random() * allTops.length)];
+                const randomBottom1 = allBottoms[Math.floor(Math.random() * allBottoms.length)];
+                const randomTop2 = allTops[Math.floor(Math.random() * allTops.length)];
+                const randomBottom2 = allBottoms[Math.floor(Math.random() * allBottoms.length)];
+                
+                const responses = [
+                    `Got it! ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}here are some fresh combos:<br><br>🔥 <strong>${randomTop1} + ${randomBottom1}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop1}', '${randomBottom1}')">Preview</button><br><br>🔥 <strong>${randomTop2} + ${randomBottom2}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop2}', '${randomBottom2}')">Preview</button><br><br>What's the vibe? Office, date, party?`,
+                    
+                    `Nice! ${userProfile.name ? `${userProfile.name}, ` : ''}check these out:<br><br>✨ <strong>${randomTop1} + ${randomBottom1}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop1}', '${randomBottom1}')">Preview</button><br><br>✨ <strong>${randomTop2} + ${randomBottom2}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop2}', '${randomBottom2}')">Preview</button><br><br>Where you headed?`,
+                    
+                    `Cool! ${userProfile.name ? `${userProfile.name}, ` : ''}try these:<br><br>💫 <strong>${randomTop1} + ${randomBottom1}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop1}', '${randomBottom1}')">Preview</button><br><br>💫 <strong>${randomTop2} + ${randomBottom2}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop2}', '${randomBottom2}')">Preview</button><br><br>What's the occasion?`
+                ];
+                
+                return responses[Math.floor(Math.random() * responses.length)];
+            } else {
+                // Generic response for other messages
+                return `Hey! ${userProfile.name ? `What's up ${userProfile.name}! ` : ''}Tell me what you need - office, date, party, sleepover, whatever! I'll hook you up with some fire outfits.`;
+            }
         }
         
         // Preview specific looks
