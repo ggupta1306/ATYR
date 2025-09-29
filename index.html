@@ -1089,6 +1089,58 @@
             justify-content: center;
         }
         
+        /* Quiz Styles */
+        .quiz-step {
+            display: none;
+        }
+        
+        .quiz-step.active {
+            display: block;
+        }
+        
+        .quiz-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #9CAF88;
+            border-radius: 10px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .quiz-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .quiz-option {
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quiz-option:hover {
+            border-color: #9CAF88;
+            background: rgba(156, 175, 136, 0.1);
+        }
+        
+        .quiz-option.selected {
+            border-color: #9CAF88;
+            background: #9CAF88;
+            color: white;
+        }
+        
+        .quiz-option img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
         
         /* Responsive */
         @media (max-width: 768px) {
@@ -1403,6 +1455,69 @@
         </div>
     </div>
 
+    <!-- Quiz Modal -->
+    <div class="modal-overlay" id="quizModal">
+        <div class="modal-content">
+            <h2 style="text-align: center; margin-bottom: 2rem; color: #9CAF88; font-size: 2rem;">Style Quiz</h2>
+            
+            <!-- Quiz Step 1: Name -->
+            <div class="quiz-step active" id="quizStep1">
+                <h3>What's your name?</h3>
+                <input type="text" id="quizName" class="quiz-input" placeholder="Enter your name">
+                <button class="btn" onclick="nextQuizStep()">Next</button>
+            </div>
+            
+            <!-- Quiz Step 2: Gender -->
+            <div class="quiz-step" id="quizStep2" style="display: none;">
+                <h3>How do you identify?</h3>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectGender('male')">Male</div>
+                    <div class="quiz-option" onclick="selectGender('female')">Female</div>
+                    <div class="quiz-option" onclick="selectGender('other')">Other</div>
+                </div>
+                <button class="btn" onclick="nextQuizStep()" id="quizNext2" disabled>Next</button>
+            </div>
+            
+            <!-- Quiz Step 3: Style Selection -->
+            <div class="quiz-step" id="quizStep3" style="display: none;">
+                <h3>Select 5-10 styles you love:</h3>
+                <div class="quiz-options" id="styleOptions">
+                    <div class="quiz-option" onclick="toggleStyle('casual')">
+                        <img src="https://via.placeholder.com/150x100/ff6b6b/ffffff?text=Casual" alt="Casual">
+                        <div>Casual</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleStyle('formal')">
+                        <img src="https://via.placeholder.com/150x100/4ecdc4/ffffff?text=Formal" alt="Formal">
+                        <div>Formal</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleStyle('streetwear')">
+                        <img src="https://via.placeholder.com/150x100/45b7d1/ffffff?text=Streetwear" alt="Streetwear">
+                        <div>Streetwear</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleStyle('bohemian')">
+                        <img src="https://via.placeholder.com/150x100/f9ca24/ffffff?text=Bohemian" alt="Bohemian">
+                        <div>Bohemian</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleStyle('minimalist')">
+                        <img src="https://via.placeholder.com/150x100/6c5ce7/ffffff?text=Minimalist" alt="Minimalist">
+                        <div>Minimalist</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleStyle('vintage')">
+                        <img src="https://via.placeholder.com/150x100/a55eea/ffffff?text=Vintage" alt="Vintage">
+                        <div>Vintage</div>
+                    </div>
+                </div>
+                <button class="btn" onclick="nextQuizStep()" id="quizNext3" disabled>Next</button>
+            </div>
+            
+            <!-- Quiz Step 4: Results -->
+            <div class="quiz-step" id="quizStep4" style="display: none;">
+                <h3>Welcome to atyr, <span id="quizResultName"></span>!</h3>
+                <p>Your style preferences have been saved. Let's start mixing & matching!</p>
+                <button class="btn" onclick="completeQuiz()">Start Mixing & Matching</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Lightbox Modal -->
     <div class="lightbox-overlay" id="lightboxOverlay">
@@ -1432,6 +1547,12 @@
         // App State
         let currentTopIndex = 0;
         let currentBottomIndex = 0;
+        let currentQuizStep = 1;
+        let quizData = {
+            name: '',
+            gender: '',
+            selectedStyles: []
+        };
         let stats = {
             fitsMade: 0,
             timeSpent: 0,
@@ -2145,6 +2266,96 @@
             }, 3000);
         }
 
+        // Quiz Functions
+        function startQuiz() {
+            document.getElementById('quizModal').classList.add('active');
+        }
+
+        function selectGender(gender) {
+            document.querySelectorAll('#quizStep2 .quiz-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            quizData.gender = gender;
+            document.getElementById('quizNext2').disabled = false;
+            document.getElementById('quizNext2').style.background = '#9CAF88';
+            document.getElementById('quizNext2').style.cursor = 'pointer';
+        }
+
+        function toggleStyle(style) {
+            const option = event.target.closest('.quiz-option');
+            if (quizData.selectedStyles.includes(style)) {
+                option.classList.remove('selected');
+                quizData.selectedStyles = quizData.selectedStyles.filter(s => s !== style);
+            } else {
+                if (quizData.selectedStyles.length < 10) {
+                    option.classList.add('selected');
+                    quizData.selectedStyles.push(style);
+                }
+            }
+            updateQuizNextButton();
+        }
+
+        function nextQuizStep() {
+            if (currentQuizStep === 1) {
+                const name = document.getElementById('quizName').value.trim();
+                if (!name) {
+                    alert('Please enter your name');
+                    return;
+                }
+                quizData.name = name;
+            } else if (currentQuizStep === 3) {
+                if (quizData.selectedStyles.length < 5) {
+                    alert('Please select at least 5 styles');
+                    return;
+                }
+            }
+            
+            document.getElementById(`quizStep${currentQuizStep}`).style.display = 'none';
+            currentQuizStep++;
+            document.getElementById(`quizStep${currentQuizStep}`).style.display = 'block';
+            
+            if (currentQuizStep === 4) {
+                document.getElementById('quizResultName').textContent = quizData.name;
+            }
+        }
+
+        function completeQuiz() {
+            // Save quiz data
+            localStorage.setItem('userProfile', JSON.stringify(quizData));
+            
+            // Update AI user profile with quiz data
+            userProfile.name = quizData.name;
+            userProfile.gender = quizData.gender;
+            userProfile.style = quizData.selectedStyles.join(', ');
+            
+            // Update welcome message
+            document.getElementById('userName').textContent = quizData.name;
+            
+            // Add welcome message to chat
+            addMessageToChat(`Welcome to atyr, ${quizData.name}! I'm your personal stylist and I'm excited to help you find the perfect outfits. I see you're into ${quizData.selectedStyles.join(', ')} styles - that's great! What can I help you with today?`, 'ai');
+            
+            // Close quiz modal
+            document.getElementById('quizModal').classList.remove('active');
+            
+            // Reset quiz
+            currentQuizStep = 1;
+            quizData = { name: '', gender: '', selectedStyles: [] };
+        }
+
+        function updateQuizNextButton() {
+            const nextBtn = document.getElementById('quizNext3');
+            if (quizData.selectedStyles.length >= 5) {
+                nextBtn.disabled = false;
+                nextBtn.style.background = '#9CAF88';
+                nextBtn.style.cursor = 'pointer';
+            } else {
+                nextBtn.disabled = true;
+                nextBtn.style.background = '#ccc';
+                nextBtn.style.cursor = 'not-allowed';
+            }
+        }
 
         function updateStats() {
             document.getElementById('fitsMade').textContent = stats.fitsMade;
@@ -2153,6 +2364,7 @@
         }
 
         // Event Listeners
+        document.getElementById('startQuizBtn').addEventListener('click', startQuiz);
         document.getElementById('viewMoodBoardBtn').addEventListener('click', () => {
             window.location.href = 'moodboard.html';
         });
