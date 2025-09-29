@@ -24,7 +24,7 @@
             position: relative;
             touch-action: manipulation;
         }
-
+        
         /* Cool Intro Animation */
         .intro-animation {
             position: fixed;
@@ -2308,7 +2308,7 @@
         async function getGroqAIResponse(message, currentTop, currentBottom) {
             try {
                 // Groq API configuration
-                const GROQ_API_KEY = 'YOUR_GROQ_API_KEY_HERE'; // Replace with your actual Groq API key - Updated for Vercel deployment
+                const GROQ_API_KEY = 'YOUR_GROQ_API_KEY_HERE'; // Replace with your actual Groq API key
                 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
                 
                 const systemPrompt = `You are a friendly, knowledgeable fashion stylist and personal shopper. You help users find the perfect outfits for any occasion. 
@@ -2838,7 +2838,7 @@ Bottoms: Classic Denim Jeans, Black Soft Pants, Blue Striped Shorts, White Skirt
             
             // Handle specific item questions
             if (itemType === 'blue jeans' || itemType === 'jeans') {
-                const responses = [
+            const responses = [
                     `Blue jeans are super versatile! ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}They go great with:<br><br>👕 <strong>Classic White Tee</strong> - timeless combo<br><button class="ai-suggestion-btn" onclick="previewLook('Classic White Tee', 'Classic Denim Jeans')">Preview</button><br><br>👔 <strong>Professional Button-Up</strong> - smart casual<br><button class="ai-suggestion-btn" onclick="previewLook('Professional Button-Up', 'Classic Denim Jeans')">Preview</button><br><br>🧥 <strong>Black Blazer</strong> - elevated look<br><button class="ai-suggestion-btn" onclick="previewLook('Black Blazer', 'Classic Denim Jeans')">Preview</button>`,
                     
                     `Jeans are a wardrobe staple! ${userProfile.name ? `${userProfile.name}, ` : ''}Try pairing them with:<br><br>✨ <strong>White Crewneck Sweater</strong> - cozy and cool<br><button class="ai-suggestion-btn" onclick="previewLook('White Crewneck Sweater', 'Classic Denim Jeans')">Preview</button><br><br>✨ <strong>Elegant Blouse</strong> - feminine touch<br><button class="ai-suggestion-btn" onclick="previewLook('Elegant Blouse', 'Classic Denim Jeans')">Preview</button><br><br>✨ <strong>Brown Casual Shirt</strong> - earthy vibes<br><button class="ai-suggestion-btn" onclick="previewLook('Brown Casual Shirt', 'Classic Denim Jeans')">Preview</button>`
@@ -2899,8 +2899,8 @@ Bottoms: Classic Denim Jeans, Black Soft Pants, Blue Striped Shorts, White Skirt
                     
                     `Cool! ${userProfile.name ? `${userProfile.name}, ` : ''}try these:<br><br>💫 <strong>${randomTop1} + ${randomBottom1}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop1}', '${randomBottom1}')">Preview</button><br><br>💫 <strong>${randomTop2} + ${randomBottom2}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop2}', '${randomBottom2}')">Preview</button><br><br>What's the occasion?`
                 ];
-                
-                return responses[Math.floor(Math.random() * responses.length)];
+            
+            return responses[Math.floor(Math.random() * responses.length)];
             } else {
                 // Generic conversational responses
                 const responses = [
