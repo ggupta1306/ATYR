@@ -2107,17 +2107,17 @@
             const randomBottom = allBottoms[Math.floor(Math.random() * allBottoms.length)];
             
             const greetings = [
-                `Hey! 👋 ${userProfile.name ? `What's up ${userProfile.name}!` : 'I\'m your stylist!'} You've got ${currentTopName} + ${currentBottomName} - looks good!<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">Show this fit</button><br><br>Or check out this combo: <strong>${randomTop} + ${randomBottom}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop}', '${randomBottom}')">Preview</button>`,
+                `Hey! 👋 ${userProfile.name ? `What's up ${userProfile.name}!` : 'How\'s it going?'} I see you've got ${currentTopName} + ${currentBottomName} selected. What's up?`,
                 
-                `Yo! ${userProfile.name ? `Hey ${userProfile.name}!` : 'Ready to look fresh?'} Your ${currentTopName} + ${currentBottomName} is solid<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">Show this fit</button><br><br>Want something different? Try <strong>${randomTop} + ${randomBottom}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop}', '${randomBottom}')">Preview</button>`,
+                `Yo! ${userProfile.name ? `Hey ${userProfile.name}!` : 'What\'s good?'} Your ${currentTopName} + ${currentBottomName} looks nice. What's going on?`,
                 
-                `Hey! ${userProfile.name ? `Good to see you ${userProfile.name}!` : 'Let\'s find you something cool!'} ${currentTopName} + ${currentBottomName} is nice<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">Show this fit</button><br><br>Here's another option: <strong>${randomTop} + ${randomBottom}</strong><br><button class="ai-suggestion-btn" onclick="previewLook('${randomTop}', '${randomBottom}')">Preview</button>`
+                `Hey! ${userProfile.name ? `Good to see you ${userProfile.name}!` : 'How are you doing?'} I see your ${currentTopName} + ${currentBottomName} combo. What's happening?`
             ];
             return greetings[Math.floor(Math.random() * greetings.length)];
         }
         
         function getHelpResponse() {
-            return `I'm here to help you look fresh! 💫 ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}just tell me where you're going - office, date, party, casual, whatever! I'll hook you up with some fire outfits.`;
+            return `Hey! ${userProfile.name ? `What's up ${userProfile.name}! ` : ''}I'm here to help with outfit stuff if you need it. What's going on?`;
         }
         
         function getThanksResponse() {
@@ -2273,7 +2273,7 @@
                 return responses[Math.floor(Math.random() * responses.length)];
             } else {
                 // Generic response for other messages
-                return `Hey! ${userProfile.name ? `What's up ${userProfile.name}! ` : ''}Tell me what you need - office, date, party, sleepover, whatever! I'll hook you up with some fire outfits.`;
+                return `Hey! ${userProfile.name ? `What's up ${userProfile.name}! ` : ''}What's going on? Need help with anything?`;
             }
         }
         
