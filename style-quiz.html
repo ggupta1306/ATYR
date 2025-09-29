@@ -341,6 +341,69 @@
             color: white;
         }
         
+        /* Color Selection */
+        .color-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .color-option {
+            aspect-ratio: 1;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .color-option:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .color-option.selected {
+            border-color: #9CAF88;
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 15px 35px rgba(156, 175, 136, 0.3);
+        }
+        
+        .color-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+        }
+        
+        .color-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 0.5rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #333;
+        }
+        
+        .color-option.selected .color-label {
+            background: rgba(156, 175, 136, 0.9);
+            color: white;
+        }
+        
         .selection-count {
             text-align: center;
             margin-bottom: 1rem;
@@ -455,6 +518,27 @@
             font-weight: 500;
         }
         
+        .selected-colors {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+        
+        .color-tag {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid #9CAF88;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: white;
+            text-shadow: 0 0 5px rgba(0,0,0,0.8);
+        }
+        
         /* Animations */
         .fade-in {
             animation: fadeIn 0.6s ease-out;
@@ -541,7 +625,7 @@
         <div class="progress-container">
             <div class="progress-header">
                 <div class="progress-title">Style Quiz</div>
-                <div class="progress-step">Step <span id="currentStep">1</span> of 4</div>
+                <div class="progress-step">Step <span id="currentStep">1</span> of 5</div>
             </div>
             <div class="progress-bar">
                 <div class="progress-fill" id="progressFill" style="width: 25%"></div>
@@ -583,50 +667,98 @@
             </div>
         </div>
 
-        <!-- Step 3: Style Selection -->
+        <!-- Step 3: Favorite Colors -->
         <div class="quiz-step hidden" id="step3">
+            <div class="step-title">What are your favorite colors?</div>
+            <div class="step-subtitle">Choose 3-5 colors that you love to wear</div>
+            <div class="selection-count" id="colorCount">Select at least 3 colors</div>
+            <div class="color-options">
+                <div class="color-option" onclick="toggleColor('black', this)" style="background: #000000;">
+                    <div class="color-label">Black</div>
+                </div>
+                <div class="color-option" onclick="toggleColor('white', this)" style="background: #ffffff; border: 2px solid #ddd;">
+                    <div class="color-label">White</div>
+                </div>
+                <div class="color-option" onclick="toggleColor('navy', this)" style="background: #000080;">
+                    <div class="color-label">Navy</div>
+                </div>
+                <div class="color-option" onclick="toggleColor('grey', this)" style="background: #808080;">
+                    <div class="color-label">Grey</div>
+                </div>
+                <div class="color-option" onclick="toggleColor('brown', this)" style="background: #8B4513;">
+                    <div class="color-label">Brown</div>
+                </div>
+                <div class="color-option" onclick="toggleColor('red', this)" style="background: #FF0000;">
+                    <div class="color-label">Red</div>
+                </div>
+                <div class="color-option" onclick="toggleColor('blue', this)" style="background: #0000FF;">
+                    <div class="color-label">Blue</div>
+                </div>
+                <div class="color-option" onclick="toggleColor('green', this)" style="background: #008000;">
+                    <div class="color-label">Green</div>
+                </div>
+                <div class="color-option" onclick="toggleColor('yellow', this)" style="background: #FFFF00;">
+                    <div class="color-label">Yellow</div>
+                </div>
+                <div class="color-option" onclick="toggleColor('pink', this)" style="background: #FFC0CB;">
+                    <div class="color-label">Pink</div>
+                </div>
+                <div class="color-option" onclick="toggleColor('purple', this)" style="background: #800080;">
+                    <div class="color-label">Purple</div>
+                </div>
+                <div class="color-option" onclick="toggleColor('orange', this)" style="background: #FFA500;">
+                    <div class="color-label">Orange</div>
+                </div>
+            </div>
+            <div class="btn-container">
+                <button class="btn" id="nextBtn3" onclick="nextStep()" disabled>Next</button>
+            </div>
+        </div>
+
+        <!-- Step 4: Style Selection -->
+        <div class="quiz-step hidden" id="step4">
             <div class="step-title">Select your favorite styles</div>
-            <div class="step-subtitle">Choose 5-10 styles that resonate with you</div>
-            <div class="selection-count" id="selectionCount">Select at least 5 styles</div>
+            <div class="step-subtitle">Choose 3-5 styles that resonate with you</div>
+            <div class="selection-count" id="selectionCount">Select at least 3 styles</div>
             <div class="style-options">
                 <div class="style-option" onclick="toggleStyle('casual', this)">
-                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&h=200&fit=crop&crop=center" alt="Casual Style" class="style-image">
+                    <img src="https://picsum.photos/300/200?random=1" alt="Casual Style" class="style-image">
                     <div class="style-label">Casual</div>
                 </div>
                 <div class="style-option" onclick="toggleStyle('formal', this)">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop&crop=center" alt="Formal Style" class="style-image">
+                    <img src="https://picsum.photos/300/200?random=2" alt="Formal Style" class="style-image">
                     <div class="style-label">Formal</div>
                 </div>
                 <div class="style-option" onclick="toggleStyle('streetwear', this)">
-                    <img src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=300&h=200&fit=crop&crop=center" alt="Streetwear Style" class="style-image">
+                    <img src="https://picsum.photos/300/200?random=3" alt="Streetwear Style" class="style-image">
                     <div class="style-label">Streetwear</div>
                 </div>
                 <div class="style-option" onclick="toggleStyle('bohemian', this)">
-                    <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=200&fit=crop&crop=center" alt="Bohemian Style" class="style-image">
+                    <img src="https://picsum.photos/300/200?random=4" alt="Bohemian Style" class="style-image">
                     <div class="style-label">Bohemian</div>
                 </div>
                 <div class="style-option" onclick="toggleStyle('minimalist', this)">
-                    <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=300&h=200&fit=crop&crop=center" alt="Minimalist Style" class="style-image">
+                    <img src="https://picsum.photos/300/200?random=5" alt="Minimalist Style" class="style-image">
                     <div class="style-label">Minimalist</div>
                 </div>
                 <div class="style-option" onclick="toggleStyle('vintage', this)">
-                    <img src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=300&h=200&fit=crop&crop=center" alt="Vintage Style" class="style-image">
+                    <img src="https://picsum.photos/300/200?random=6" alt="Vintage Style" class="style-image">
                     <div class="style-label">Vintage</div>
                 </div>
                 <div class="style-option" onclick="toggleStyle('athletic', this)">
-                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop&crop=center" alt="Athletic Style" class="style-image">
+                    <img src="https://picsum.photos/300/200?random=7" alt="Athletic Style" class="style-image">
                     <div class="style-label">Athletic</div>
                 </div>
                 <div class="style-option" onclick="toggleStyle('romantic', this)">
-                    <img src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=300&h=200&fit=crop&crop=center" alt="Romantic Style" class="style-image">
+                    <img src="https://picsum.photos/300/200?random=8" alt="Romantic Style" class="style-image">
                     <div class="style-label">Romantic</div>
                 </div>
                 <div class="style-option" onclick="toggleStyle('edgy', this)">
-                    <img src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=300&h=200&fit=crop&crop=center" alt="Edgy Style" class="style-image">
+                    <img src="https://picsum.photos/300/200?random=9" alt="Edgy Style" class="style-image">
                     <div class="style-label">Edgy</div>
                 </div>
                 <div class="style-option" onclick="toggleStyle('preppy', this)">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop&crop=center" alt="Preppy Style" class="style-image">
+                    <img src="https://picsum.photos/300/200?random=10" alt="Preppy Style" class="style-image">
                     <div class="style-label">Preppy</div>
                 </div>
             </div>
@@ -635,8 +767,8 @@
             </div>
         </div>
 
-        <!-- Step 4: Results -->
-        <div class="quiz-step hidden" id="step4">
+        <!-- Step 5: Results -->
+        <div class="quiz-step hidden" id="step5">
             <div class="results-container">
                 <div class="welcome-message">
                     Welcome to atyr, <span class="welcome-name" id="resultName"></span>!
@@ -647,6 +779,10 @@
                 <div class="style-summary">
                     <div class="style-summary-title">Your Style Profile</div>
                     <div class="selected-styles" id="selectedStylesList"></div>
+                </div>
+                <div class="style-summary">
+                    <div class="style-summary-title">Your Favorite Colors</div>
+                    <div class="selected-colors" id="selectedColorsList"></div>
                 </div>
                 <div class="btn-container">
                     <button class="btn" onclick="completeQuiz()">Start Mixing & Matching</button>
@@ -661,6 +797,7 @@
         let quizData = {
             name: '',
             gender: '',
+            selectedColors: [],
             selectedStyles: []
         };
 
@@ -691,8 +828,13 @@
                 }
                 quizData.name = name;
             } else if (currentStep === 3) {
-                if (quizData.selectedStyles.length < 5) {
-                    alert('Please select at least 5 styles');
+                if (quizData.selectedColors.length < 3) {
+                    alert('Please select at least 3 colors');
+                    return;
+                }
+            } else if (currentStep === 4) {
+                if (quizData.selectedStyles.length < 3) {
+                    alert('Please select at least 3 styles');
                     return;
                 }
             }
@@ -714,7 +856,7 @@
             nextStepEl.style.animation = 'fadeIn 0.6s ease-out';
             
             // Handle results step
-            if (currentStep === 4) {
+            if (currentStep === 5) {
                 showResults();
             }
         }
@@ -722,7 +864,7 @@
         function updateProgress() {
             const progressFill = document.getElementById('progressFill');
             const currentStepEl = document.getElementById('currentStep');
-            const progress = (currentStep / 4) * 100;
+            const progress = (currentStep / 5) * 100;
             
             progressFill.style.width = progress + '%';
             currentStepEl.textContent = currentStep;
@@ -747,6 +889,44 @@
             nextBtn2.style.background = 'linear-gradient(135deg, #9CAF88, #8BA077)';
         }
 
+        // Color Selection
+        function toggleColor(color, element) {
+            if (quizData.selectedColors.includes(color)) {
+                // Remove color
+                element.classList.remove('selected');
+                quizData.selectedColors = quizData.selectedColors.filter(c => c !== color);
+            } else {
+                // Add color (max 5)
+                if (quizData.selectedColors.length < 5) {
+                    element.classList.add('selected');
+                    quizData.selectedColors.push(color);
+                } else {
+                    alert('You can select up to 5 colors');
+                        return;
+                    }
+                }
+                
+            updateColorCount();
+        }
+
+        function updateColorCount() {
+            const count = quizData.selectedColors.length;
+            const countEl = document.getElementById('colorCount');
+            const nextBtn3 = document.getElementById('nextBtn3');
+            
+            if (count < 3) {
+                countEl.textContent = `Select at least ${3 - count} more colors`;
+                countEl.classList.remove('highlight');
+                nextBtn3.disabled = true;
+                nextBtn3.style.background = '#ccc';
+            } else {
+                countEl.textContent = `${count} colors selected - Great choice!`;
+                countEl.classList.add('highlight');
+                nextBtn3.disabled = false;
+                nextBtn3.style.background = 'linear-gradient(135deg, #9CAF88, #8BA077)';
+            }
+        }
+
         // Style Selection
         function toggleStyle(style, element) {
             if (quizData.selectedStyles.includes(style)) {
@@ -754,13 +934,13 @@
                 element.classList.remove('selected');
                 quizData.selectedStyles = quizData.selectedStyles.filter(s => s !== style);
             } else {
-                // Add style (max 10)
-                if (quizData.selectedStyles.length < 10) {
+                // Add style (max 5)
+                    if (quizData.selectedStyles.length < 5) {
                     element.classList.add('selected');
                     quizData.selectedStyles.push(style);
                 } else {
-                    alert('You can select up to 10 styles');
-                    return;
+                    alert('You can select up to 5 styles');
+                        return;
                 }
             }
             
@@ -772,8 +952,8 @@
             const countEl = document.getElementById('selectionCount');
             const nextBtn3 = document.getElementById('nextBtn3');
             
-            if (count < 5) {
-                countEl.textContent = `Select at least ${5 - count} more styles`;
+            if (count < 3) {
+                countEl.textContent = `Select at least ${3 - count} more styles`;
                 countEl.classList.remove('highlight');
                 nextBtn3.disabled = true;
                 nextBtn3.style.background = '#ccc';
@@ -789,6 +969,7 @@
         function showResults() {
             document.getElementById('resultName').textContent = quizData.name;
             
+            // Show selected styles
             const stylesList = document.getElementById('selectedStylesList');
             stylesList.innerHTML = '';
             
@@ -798,12 +979,39 @@
                 tag.textContent = style.charAt(0).toUpperCase() + style.slice(1);
                 stylesList.appendChild(tag);
             });
+            
+            // Show selected colors
+            const colorsList = document.getElementById('selectedColorsList');
+            colorsList.innerHTML = '';
+            
+            const colorMap = {
+                'black': '#000000',
+                'white': '#ffffff',
+                'navy': '#000080',
+                'grey': '#808080',
+                'brown': '#8B4513',
+                'red': '#FF0000',
+                'blue': '#0000FF',
+                'green': '#008000',
+                'yellow': '#FFFF00',
+                'pink': '#FFC0CB',
+                'purple': '#800080',
+                'orange': '#FFA500'
+            };
+            
+            quizData.selectedColors.forEach(color => {
+                const tag = document.createElement('div');
+                tag.className = 'color-tag';
+                tag.style.background = colorMap[color] || '#9CAF88';
+                tag.textContent = color.charAt(0).toUpperCase();
+                colorsList.appendChild(tag);
+            });
         }
-
+            
         function completeQuiz() {
             // Save quiz data
             localStorage.setItem('userProfile', JSON.stringify(quizData));
-            
+
             // Redirect to main app
             window.location.href = 'index.html';
         }

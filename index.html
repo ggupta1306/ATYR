@@ -1873,30 +1873,30 @@
             
             <!-- Quiz Step 3: Style Selection -->
             <div class="quiz-step" id="quizStep3" style="display: none;">
-                <h3>Select 5-10 styles you love:</h3>
+                <h3>Select 3-5 styles you love:</h3>
                 <div class="quiz-options" id="styleOptions">
                     <div class="quiz-option" onclick="toggleStyle('casual')">
-                        <img src="https://via.placeholder.com/150x100/ff6b6b/ffffff?text=Casual" alt="Casual">
+                        <img src="https://picsum.photos/150/100?random=1" alt="Casual">
                         <div>Casual</div>
                     </div>
                     <div class="quiz-option" onclick="toggleStyle('formal')">
-                        <img src="https://via.placeholder.com/150x100/4ecdc4/ffffff?text=Formal" alt="Formal">
+                        <img src="https://picsum.photos/150/100?random=2" alt="Formal">
                         <div>Formal</div>
                     </div>
                     <div class="quiz-option" onclick="toggleStyle('streetwear')">
-                        <img src="https://via.placeholder.com/150x100/45b7d1/ffffff?text=Streetwear" alt="Streetwear">
+                        <img src="https://picsum.photos/150/100?random=3" alt="Streetwear">
                         <div>Streetwear</div>
                     </div>
                     <div class="quiz-option" onclick="toggleStyle('bohemian')">
-                        <img src="https://via.placeholder.com/150x100/f9ca24/ffffff?text=Bohemian" alt="Bohemian">
+                        <img src="https://picsum.photos/150/100?random=4" alt="Bohemian">
                         <div>Bohemian</div>
                     </div>
                     <div class="quiz-option" onclick="toggleStyle('minimalist')">
-                        <img src="https://via.placeholder.com/150x100/6c5ce7/ffffff?text=Minimalist" alt="Minimalist">
+                        <img src="https://picsum.photos/150/100?random=5" alt="Minimalist">
                         <div>Minimalist</div>
                     </div>
                     <div class="quiz-option" onclick="toggleStyle('vintage')">
-                        <img src="https://via.placeholder.com/150x100/a55eea/ffffff?text=Vintage" alt="Vintage">
+                        <img src="https://picsum.photos/150/100?random=6" alt="Vintage">
                         <div>Vintage</div>
                     </div>
                 </div>
@@ -3103,7 +3103,7 @@ IMPORTANT: Always suggest items from the list above. Never say you can't find it
                 option.classList.remove('selected');
                 quizData.selectedStyles = quizData.selectedStyles.filter(s => s !== style);
             } else {
-                if (quizData.selectedStyles.length < 10) {
+                if (quizData.selectedStyles.length < 5) {
                     option.classList.add('selected');
                     quizData.selectedStyles.push(style);
                 }
@@ -3120,8 +3120,8 @@ IMPORTANT: Always suggest items from the list above. Never say you can't find it
                 }
                 quizData.name = name;
             } else if (currentQuizStep === 3) {
-                if (quizData.selectedStyles.length < 5) {
-                    alert('Please select at least 5 styles');
+                if (quizData.selectedStyles.length < 3) {
+                    alert('Please select at least 3 styles');
                     return;
                 }
             }
@@ -3160,7 +3160,7 @@ IMPORTANT: Always suggest items from the list above. Never say you can't find it
 
         function updateQuizNextButton() {
             const nextBtn = document.getElementById('quizNext3');
-            if (quizData.selectedStyles.length >= 5) {
+            if (quizData.selectedStyles.length >= 3) {
                 nextBtn.disabled = false;
                 nextBtn.style.background = '#9CAF88';
                 nextBtn.style.cursor = 'pointer';
