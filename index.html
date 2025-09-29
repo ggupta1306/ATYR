@@ -24,6 +24,197 @@
             position: relative;
             touch-action: manipulation;
         }
+
+        /* Cool Intro Animation */
+        .intro-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 1;
+            transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .intro-animation.hidden {
+            opacity: 0;
+            transform: scale(0.8) translateY(-50px);
+            pointer-events: none;
+        }
+
+        .intro-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .intro-logo {
+            margin-bottom: 60px;
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 10px;
+            animation: logoGlow 2s ease-in-out infinite alternate;
+        }
+
+        .logo-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: subtitleFade 2s ease-in-out infinite alternate;
+        }
+
+        .intro-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: particleFloat 6s linear infinite;
+        }
+
+        .particle:nth-child(1) {
+            top: 20%;
+            left: 20%;
+            animation-delay: 0s;
+            animation-duration: 8s;
+        }
+
+        .particle:nth-child(2) {
+            top: 30%;
+            right: 20%;
+            animation-delay: 1s;
+            animation-duration: 7s;
+        }
+
+        .particle:nth-child(3) {
+            bottom: 30%;
+            left: 30%;
+            animation-delay: 2s;
+            animation-duration: 9s;
+        }
+
+        .particle:nth-child(4) {
+            bottom: 20%;
+            right: 30%;
+            animation-delay: 3s;
+            animation-duration: 6s;
+        }
+
+        .particle:nth-child(5) {
+            top: 50%;
+            left: 50%;
+            animation-delay: 4s;
+            animation-duration: 8s;
+        }
+
+        .intro-loading {
+            margin-top: 40px;
+        }
+
+        .loading-bar {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #ffffff, #f093fb, #ffffff);
+            border-radius: 2px;
+            width: 0%;
+            animation: loadingProgress 3s ease-in-out forwards;
+            position: relative;
+        }
+
+        .loading-progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+            animation: loadingShimmer 1.5s ease-in-out infinite;
+        }
+
+        .loading-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            font-weight: 300;
+            animation: loadingTextPulse 2s ease-in-out infinite;
+        }
+
+        /* Animations */
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes logoGlow {
+            0% { text-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); }
+            100% { text-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.3); }
+        }
+
+        @keyframes subtitleFade {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes particleFloat {
+            0% { 
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { 
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes loadingProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes loadingShimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @keyframes loadingTextPulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
         
         /* Landing Screen */
         .landing-screen {
@@ -1313,6 +1504,29 @@
                     <a href="moodboard.html" class="nav-btn">
                         <span>Mood Board</span>
                     </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cool Intro Animation -->
+        <div class="intro-animation" id="introAnimation">
+            <div class="intro-content">
+                <div class="intro-logo">
+                    <div class="logo-text">atyr</div>
+                    <div class="logo-subtitle">Fashion Intelligence</div>
+                </div>
+                <div class="intro-particles">
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                </div>
+                <div class="intro-loading">
+                    <div class="loading-bar">
+                        <div class="loading-progress"></div>
+                    </div>
+                    <div class="loading-text">Crafting your style...</div>
                 </div>
             </div>
         </div>
@@ -2958,6 +3172,26 @@
             
             updateComboDisplay();
         }
+
+        // Cool Intro Animation
+        function initIntroAnimation() {
+            const introAnimation = document.getElementById('introAnimation');
+            
+            // Show intro animation for 3 seconds
+            setTimeout(() => {
+                introAnimation.classList.add('hidden');
+                
+                // Remove from DOM after animation completes
+                setTimeout(() => {
+                    introAnimation.style.display = 'none';
+                }, 1200);
+            }, 3000);
+        }
+
+        // Initialize intro animation when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initIntroAnimation();
+        });
     </script>
 </body>
 </html>
