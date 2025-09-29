@@ -2051,87 +2051,194 @@
             
             const messageLower = message.toLowerCase();
             
-            // Check for feedback/rejection first
-            if (messageLower.includes('no') || messageLower.includes('too formal') || messageLower.includes('too fancy') || messageLower.includes('not good') || messageLower.includes('doesn\'t work')) {
-                return getFeedbackResponse(message, currentTopName, currentBottomName);
+            // Intelligent response generation based on message content and context
+            return generateIntelligentResponse(message, currentTopName, currentBottomName);
+        }
+        
+        function generateIntelligentResponse(message, currentTop, currentBottom) {
+            const messageLower = message.toLowerCase();
+            
+            // Analyze the message intent and content
+            const intent = analyzeMessageIntent(message);
+            const context = getConversationContext();
+            
+            // Generate contextual response
+            return createContextualResponse(intent, context, message, currentTop, currentBottom);
+        }
+        
+        function analyzeMessageIntent(message) {
+            const messageLower = message.toLowerCase();
+            
+            // Greeting patterns
+            if (messageLower.match(/\b(hi|hello|hey|yo|what's up|how are you|good morning|good afternoon|good evening)\b/)) {
+                return { type: 'greeting', confidence: 0.9 };
             }
             
-            // More personal and friendly responses
-            const responses = {
-                'hello': getGreetingResponse(),
-                'hi': getGreetingResponse(),
-                'hey': getGreetingResponse(),
-                'office': getOfficeResponse(currentTopName, currentBottomName),
-                'meeting': getMeetingResponse(currentTopName, currentBottomName),
-                'date': getDateResponse(currentTopName, currentBottomName),
-                'party': getPartyResponse(currentTopName, currentBottomName),
-                'casual': getCasualResponse(currentTopName, currentBottomName),
-                'weekend': getWeekendResponse(currentTopName, currentBottomName),
-                'concert': getConcertResponse(currentTopName, currentBottomName),
-                'formal': getFormalResponse(currentTopName, currentBottomName),
-                'sleepover': getSleepoverResponse(currentTopName, currentBottomName),
-                'sleep over': getSleepoverResponse(currentTopName, currentBottomName),
-                'sleep': getSleepoverResponse(currentTopName, currentBottomName),
-                'night': getSleepoverResponse(currentTopName, currentBottomName),
-                'blue jeans': getItemResponse('blue jeans', message),
-                'jeans': getItemResponse('jeans', message),
-                'white tee': getItemResponse('white tee', message),
-                'black dress': getItemResponse('black dress', message),
-                'blazer': getItemResponse('blazer', message),
-                'sweater': getItemResponse('sweater', message),
-                'shirt': getItemResponse('shirt', message),
-                'pants': getItemResponse('pants', message),
-                'skirt': getItemResponse('skirt', message),
-                'shorts': getItemResponse('shorts', message),
-                'goes with': getItemResponse('goes with', message),
-                'pairs with': getItemResponse('pairs with', message),
-                'matches': getItemResponse('matches', message),
-                'help': getHelpResponse(),
-                'thanks': getThanksResponse(),
-                'thank you': getThanksResponse(),
-                'default': getDefaultResponse(message, currentTopName, currentBottomName)
-            };
+            // Question patterns
+            if (messageLower.includes('?') || messageLower.match(/\b(what|how|where|when|why|which|who)\b/)) {
+                return { type: 'question', confidence: 0.8 };
+            }
             
-            // Find matching response
-            for (const [key, response] of Object.entries(responses)) {
-                if (messageLower.includes(key)) {
-                    return response;
+            // Request patterns
+            if (messageLower.match(/\b(need|want|looking for|help me|can you|could you|please)\b/)) {
+                return { type: 'request', confidence: 0.8 };
+            }
+            
+            // Feedback patterns
+            if (messageLower.match(/\b(no|not|too|bad|wrong|doesn't|don't|hate|dislike)\b/)) {
+                return { type: 'feedback', confidence: 0.7 };
+            }
+            
+            // Occasion patterns
+            const occasions = ['office', 'work', 'meeting', 'date', 'party', 'casual', 'weekend', 'sleepover', 'sleep over', 'night', 'concert', 'formal', 'wedding', 'interview'];
+            for (const occasion of occasions) {
+                if (messageLower.includes(occasion)) {
+                    return { type: 'occasion', occasion: occasion, confidence: 0.8 };
                 }
             }
             
-            return responses.default;
+            // Item patterns
+            const items = ['jeans', 'tee', 'shirt', 'dress', 'blazer', 'sweater', 'pants', 'skirt', 'shorts', 'jacket', 'top', 'bottom'];
+            for (const item of items) {
+                if (messageLower.includes(item)) {
+                    return { type: 'item', item: item, confidence: 0.7 };
+                }
+            }
+            
+            // Default to general conversation
+            return { type: 'conversation', confidence: 0.5 };
         }
         
-        function getGreetingResponse() {
-            const currentTop = document.querySelectorAll('#topCarousel .carousel-item')[currentTopIndex];
-            const currentBottom = document.querySelectorAll('#bottomCarousel .carousel-item')[currentBottomIndex];
-            const currentTopName = currentTop.dataset.name;
-            const currentBottomName = currentBottom.dataset.name;
+        function getConversationContext() {
+            // Get recent conversation history for context
+            const recentMessages = chatHistory.slice(-3); // Last 3 messages
+            return {
+                recentMessages: recentMessages,
+                userProfile: userProfile,
+                currentTime: new Date().getHours()
+            };
+        }
+        
+        function createContextualResponse(intent, context, message, currentTop, currentBottom) {
+            const messageLower = message.toLowerCase();
             
-            // Generate random outfit suggestions
-            const allTops = [
-                'Classic White Tee', 'Black Sleeveless Dress', 'Yellow Vest', 'Brown Casual Shirt',
-                'Grey Loose Shirt', 'Black Blazer', 'Blue Striped T-Shirt', 'White Crewneck Sweater',
-                'White Long Sleeve', 'Elegant Blouse', 'Professional Button-Up'
-            ];
-            
-            const allBottoms = [
-                'Classic Denim Jeans', 'Black Soft Pants', 'Blue Striped Shorts', 'White Skirt',
-                'Black Jeans', 'Blue Denim Jeans', 'Brown Pants', 'Comfortable Joggers',
-                'White Trousers', 'Business Chinos', 'Formal Trousers'
-            ];
-            
-            const randomTop = allTops[Math.floor(Math.random() * allTops.length)];
-            const randomBottom = allBottoms[Math.floor(Math.random() * allBottoms.length)];
-            
+            switch (intent.type) {
+                case 'greeting':
+                    return generateGreetingResponse(context, currentTop, currentBottom);
+                    
+                case 'question':
+                    return generateQuestionResponse(message, context, currentTop, currentBottom);
+                    
+                case 'request':
+                    return generateRequestResponse(message, context, currentTop, currentBottom);
+                    
+                case 'feedback':
+                    return generateFeedbackResponse(message, context, currentTop, currentBottom);
+                    
+                case 'occasion':
+                    return generateOccasionResponse(intent.occasion, context, currentTop, currentBottom);
+                    
+                case 'item':
+                    return generateItemResponse(intent.item, message, context, currentTop, currentBottom);
+                    
+                default:
+                    return generateConversationalResponse(message, context, currentTop, currentBottom);
+            }
+        }
+        
+        function generateGreetingResponse(context, currentTop, currentBottom) {
             const greetings = [
-                `Hey! 👋 ${userProfile.name ? `What's up ${userProfile.name}!` : 'How\'s it going?'} I see you've got ${currentTopName} + ${currentBottomName} selected. What's up?`,
-                
-                `Yo! ${userProfile.name ? `Hey ${userProfile.name}!` : 'What\'s good?'} Your ${currentTopName} + ${currentBottomName} looks nice. What's going on?`,
-                
-                `Hey! ${userProfile.name ? `Good to see you ${userProfile.name}!` : 'How are you doing?'} I see your ${currentTopName} + ${currentBottomName} combo. What's happening?`
+                `Hey! 👋 ${context.userProfile.name ? `What's up ${context.userProfile.name}!` : 'How\'s it going?'} I see you've got ${currentTop} + ${currentBottom} selected. What's up?`,
+                `Yo! ${context.userProfile.name ? `Hey ${context.userProfile.name}!` : 'What\'s good?'} Your ${currentTop} + ${currentBottom} looks nice. What's going on?`,
+                `Hey! ${context.userProfile.name ? `Good to see you ${context.userProfile.name}!` : 'How are you doing?'} I see your ${currentTop} + ${currentBottom} combo. What's happening?`
             ];
             return greetings[Math.floor(Math.random() * greetings.length)];
+        }
+        
+        function generateQuestionResponse(message, context, currentTop, currentBottom) {
+            const messageLower = message.toLowerCase();
+            
+            // Fashion-related questions
+            if (messageLower.includes('what') && (messageLower.includes('wear') || messageLower.includes('outfit') || messageLower.includes('look'))) {
+                return `What kind of look are you going for? ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}I can help you find something that works for any occasion!`;
+            }
+            
+            if (messageLower.includes('how') && messageLower.includes('look')) {
+                return `You look great! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}Your ${currentTop} + ${currentBottom} combo is solid. What's the occasion?`;
+            }
+            
+            // General questions
+            return `Good question! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}What do you need help with? I'm here to help with outfit stuff!`;
+        }
+        
+        function generateRequestResponse(message, context, currentTop, currentBottom) {
+            const messageLower = message.toLowerCase();
+            
+            if (messageLower.includes('need') || messageLower.includes('want')) {
+                return `Got it! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}What do you need help with? I can suggest some great outfit combinations!`;
+            }
+            
+            if (messageLower.includes('help')) {
+                return `I'm here to help! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}What do you need? Outfit suggestions? Style advice? Just ask!`;
+            }
+            
+            return `Sure thing! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}What can I do for you?`;
+        }
+        
+        function generateFeedbackResponse(message, context, currentTop, currentBottom) {
+            const messageLower = message.toLowerCase();
+            
+            if (messageLower.includes('too formal') || messageLower.includes('too fancy')) {
+                return `Oh totally! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}You're right, that was way too formal. You want something more casual and relaxed!`;
+            }
+            
+            if (messageLower.includes('not good') || messageLower.includes('doesn\'t work')) {
+                return `Got it! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}What kind of vibe are you going for instead?`;
+            }
+            
+            return `Ah okay! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}What would work better for you?`;
+        }
+        
+        function generateOccasionResponse(occasion, context, currentTop, currentBottom) {
+            const occasionLower = occasion.toLowerCase();
+            
+            if (occasionLower.includes('sleepover') || occasionLower.includes('sleep')) {
+                return `For a sleepover you definitely want something comfy! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}Try something like a white tee with joggers or a cozy sweater with jeans. Nothing too fancy, just something you can relax in!`;
+            }
+            
+            if (occasionLower.includes('office') || occasionLower.includes('work')) {
+                return `For the office, you want something professional but not stuffy. ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}A nice button-up with chinos or a blouse with trousers would work great!`;
+            }
+            
+            if (occasionLower.includes('date')) {
+                return `For a date, you want to look good but not overdone. ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}Something like a nice blouse with jeans or a dress would be perfect!`;
+            }
+            
+            return `For ${occasion}, you want something that fits the vibe! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}What kind of look are you thinking?`;
+        }
+        
+        function generateItemResponse(item, message, context, currentTop, currentBottom) {
+            const itemLower = item.toLowerCase();
+            
+            if (itemLower.includes('jeans')) {
+                return `Jeans are super versatile! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}They go great with tees, sweaters, blouses, or even blazers. What kind of look are you going for?`;
+            }
+            
+            if (itemLower.includes('tee') || itemLower.includes('shirt')) {
+                return `Tees and shirts are wardrobe staples! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}They work with jeans, skirts, shorts, or pants. Super versatile!`;
+            }
+            
+            return `That's a great piece! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}What kind of look are you going for? I can help you find the perfect pairing!`;
+        }
+        
+        function generateConversationalResponse(message, context, currentTop, currentBottom) {
+            const responses = [
+                `Interesting! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}What's on your mind?`,
+                `Cool! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}What do you need help with?`,
+                `Nice! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}Anything I can help you with?`,
+                `Got it! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}What's going on?`
+            ];
+            return responses[Math.floor(Math.random() * responses.length)];
         }
         
         function getHelpResponse() {
