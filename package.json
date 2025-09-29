@@ -9,5 +9,8 @@
   },
   "keywords": ["fashion", "ai", "stylist", "outfit", "recommendations"],
   "author": "ATYR Team",
-  "license": "MIT"
+  "license": "MIT",
+  "vercel": {
+    "outputDirectory": "."
+  }
 }
