@@ -2315,15 +2315,19 @@
 
 Current outfit: ${currentTop} + ${currentBottom}
 
-RULES:
+CRITICAL RULES:
 - MAX 2 sentences per response
 - ALWAYS end with ONE button
+- LISTEN to user feedback - if they say "I don't want X" or "no X", NEVER suggest X
+- Use EXACT item names from the list below
 - For current outfit: "Your response here! <br><br><button class='ai-recommend-btn' onclick='showRecommendedFit(\"${currentTop}\", \"${currentBottom}\")'>✨ Show This Fit</button>"
 - For suggestions: "Your response here! <br><br><button class='ai-suggestion-btn' onclick='previewLook(\"EXACT_TOP_NAME\", \"EXACT_BOTTOM_NAME\")'>Try This Look</button>"
 
 Available items (use EXACT names):
 Tops: Classic White Tee, Black Sleeveless Dress, Yellow Vest, Brown Casual Shirt, Grey Loose Shirt, Black Blazer, Blue Striped T-Shirt, White Crewneck Sweater, White Long Sleeve, Elegant Blouse, Professional Button-Up
-Bottoms: Classic Denim Jeans, Black Soft Pants, Blue Striped Shorts, White Skirt, Black Jeans, Blue Denim Jeans, Brown Pants, Comfortable Joggers, White Trousers, Business Chinos, Formal Trousers`;
+Bottoms: Classic Denim Jeans, Black Soft Pants, Blue Striped Shorts, White Skirt, Black Jeans, Blue Denim Jeans, Brown Pants, Comfortable Joggers, White Trousers, Business Chinos, Formal Trousers
+
+Remember: If user says they don't want something, suggest something DIFFERENT!`;
 
                 const response = await fetch(GROQ_API_URL, {
                     method: 'POST',
@@ -2352,29 +2356,11 @@ Bottoms: Classic Denim Jeans, Black Soft Pants, Blue Striped Shorts, White Skirt
 
             } catch (error) {
                 console.error('Groq API Error:', error);
-                // Fallback to local response if API fails
-                return getFallbackResponse(message, currentTop, currentBottom);
+                // Return a simple error message instead of fallback
+                return `Sorry, I'm having trouble connecting to my AI brain right now. Please try again in a moment!`;
             }
         }
         
-        function getFallbackResponse(message, currentTop, currentBottom) {
-            // Simple fallback responses when API is not available
-            const messageLower = message.toLowerCase();
-            
-            if (messageLower.includes('hello') || messageLower.includes('hi') || messageLower.includes('hey')) {
-                return `Hey! 👋 I'm your AI stylist! I can help you find the perfect outfit for any occasion. What are you looking for today?`;
-            }
-            
-            if (messageLower.includes('date') || messageLower.includes('romantic')) {
-                return `For a date night, I'd recommend something elegant yet comfortable. Your current ${currentTop} + ${currentBottom} combo could work! Want me to suggest some alternatives?`;
-            }
-            
-            if (messageLower.includes('work') || messageLower.includes('office') || messageLower.includes('meeting')) {
-                return `For work, you want something professional and polished. Your ${currentTop} + ${currentBottom} combo looks great! Need any adjustments?`;
-            }
-            
-            return `I'd love to help you with fashion advice! Tell me more about what you're looking for - I can suggest outfits for any occasion! 😊`;
-        }
         
         function generateIntelligentResponse(message, currentTop, currentBottom) {
             const messageLower = message.toLowerCase();
@@ -2901,7 +2887,7 @@ Bottoms: Classic Denim Jeans, Black Soft Pants, Blue Striped Shorts, White Skirt
                     `What's good? ${userProfile.name ? `Hey ${userProfile.name}! ` : ''}Need help with anything?`,
                     `Hey! ${userProfile.name ? `What's up ${userProfile.name}! ` : ''}Anything I can help with?`
                 ];
-                return responses[Math.floor(Math.random() * responses.length)];
+            return responses[Math.floor(Math.random() * responses.length)];
             }
         }
         
