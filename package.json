@@ -1,1 +1,13 @@
-{"name":"fashion-mix-match-app","version":"1.0.0","description":"A minimal viable fashion web app with mix & match carousel","scripts":{"dev":"concurrently \"npm run dev:backend\" \"npm run dev:frontend\"","dev:backend":"cd backend && npm run dev","dev:frontend":"cd frontend && npm run dev","install:all":"npm install && cd backend && npm install && cd ../frontend && npm install"},"devDependencies":{"concurrently":"^8.2.2"}}
+{
+  "name": "atyr-fashion-app",
+  "version": "1.0.0",
+  "description": "ATYR Fashion Mix & Match App with AI Stylist",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Static site - no build needed'",
+    "start": "echo 'Static site - serving index.html'"
+  },
+  "keywords": ["fashion", "ai", "stylist", "outfit", "recommendations"],
+  "author": "ATYR Team",
+  "license": "MIT"
+}
