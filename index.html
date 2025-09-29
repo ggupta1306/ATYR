@@ -1028,6 +1028,44 @@
             transform: translateY(-2px);
         }
         
+        /* Typing Indicator */
+        .typing-indicator {
+            opacity: 0.8;
+        }
+        
+        .typing-dots {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #667eea;
+            animation: typingDot 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dots span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+        
+        .typing-dots span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+        
+        @keyframes typingDot {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
         @keyframes slideIn {
             from {
                 opacity: 0;
@@ -2256,17 +2294,95 @@
             chatHistory.push({ content, sender, time });
         }
         
-        function getAIResponse(message) {
+        async function getAIResponse(message) {
             const currentTop = document.querySelectorAll('#topCarousel .carousel-item')[currentTopIndex];
             const currentBottom = document.querySelectorAll('#bottomCarousel .carousel-item')[currentBottomIndex];
             
             const currentTopName = currentTop.dataset.name;
             const currentBottomName = currentBottom.dataset.name;
             
+            // Use real Groq API for intelligent responses
+            return await getGroqAIResponse(message, currentTopName, currentBottomName);
+        }
+        
+        async function getGroqAIResponse(message, currentTop, currentBottom) {
+            try {
+                // Groq API configuration
+                const GROQ_API_KEY = 'YOUR_GROQ_API_KEY_HERE'; // Replace with your actual Groq API key
+                const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
+                
+                const systemPrompt = `You are a friendly, knowledgeable fashion stylist and personal shopper. You help users find the perfect outfits for any occasion. 
+
+Current outfit context:
+- Top: ${currentTop}
+- Bottom: ${currentBottom}
+
+User profile: ${userProfile.name ? `Name: ${userProfile.name}` : 'Guest user'}
+Style preferences: ${userProfile.style ? userProfile.style.join(', ') : 'Not specified'}
+Occasions: ${userProfile.occasions ? userProfile.occasions.join(', ') : 'Not specified'}
+
+Guidelines:
+- Be conversational and friendly, like talking to a friend
+- Give specific, actionable fashion advice
+- Consider the current outfit they have selected
+- Ask follow-up questions when helpful
+- Be encouraging and positive
+- Keep responses concise but helpful
+- Use emojis occasionally but not excessively
+
+Available clothing items:
+Tops: Classic White Tee, Black Sleeveless Dress, Yellow Vest, Brown Casual Shirt, Grey Loose Shirt, Black Blazer, Blue Striped T-Shirt, White Crewneck Sweater, White Long Sleeve, Elegant Blouse, Professional Button-Up
+Bottoms: Classic Denim Jeans, Black Soft Pants, Blue Striped Shorts, White Skirt, Black Jeans, Blue Denim Jeans, Brown Pants, Comfortable Joggers, White Trousers, Business Chinos, Formal Trousers`;
+
+                const response = await fetch(GROQ_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${GROQ_API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: 'llama-3.1-70b-versatile',
+                        messages: [
+                            { role: 'system', content: systemPrompt },
+                            { role: 'user', content: message }
+                        ],
+                        max_tokens: 300,
+                        temperature: 0.7,
+                        stream: false
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API request failed: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.choices[0].message.content;
+
+            } catch (error) {
+                console.error('Groq API Error:', error);
+                // Fallback to local response if API fails
+                return getFallbackResponse(message, currentTop, currentBottom);
+            }
+        }
+        
+        function getFallbackResponse(message, currentTop, currentBottom) {
+            // Simple fallback responses when API is not available
             const messageLower = message.toLowerCase();
             
-            // Intelligent response generation based on message content and context
-            return generateIntelligentResponse(message, currentTopName, currentBottomName);
+            if (messageLower.includes('hello') || messageLower.includes('hi') || messageLower.includes('hey')) {
+                return `Hey! 👋 I'm your AI stylist! I can help you find the perfect outfit for any occasion. What are you looking for today?`;
+            }
+            
+            if (messageLower.includes('date') || messageLower.includes('romantic')) {
+                return `For a date night, I'd recommend something elegant yet comfortable. Your current ${currentTop} + ${currentBottom} combo could work! Want me to suggest some alternatives?`;
+            }
+            
+            if (messageLower.includes('work') || messageLower.includes('office') || messageLower.includes('meeting')) {
+                return `For work, you want something professional and polished. Your ${currentTop} + ${currentBottom} combo looks great! Need any adjustments?`;
+            }
+            
+            return `I'd love to help you with fashion advice! Tell me more about what you're looking for - I can suggest outfits for any occasion! 😊`;
         }
         
         function generateIntelligentResponse(message, currentTop, currentBottom) {
@@ -3298,6 +3414,75 @@
             
             updateComboDisplay();
         }
+
+        // AI Chat Functions
+        async function sendMessage() {
+            const input = document.getElementById('aiInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Clear input
+            input.value = '';
+            
+            // Add user message to chat
+            addMessageToChat(message, 'user');
+            
+            // Show typing indicator
+            const typingIndicator = addTypingIndicator();
+            
+            try {
+                // Get AI response
+                const aiResponse = await getAIResponse(message);
+                
+                // Remove typing indicator
+                removeTypingIndicator(typingIndicator);
+                
+                // Add AI response to chat
+                addMessageToChat(aiResponse, 'ai');
+                
+            } catch (error) {
+                console.error('Error getting AI response:', error);
+                removeTypingIndicator(typingIndicator);
+                addMessageToChat('Sorry, I encountered an error. Please try again!', 'ai');
+            }
+        }
+        
+        function addTypingIndicator() {
+            const chatContainer = document.getElementById('chatContainer');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'chat-bubble ai-bubble typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="message-content">
+                    <span class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </div>
+            `;
+            chatContainer.appendChild(typingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            return typingDiv;
+        }
+        
+        function removeTypingIndicator(typingDiv) {
+            if (typingDiv && typingDiv.parentNode) {
+                typingDiv.parentNode.removeChild(typingDiv);
+            }
+        }
+        
+        // Allow Enter key to send message
+        document.addEventListener('DOMContentLoaded', function() {
+            const aiInput = document.getElementById('aiInput');
+            if (aiInput) {
+                aiInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendMessage();
+                    }
+                });
+            }
+        });
 
         // Cool Intro Animation
         function initIntroAnimation() {
