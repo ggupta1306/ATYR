@@ -1255,6 +1255,35 @@
                 height: 90%;
             }
         }
+        /* AI Recommendation Buttons */
+        .ai-suggestion-btn, .ai-recommend-btn {
+            background: linear-gradient(135deg, #9CAF88, #8BA077);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 0.5rem 0;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .ai-suggestion-btn:hover, .ai-recommend-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(156, 175, 136, 0.4);
+        }
+        
+        .ai-recommend-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            font-size: 1rem;
+            padding: 0.75rem 1.5rem;
+        }
+        
+        .ai-recommend-btn:hover {
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
     </style>
 </head>
 <body>
@@ -1281,9 +1310,9 @@
                     <a href="style-quiz.html" class="nav-btn">
                         <span>Style Quiz</span>
                     </a>
-                    <button class="nav-btn" id="viewMoodBoardBtn">
+                    <a href="moodboard.html" class="nav-btn">
                         <span>Mood Board</span>
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -2052,10 +2081,15 @@
         }
         
         function getGreetingResponse() {
+            const currentTop = document.querySelectorAll('#topCarousel .carousel-item')[currentTopIndex];
+            const currentBottom = document.querySelectorAll('#bottomCarousel .carousel-item')[currentBottomIndex];
+            const currentTopName = currentTop.dataset.name;
+            const currentBottomName = currentBottom.dataset.name;
+            
             const greetings = [
-                `Hey there! 👋 ${userProfile.name ? `Nice to see you again, ${userProfile.name}!` : 'I\'m your personal stylist!'} What can I help you with today?`,
-                `Hi! ${userProfile.name ? `Welcome back, ${userProfile.name}!` : 'Ready to find your perfect outfit?'} What\'s the occasion?`,
-                `Hello! ${userProfile.name ? `Great to see you, ${userProfile.name}!` : 'Let\'s make you look amazing!'} ✨ Tell me where you\'re heading!`
+                `Hey there! 👋 ${userProfile.name ? `Nice to see you again, ${userProfile.name}!` : 'I\'m your personal stylist!'} I see you have ${currentTopName} + ${currentBottomName} selected. Want to see this look?<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">✨ Show This Fit</button><br><br>Or tell me where you're heading for more suggestions!`,
+                `Hi! ${userProfile.name ? `Welcome back, ${userProfile.name}!` : 'Ready to find your perfect outfit?'} Your current selection looks great: ${currentTopName} + ${currentBottomName}<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">✨ Show This Fit</button><br><br>Need suggestions for a specific occasion?`,
+                `Hello! ${userProfile.name ? `Great to see you, ${userProfile.name}!` : 'Let\'s make you look amazing!'} ✨ I love your current choice: ${currentTopName} + ${currentBottomName}<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTopName}', '${currentBottomName}')">✨ Show This Fit</button><br><br>Tell me where you're heading for personalized recommendations!`
             ];
             return greetings[Math.floor(Math.random() * greetings.length)];
         }
@@ -2104,13 +2138,13 @@
         }
         
         function getDateResponse(currentTop, currentBottom) {
-            const romantic = ['Elegant Blouse', 'Professional Button-Up'];
+            const romantic = ['Elegant Blouse', 'Professional Button-Up', 'Black Sleeveless Dress'];
             const isRomantic = romantic.some(item => currentTop.includes(item));
             
             if (isRomantic) {
-                return `Lovely choice! The ${currentTop} is perfect for a date - sophisticated yet approachable. Have a wonderful time! 💕`;
+                return `Lovely choice! The ${currentTop} is perfect for a date - sophisticated yet approachable. Have a wonderful time! 💕<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTop}', '${currentBottom}')">✨ Show This Recommended Fit</button>`;
             } else {
-                return `For a date night, I recommend: <br><br>💕 <strong>Elegant Blouse + Business Chinos</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Elegant Blouse', 'Business Chinos')">Preview This Look</button><br><br>💕 <strong>Professional Button-Up + Classic Denim Jeans</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Professional Button-Up', 'Classic Denim Jeans')">Preview This Look</button>`;
+                return `For a date night, I recommend: <br><br>💕 <strong>Black Sleeveless Dress + White Skirt</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Black Sleeveless Dress', 'White Skirt')">Preview This Look</button><br><br>💕 <strong>Elegant Blouse + Business Chinos</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Elegant Blouse', 'Business Chinos')">Preview This Look</button><br><br>💕 <strong>Professional Button-Up + Classic Denim Jeans</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Professional Button-Up', 'Classic Denim Jeans')">Preview This Look</button>`;
             }
         }
         
@@ -2476,10 +2510,6 @@
         }
 
         // Event Listeners
-        document.getElementById('startQuizBtn').addEventListener('click', startQuiz);
-        document.getElementById('viewMoodBoardBtn').addEventListener('click', () => {
-            window.location.href = 'moodboard.html';
-        });
 
         // Lightbox Functions
         function openLightbox(item) {
@@ -2619,6 +2649,81 @@
         
         // Add swipe listeners after DOM is loaded
         setTimeout(addSwipeListeners, 100);
+        
+        // AI Recommendation Functions
+        function showRecommendedFit(topName, bottomName) {
+            // Find the items in the carousel
+            const topItems = document.querySelectorAll('#topCarousel .carousel-item');
+            const bottomItems = document.querySelectorAll('#bottomCarousel .carousel-item');
+            
+            let topIndex = -1;
+            let bottomIndex = -1;
+            
+            // Find the matching items
+            topItems.forEach((item, index) => {
+                if (item.dataset.name === topName) {
+                    topIndex = index;
+                }
+            });
+            
+            bottomItems.forEach((item, index) => {
+                if (item.dataset.name === bottomName) {
+                    bottomIndex = index;
+                }
+            });
+            
+            // If items found, navigate to them
+            if (topIndex !== -1 && bottomIndex !== -1) {
+                // Navigate to the recommended top
+                navigateToItem('top', topIndex);
+                // Navigate to the recommended bottom
+                navigateToItem('bottom', bottomIndex);
+                
+                // Show success message
+                addMessageToChat(`✨ Perfect! I've shown you the recommended fit: ${topName} + ${bottomName}. This combination will look amazing!`, 'ai');
+            } else {
+                addMessageToChat(`Sorry, I couldn't find those specific items. Let me suggest some alternatives!`, 'ai');
+            }
+        }
+        
+        function previewLook(topName, bottomName) {
+            // Show a preview message
+            addMessageToChat(`👀 Here's a preview of ${topName} + ${bottomName}. This would be perfect for your occasion!<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${topName}', '${bottomName}')">✨ Show This Recommended Fit</button>`, 'ai');
+        }
+        
+        function navigateToItem(type, targetIndex) {
+            if (type === 'top') {
+                const items = document.querySelectorAll('#topCarousel .carousel-item');
+                const currentItem = items[currentTopIndex];
+                currentItem.classList.remove('active');
+                currentItem.classList.add('prev');
+                
+                currentTopIndex = targetIndex;
+                const targetItem = items[currentTopIndex];
+                targetItem.classList.add('active');
+                targetItem.classList.remove('prev');
+                
+                setTimeout(() => {
+                    currentItem.classList.remove('prev');
+                }, 600);
+            } else {
+                const items = document.querySelectorAll('#bottomCarousel .carousel-item');
+                const currentItem = items[currentBottomIndex];
+                currentItem.classList.remove('active');
+                currentItem.classList.add('prev');
+                
+                currentBottomIndex = targetIndex;
+                const targetItem = items[currentBottomIndex];
+                targetItem.classList.add('active');
+                targetItem.classList.remove('prev');
+                
+                setTimeout(() => {
+                    currentItem.classList.remove('prev');
+                }, 600);
+            }
+            
+            updateComboDisplay();
+        }
     </script>
 </body>
 </html>
