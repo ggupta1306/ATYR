@@ -2311,26 +2311,17 @@
                 const GROQ_API_KEY = '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'; // Replace with your actual Groq API key
                 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
                 
-                const systemPrompt = `You are a friendly, knowledgeable fashion stylist and personal shopper. You help users find the perfect outfits for any occasion. 
+                const systemPrompt = `You are a fashion stylist. Keep responses SHORT (1-2 sentences max) and ALWAYS include ONE button.
 
-Current outfit context:
-- Top: ${currentTop}
-- Bottom: ${currentBottom}
+Current outfit: ${currentTop} + ${currentBottom}
 
-User profile: ${userProfile.name ? `Name: ${userProfile.name}` : 'Guest user'}
-Style preferences: ${userProfile.style ? userProfile.style.join(', ') : 'Not specified'}
-Occasions: ${userProfile.occasions ? userProfile.occasions.join(', ') : 'Not specified'}
+RULES:
+- MAX 2 sentences per response
+- ALWAYS end with ONE button
+- For current outfit: "Your response here! <br><br><button class='ai-recommend-btn' onclick='showRecommendedFit(\"${currentTop}\", \"${currentBottom}\")'>✨ Show This Fit</button>"
+- For suggestions: "Your response here! <br><br><button class='ai-suggestion-btn' onclick='previewLook(\"EXACT_TOP_NAME\", \"EXACT_BOTTOM_NAME\")'>Try This Look</button>"
 
-Guidelines:
-- Be conversational and friendly, like talking to a friend
-- Give specific, actionable fashion advice
-- Consider the current outfit they have selected
-- Ask follow-up questions when helpful
-- Be encouraging and positive
-- Keep responses concise but helpful
-- Use emojis occasionally but not excessively
-
-Available clothing items:
+Available items (use EXACT names):
 Tops: Classic White Tee, Black Sleeveless Dress, Yellow Vest, Brown Casual Shirt, Grey Loose Shirt, Black Blazer, Blue Striped T-Shirt, White Crewneck Sweater, White Long Sleeve, Elegant Blouse, Professional Button-Up
 Bottoms: Classic Denim Jeans, Black Soft Pants, Blue Striped Shorts, White Skirt, Black Jeans, Blue Denim Jeans, Brown Pants, Comfortable Joggers, White Trousers, Business Chinos, Formal Trousers`;
 
@@ -2346,7 +2337,7 @@ Bottoms: Classic Denim Jeans, Black Soft Pants, Blue Striped Shorts, White Skirt
                             { role: 'system', content: systemPrompt },
                             { role: 'user', content: message }
                         ],
-                        max_tokens: 300,
+                        max_tokens: 100,
                         temperature: 0.7,
                         stream: false
                     })
