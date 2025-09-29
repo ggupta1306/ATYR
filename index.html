@@ -2051,6 +2051,11 @@
             
             const messageLower = message.toLowerCase();
             
+            // Check for feedback/rejection first
+            if (messageLower.includes('no') || messageLower.includes('too formal') || messageLower.includes('too fancy') || messageLower.includes('not good') || messageLower.includes('doesn\'t work')) {
+                return getFeedbackResponse(message, currentTopName, currentBottomName);
+            }
+            
             // More personal and friendly responses
             const responses = {
                 'hello': getGreetingResponse(),
@@ -2244,10 +2249,25 @@
             const isComfy = comfy.some(item => currentTop.includes(item) || currentBottom.includes(item));
             
             if (isComfy) {
-                return `Perfect! ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}Your ${currentTop} + ${currentBottom} is ideal for a sleepover - comfy and cute! 🛋️<br><br><button class="ai-recommend-btn" onclick="showRecommendedFit('${currentTop}', '${currentBottom}')">Show this fit</button>`;
+                return `Yeah that's perfect! ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}Your ${currentTop} + ${currentBottom} is exactly what you want for a sleepover - super comfy and chill!`;
             } else {
-                return `For a sleepover, ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}you want something comfy and cute:<br><br>🛋️ <strong>Classic White Tee + Comfortable Joggers</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Classic White Tee', 'Comfortable Joggers')">Preview</button><br><br>🛋️ <strong>White Crewneck Sweater + Classic Denim Jeans</strong><br><button class="ai-suggestion-btn" onclick="previewLook('White Crewneck Sweater', 'Classic Denim Jeans')">Preview</button><br><br>🛋️ <strong>Grey Loose Shirt + Black Soft Pants</strong><br><button class="ai-suggestion-btn" onclick="previewLook('Grey Loose Shirt', 'Black Soft Pants')">Preview</button>`;
+                return `For a sleepover you definitely want something comfy! ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}Try something like a white tee with joggers or a cozy sweater with jeans. Nothing too fancy, just something you can relax in!`;
             }
+        }
+        
+        function getFeedbackResponse(message, currentTop, currentBottom) {
+            const messageLower = message.toLowerCase();
+            
+            if (messageLower.includes('too formal') || messageLower.includes('too fancy')) {
+                return `Oh totally! ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}You're right, that was way too formal for a sleepover. You want something super casual and comfy - like a basic tee with joggers or a cozy sweater with jeans. Nothing fancy at all!`;
+            }
+            
+            if (messageLower.includes('not good') || messageLower.includes('doesn\'t work')) {
+                return `Got it! ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}What kind of vibe are you going for instead? More casual? Something else?`;
+            }
+            
+            // Generic feedback response
+            return `Ah okay! ${userProfile.name ? `Hey ${userProfile.name}, ` : ''}What would work better for you?`;
         }
         
         function getItemResponse(itemType, message) {
