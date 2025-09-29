@@ -2283,6 +2283,12 @@
         function analyzeMessageIntent(message) {
             const messageLower = message.toLowerCase();
             
+            // Complex context analysis - look for multiple keywords together
+            const context = analyzeComplexContext(messageLower);
+            if (context.confidence > 0.7) {
+                return context;
+            }
+            
             // Greeting patterns
             if (messageLower.match(/\b(hi|hello|hey|yo|what's up|how are you|good morning|good afternoon|good evening)\b/)) {
                 return { type: 'greeting', confidence: 0.9 };
@@ -2323,6 +2329,91 @@
             return { type: 'conversation', confidence: 0.5 };
         }
         
+        function analyzeComplexContext(messageLower) {
+            // Cruise + Pool context
+            if ((messageLower.includes('cruise') || messageLower.includes('boat') || messageLower.includes('ship')) && 
+                (messageLower.includes('pool') || messageLower.includes('swim') || messageLower.includes('beach'))) {
+                return { 
+                    type: 'complex_occasion', 
+                    occasion: 'cruise_pool', 
+                    context: 'cruise pool side',
+                    confidence: 0.9 
+                };
+            }
+            
+            // Beach + Vacation context
+            if ((messageLower.includes('beach') || messageLower.includes('vacation') || messageLower.includes('trip')) && 
+                (messageLower.includes('swim') || messageLower.includes('pool') || messageLower.includes('water'))) {
+                return { 
+                    type: 'complex_occasion', 
+                    occasion: 'beach_vacation', 
+                    context: 'beach vacation',
+                    confidence: 0.9 
+                };
+            }
+            
+            // Wedding + Reception context
+            if (messageLower.includes('wedding') && (messageLower.includes('reception') || messageLower.includes('party') || messageLower.includes('dance'))) {
+                return { 
+                    type: 'complex_occasion', 
+                    occasion: 'wedding_reception', 
+                    context: 'wedding reception',
+                    confidence: 0.9 
+                };
+            }
+            
+            // Business + Travel context
+            if ((messageLower.includes('business') || messageLower.includes('work')) && 
+                (messageLower.includes('travel') || messageLower.includes('trip') || messageLower.includes('flight'))) {
+                return { 
+                    type: 'complex_occasion', 
+                    occasion: 'business_travel', 
+                    context: 'business travel',
+                    confidence: 0.9 
+                };
+            }
+            
+            // Date + Dinner context
+            if (messageLower.includes('date') && (messageLower.includes('dinner') || messageLower.includes('restaurant') || messageLower.includes('romantic'))) {
+                return { 
+                    type: 'complex_occasion', 
+                    occasion: 'date_dinner', 
+                    context: 'romantic dinner',
+                    confidence: 0.9 
+                };
+            }
+            
+            // Single occasion with specific context
+            if (messageLower.includes('cruise')) {
+                return { 
+                    type: 'complex_occasion', 
+                    occasion: 'cruise', 
+                    context: 'cruise',
+                    confidence: 0.8 
+                };
+            }
+            
+            if (messageLower.includes('pool') || messageLower.includes('swim')) {
+                return { 
+                    type: 'complex_occasion', 
+                    occasion: 'pool', 
+                    context: 'pool/swimming',
+                    confidence: 0.8 
+                };
+            }
+            
+            if (messageLower.includes('beach')) {
+                return { 
+                    type: 'complex_occasion', 
+                    occasion: 'beach', 
+                    context: 'beach',
+                    confidence: 0.8 
+                };
+            }
+            
+            return { type: 'none', confidence: 0 };
+        }
+        
         function getConversationContext() {
             // Get recent conversation history for context
             const recentMessages = chatHistory.slice(-3); // Last 3 messages
@@ -2351,6 +2442,9 @@
                     
                 case 'occasion':
                     return generateOccasionResponse(intent.occasion, context, currentTop, currentBottom);
+                    
+                case 'complex_occasion':
+                    return generateComplexOccasionResponse(intent, context, currentTop, currentBottom);
                     
                 case 'item':
                     return generateItemResponse(intent.item, message, context, currentTop, currentBottom);
@@ -2429,6 +2523,38 @@
             }
             
             return `For ${occasion}, you want something that fits the vibe! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}What kind of look are you thinking?`;
+        }
+        
+        function generateComplexOccasionResponse(intent, context, currentTop, currentBottom) {
+            const occasion = intent.occasion;
+            const occasionContext = intent.context;
+            
+            switch (occasion) {
+                case 'cruise_pool':
+                    return `Perfect! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}For a cruise pool side, you want something stylish but practical. Think flowy cover-ups, cute swimwear, and easy-to-wear pieces that can go from pool to deck. A nice sundress or linen shorts with a breezy top would be ideal!`;
+                    
+                case 'cruise':
+                    return `Cruise vibes! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}You'll want versatile pieces that work for different activities - pool, dining, exploring ports. Think lightweight fabrics, layers you can add/remove, and colors that work in the sun. What's your main focus - pool time, dining, or exploring?`;
+                    
+                case 'pool':
+                case 'beach_vacation':
+                    return `Pool/beach time! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}You want something that's comfortable, dries quickly, and looks great. Think breathable fabrics, easy-care pieces, and colors that pop against water. A cute cover-up or quick-dry shorts with a tank would be perfect!`;
+                    
+                case 'beach':
+                    return `Beach day! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}You want something that's sand-friendly, sun-protective, and easy to move in. Think lightweight, breathable fabrics and pieces that won't get ruined by salt water or sand.`;
+                    
+                case 'wedding_reception':
+                    return `Wedding reception! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}You want something elegant but dance-friendly. Think sophisticated pieces that move well, comfortable shoes, and layers for temperature changes. A nice dress or dressy separates would work great!`;
+                    
+                case 'business_travel':
+                    return `Business travel! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}You need versatile pieces that work for meetings, travel, and downtime. Think wrinkle-resistant fabrics, mix-and-match separates, and comfortable layers for different climates.`;
+                    
+                case 'date_dinner':
+                    return `Romantic dinner! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}You want something that's elegant but not overdressed. Think sophisticated pieces that make you feel confident - a nice dress or dressy separates with some personality.`;
+                    
+                default:
+                    return `That sounds like a great occasion! ${context.userProfile.name ? `Hey ${context.userProfile.name}, ` : ''}What kind of vibe are you going for? I can help you find the perfect outfit!`;
+            }
         }
         
         function generateItemResponse(item, message, context, currentTop, currentBottom) {
